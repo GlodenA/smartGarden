@@ -1,0 +1,82 @@
+<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.css" />
+<style>
+    .dizhi-choose {
+        width: 100%;
+        border: solid 1px #e4e4e4;
+        height: 40px;
+        line-height: 40px;
+        font-size: 14px;
+        cursor: pointer;
+        border-radius: 2px !important;
+        -moz-border-radius: 2px !important;
+        -webkit-border-radius: 2px !important;
+    }
+
+    .dizhi-choose span {
+        padding: 0 10px;
+    }
+</style>
+<div class="padding-md">
+    <div>
+        <ul class="breadcrumb">
+            当前位置：
+            <li><a href="__MODULE__/Index/main"> 主页</a></li>
+            <li><a href="__ACTION__">电子栅栏</a></li>
+        </ul>
+    </div>
+    <div class="smart-widget widget-dark-blue">
+        <div class="smart-widget-inner">
+            <div class="smart-widget-body">
+                <form class="form-horizontal m-top-sm" method="post" id="form">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div id="map" style="width:100%;margin:20px 0px;">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{:C('ADMIN_JS_PATH')}/jquery.validate.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=NENpvHSwTNZ6ftZOKdfiiPDxGKKPHjtg"></script>
+<!--加载鼠标绘制工具-->
+<script type="text/javascript" src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
+<link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
+<!--加载检索信息窗口-->
+<script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.js"></script>
+
+
+<script type="text/javascript">
+    var clientHeight = document.body.clientHeight;
+    document.getElementById("map").style.height = clientHeight-150+'px';
+    //直接加载地图
+    var rank = "{:C('CITY_RANK')}";
+    var cityName = "{:C('CITY_NAME')}";
+    var map = new BMap.Map("map");
+   
+    var data = JSON.parse('{$areaList}');
+    var point = new BMap.Point(data[0]['coordinate'][0].lon,data[0]['coordinate'][0].lat);    // 创建点坐标  112.987402, 28.201509
+    map.centerAndZoom(point, rank); 
+    map.addControl(new BMap.ScaleControl());                    // 添加比例尺控件
+    map.addControl(new BMap.OverviewMapControl());              //添加缩略地图控件
+    // map.setCenter(cityName);     // 设置地图显示的城市 此项是必须设置的
+     map.enableScrollWheelZoom();
+    var arrPois = [];
+    var polyLine = [];
+    for(var j = 0; j < data.length;j++){
+        // console.log(1);
+        arrPois[j] = [];
+        polyLine[j] = "";
+        for(var i = 0; i < data[j].coordinate.length;i++){
+            arrPois[j].push(new BMap.Point(data[j].coordinate[i].lon,data[j].coordinate[i].lat));// 循环数组中每一组的坐标
+        }
+        polyLine[j] = new BMap.Polygon(arrPois[j], {strokeColor:"red",fillColor:"red", strokeWeight: 1 ,fillOpacity: 0.3, strokeOpacity: 0.3});// 展示围栏
+        map.addOverlay(polyLine[j]);
+    }
+
+
+
+
+</script>

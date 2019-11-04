@@ -1,0 +1,155 @@
+<?php if (!defined('THINK_PATH')) exit();?><form class="form-horizontal no-margin" method="post" id="form">
+	<div class="form-group">
+		<label class="control-label col-md-3">登录账号</label>
+		<div class="col-md-5">
+			<input type="text" class="form-control input-sm" name="info[username]" placeholder="">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-md-3">登录密码</label>
+		<div class="col-md-5">
+			<input type="password" class="form-control input-sm" name="password" placeholder="">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-md-3">真实姓名</label>
+		<div class="col-md-5">
+			<input type="text" class="form-control input-sm" name="info[realname]" value="" required>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-md-3">手机号</label>
+		<div class="col-md-5">
+			<input type="text" class="form-control input-sm" name="info[mobile]" value="" required>
+		</div>
+	</div>
+	<!-- <div class="form-group">
+		<label class="control-label col-md-3">E-mail</label>
+		<div class="col-md-5">
+			<input type="email" class="form-control input-sm" name="info[email]" required>
+		</div>
+	</div> -->
+	<div class="form-group">
+		<label class="control-label col-md-3">头像</label>
+		<div class="col-md-5">
+			<button type="button" class="btn btn-success btn-sm" id="selector">选取图片</button>
+			<button type="button" class="btn btn-warning btn-sm hide" id="upload">上传</button>
+			<span id="filepath"></span>
+			<input type="hidden" name="info[avatar]" />
+			<p class="m-top-sm"><img src="<?php echo C('ADMIN_IMAGE_PATH');?>/noimg.png" width="20%" id="avatar"/></p>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-md-3">管理组</label>
+		<div class="col-md-5">
+			<select class="form-control" name="info[group_id]" required>
+              	<?php if(is_array($groupInfo)): foreach($groupInfo as $key=>$v): ?><option value="<?php echo ($v['id']); ?>"><?php echo ($v['title']); ?></option><?php endforeach; endif; ?>
+            </select>
+        </div>
+	</div>
+	<!-- <div class="form-group">
+		<label class="control-label col-md-3"></label>
+		<div class="col-md-5">
+			<div class="radio inline-block">
+				<div class="custom-radio m-right-xs">
+					<input type="radio" id="display1" name="info[status]" value="1" checked="">
+					<label for="display1"></label>
+				</div>
+				<div class="inline-block vertical-top">正常</div>
+				<div class="custom-radio m-right-xs">
+					<input type="radio" id="display2" name="info[status]" value="0" >
+					<label for="display2"></label>
+				</div>
+				<div class="inline-block vertical-top">禁止</div>
+			</div>
+		</div>
+	</div> -->
+	<div class="text-center m-top-md">
+		<button type="submit" class="btn btn-info">提交</button>
+	</div>
+</form>
+<script src="<?php echo C('ADMIN_JS_PATH');?>/jquery.validate.min.js" type="text/javascript"></script>
+<script src="<?php echo C('ADMIN_JS_PATH');?>/ajaxupload.js" type="text/javascript"></script>
+<script type="text/javascript">
+	$(function(){
+        $("#form").validate({
+        	rules:{
+        		"info[username]":{
+        			required: true,
+        			minlength: 5
+        		},
+        		"password":{
+        			required: true,
+        			minlength: 5
+        		}
+        	},
+        	messages:{
+        		"info[username]":{
+			        required: "请输入用户名",
+			        minlength: "用户名至少由五个字符组成"
+			     },
+			     "password":{
+			        required: "请输入密码",
+			        minlength: "密码至少由五个字符组成"
+			     }
+        	},
+	        submitHandler:function(form){
+	            confirm();
+	        }
+	    });
+        // 创建一个上传参数
+        var uploadOption = {
+            // 提交目标url
+            action: "/util.php/Attachment/Index/adminUploadOne",
+			// 服务端接收的名称
+			name: "file",
+            // 自动提交
+            autoSubmit: true,
+            // 选择文件之后…
+            onChange: function (file, extension) {
+                if (new RegExp(/(jpg)|(jpeg)|(gif)|(png)/i).test(extension)) {
+                	$("#upload").removeClass("hide");
+                    $("#filepath").text(file);
+                } else {
+                    DMS.alert("只限上传图片文件，请重新选择！");
+                }
+            },
+            // 开始上传文件
+            onSubmit: function (file, extension) {
+                $("#upload").text("正在上传");
+            },
+            // 上传完成之后
+            onComplete: function (file, response) {
+            	var response = JSON.parse(jQuery(response).text());
+            	if(response.status == 'success'){
+            		$("#upload").text("上传完成");
+            		$("[name='info[avatar]']").val(response.path);
+            		$("#avatar").attr("src",response.path);
+            	}
+            }
+        }
+
+        // 初始化图片上传框
+        var oAjaxUpload = new AjaxUpload('#selector', uploadOption);
+        // 给上传按钮增加上传动作
+        $("#upload").click(function (){
+            oAjaxUpload.submit();
+        });
+    })
+
+	function confirm() {
+		DMS.ajaxPost("/WFGarden/manager.php?s=/Admin/adminAdd",$('#form').serialize(),function(ret){
+			if(ret.status==1){
+            	DMS.success("提交成功",0,function(){
+					if(ret.url){
+            			window.location.href = ret.url;
+            		}else{
+            			window.location.href = window.location.href;
+            		}
+				});
+            }else{
+            	DMS.error(''+ret.info+'',0);
+            }
+		})
+    }
+</script>

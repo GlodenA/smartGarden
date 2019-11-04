@@ -1,0 +1,66 @@
+<div class="padding-md">
+	<div class="smart-widget widget-dark-blue">
+        <div class="paddingTLR-md">
+            <a href="__CONTROLLER__/ucpaasInfo" class="btn btn-xs">平台信息</a>
+            <a href="#" class="btn btn-xs btn-info">配置</a>
+            <a href="__CONTROLLER__/ucpaasTpl" class="btn btn-xs">短信模板</a>
+        </div>
+		<div class="smart-widget-inner">
+			<div class="smart-widget-body">
+                <div class="alert alert-warning alert-custom alert-dismissible" role="alert">
+                    <i class="fa fa-exclamation-circle m-right-xs"></i> <strong>说明</strong>
+                    短信模块集成了云之讯推送，请前往云之讯官方网站注册账号，并按说明文档进行相关设置。
+                    云之讯官方网站（<a href="http://www.ucpaas.com/" target="_blank">http://www.ucpaas.com/</a>）
+                </div>
+				<form class="form-horizontal m-top-sm" method="post" id="form">
+                    <div class="form-group">
+                        <label class="control-label col-md-2">应用ID</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control input-sm" name="ucpaas_app_id" value="{$ucpaas_app_id}" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Account Sid</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control input-sm" name="ucpaas_account_sid" value="{$ucpaas_account_sid}" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Auth Token</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control input-sm" name="ucpaas_auth_token" value="{$ucpaas_auth_token}" required>
+                        </div>
+                    </div>
+                    <div class="text-center m-top-md">
+                        <button type="submit" class="btn btn-info">提交</button>
+                    </div>
+                </form>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="{:C('ADMIN_JS_PATH')}/jquery.validate.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function(){
+        $("#form").validate({
+            submitHandler:function(form){
+                confirm();
+            }
+        });
+    })
+    function confirm() {
+        DMS.ajaxPost("__CONTROLLER__/ucpaasSetting",$('#form').serialize(),function(ret){
+            if(ret.status==1){
+                DMS.success(ret.info,0,function(){
+                    if(ret.url){
+                        window.location.href = ret.url;
+                    }else{
+                        window.location.href = window.location.href;
+                    }
+                });
+            }else{
+                DMS.error(''+ret.info+'',0);
+            }
+        })
+    }
+</script>

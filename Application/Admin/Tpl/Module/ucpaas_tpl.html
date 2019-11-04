@@ -1,0 +1,102 @@
+<div class="padding-md">
+	<div class="smart-widget widget-dark-blue">
+        <div class="paddingTLR-md">
+            <a href="__CONTROLLER__/ucpaasInfo" class="btn btn-xs">平台信息</a>
+            <a href="__CONTROLLER__/ucpaasSetting" class="btn btn-xs">配置</a>
+            <a href="#" class="btn btn-xs btn-info">短信模板</a>
+        </div>
+		<div class="smart-widget-inner">
+			<div class="smart-widget-body">
+                <div class="alert alert-warning alert-custom alert-dismissible" role="alert">
+                    <i class="fa fa-exclamation-circle m-right-xs"></i> <strong>说明</strong>
+                    请到云之讯官方网站配置相关模板，并按照下方模板实例格式进行填写，{1},{2}分别对应云之讯模板参数
+                </div>
+				<form class="form-horizontal m-top-sm" method="post" id="form">
+                    <h5 class="text-primary">用户注册类</h5>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">对应云之讯模板ID</label>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control input-sm" name="info[register][tpl_id]" value="{$data['register']['tpl_id']}" required>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">状态</label>
+                        <div class="col-md-4 m-top-xs">
+                            <input type="radio" name="info[register][status]" value="1" <if condition="$data['register']['status'] eq 1">checked</if>> 开启
+                            <input type="radio" name="info[register][status]" value="0" <if condition="$data['register']['status'] eq 0">checked</if>> 关闭
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">对应模板内容格式</label>
+                        <div class="col-md-8 m-top-xs">您的验证码为{1}，请于{2}分钟内正确输入验证码</div>
+                    </div>
+                    <h5 class="text-primary">密码找回</h5>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">对应云之讯模板ID</label>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control input-sm" name="info[forgetPassword][tpl_id]" value="{$data['forgetPassword']['tpl_id']}" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">状态</label>
+                        <div class="col-md-4 m-top-xs">
+                            <input type="radio" name="info[forgetPassword][status]" value="1" <if condition="$data['forgetPassword']['status'] eq 1">checked</if>> 开启
+                            <input type="radio" name="info[forgetPassword][status]" value="0" <if condition="$data['forgetPassword']['status'] eq 0">checked</if>> 关闭
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">对应模板内容格式</label>
+                        <div class="col-md-8 m-top-xs">您的验证码为{1}，请于{2}分钟内正确输入验证码</div>
+                    </div>
+                    <h5 class="text-primary">订单通知</h5>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">对应云之讯模板ID</label>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control input-sm" name="info[order][tpl_id]" value="{$data['order']['tpl_id']}" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">状态</label>
+                        <div class="col-md-4 m-top-xs">
+                            <input type="radio" name="info[order][status]" value="1" <if condition="$data['order']['status'] eq 1">checked</if>> 开启
+                            <input type="radio" name="info[order][status]" value="0" <if condition="$data['order']['status'] eq 0">checked</if>> 关闭
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">对应模板内容格式</label>
+                        <div class="col-md-8 m-top-xs">您有新的订单，订单号为{1}</div>
+                    </div>
+                    <div class="text-center m-top-md">
+                        <button type="submit" class="btn btn-info">提交</button>
+                    </div>
+                </form>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="{:C('ADMIN_JS_PATH')}/jquery.validate.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function(){
+        $("#form").validate({
+            submitHandler:function(form){
+                confirm();
+            }
+        });
+    })
+    function confirm() {
+        DMS.ajaxPost("__CONTROLLER__/ucpaasTpl",$('#form').serialize(),function(ret){
+            if(ret.status==1){
+                DMS.success(ret.info,0,function(){
+                    if(ret.url){
+                        window.location.href = ret.url;
+                    }else{
+                        window.location.href = window.location.href;
+                    }
+                });
+            }else{
+                DMS.error(''+ret.info+'',0);
+            }
+        })
+    }
+</script>

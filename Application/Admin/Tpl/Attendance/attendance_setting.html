@@ -1,0 +1,87 @@
+<div class="padding-md">
+	<div>
+		<ul class="breadcrumb">
+			当前位置：
+			<li><a href="__MODULE__/Index/main"> 主页</a></li>
+			<li><a href="__ACTION__">考勤设置</a></li>
+		</ul>
+	</div>
+	<div class="smart-widget widget-dark-blue">
+		<div class="smart-widget-inner padding-md">
+			<div class="smart-widget-body">
+				<form class="form-horizontal no-margin" method="post" id="form">
+					<div class="form-group">
+						<label class="control-label col-md-4">允许设备误差时间(秒数)</label>
+						<div class="col-md-2">
+							<input type="number" class="form-control" name="info[error_time]" value="{$error_time}" id="error_time" required>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-4">允许设备静止多长时间报警(秒数)</label>
+						<div class="col-md-2">
+							<input type="number" class="form-control" name="info[still_time]" value="{$still_time}" id="still_time" required>
+						</div>
+					</div>
+					<!--<div class="form-group">-->
+						<!--<label class="control-label col-md-4">静止报警时间间隔(秒数)</label>-->
+						<!--<div class="col-md-2">-->
+							<!--<input type="number" class="form-control" name="info[still_time_interval]" value="{$still_time_interval}" id="still_time_interval" required>-->
+						<!--</div>-->
+					<!--</div>-->
+					<div class="form-group">
+						<label class="control-label col-md-4">允许超过上班开始多长时间算是迟到(秒数)</label>
+						<div class="col-md-2">
+							<input type="number" class="form-control" name="info[late_time]" value="{$late_time}" id="late_time" required>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-4">允许超过上班开始多长时间算是旷工(秒数)</label>
+						<div class="col-md-2">
+							<input type="number" class="form-control" name="info[absenteeism_time]" value="{$absenteeism_time}" id="absenteeism_time" required>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-4">允许设备远离区域多长时间报警(秒数)</label>
+						<div class="col-md-2">
+							<input type="number" class="form-control" name="info[distance_time]" value="{$distance_time}" id="distance_time" required>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-4">允许设备远离区域多长时间算是早退(秒数)</label>
+						<div class="col-md-2">
+							<input type="number" class="form-control" name="info[leave_time]" value="{$leave_time}" id="leave_time" required>
+						</div>
+					</div>
+					<div class="text-center m-top-md">
+						<button type="submit" class="btn btn-info">提交保存</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="{:C('ADMIN_JS_PATH')}/jquery.validate.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+	$(function(){
+        $("#form").validate({
+	        submitHandler:function(form){
+	            save();
+	        }
+	    });
+    })
+	function save() {
+		DMS.ajaxPost("__CONTROLLER__/attendanceSetting",$('#form').serialize(),function(ret,err){
+			if(ret.status==1){
+            	DMS.success(ret.info,1000,function(){
+					if(ret.url){
+            			window.location.href = ret.url;
+            		}else{
+            			window.location.href = window.location.href;
+            		}
+				});
+            }else{
+            	DMS.error(''+ret.info+'',0);
+            }
+		})
+    }
+</script>

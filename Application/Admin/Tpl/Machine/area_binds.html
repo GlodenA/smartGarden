@@ -1,0 +1,64 @@
+<form class="form-horizontal no-margin" id="area-form">
+    <input type="hidden" class="input-sm" name="machineids" value="{$machineids}">
+    <div class="form-group">
+        <label class="control-label col-md-2">关键字查询</label>
+        <div class="col-md-6">
+            <input type="text" class="form-control" id="keyword" placeholder="请输入区域名称">
+        </div>
+        <a href="javascript:getAreaList();" class="btn btn-sm btn-success">查询</a>
+    </div>
+</form>
+<form class="form-horizontal no-margin" method="post" id="form">
+    <input type="hidden" name="machineids" value="{$machineids}">
+    <div class="form-group"  id="area">
+        <label class="control-label col-md-3"></label>
+        <div class="col-md-5">
+            <select class="form-control m-top-md" name="info[area_id]">
+                <option value="0">--解除区域--</option>
+                <foreach name="areaList" item="v">
+                    <option value="{$v['id']}">{$v['area_name']}</option>
+                </foreach>
+            </select>
+        </div>
+    </div>
+    <div class="text-center m-top-md">
+        <button type="submit" class="btn btn-info">提交</button>
+    </div>
+</form>
+<script src="{:C('ADMIN_JS_PATH')}/jquery.validate.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function(){
+        $("#form").validate({
+            submitHandler:function(form){
+                confirm();
+            }
+        });
+    })
+    function confirm() {
+        DMS.ajaxPost("__CONTROLLER__/areaBinds",$('#form').serialize(),function(ret){
+            if(ret.status==1){
+                DMS.success("提交成功",0,function(){
+                    window.location.reload();
+                });
+            }else{
+                DMS.error(''+ret.info+'',0);
+            }
+        })
+    }
+    function getAreaList(){
+        var keywords = $('#keyword').val();
+        var item = document.getElementById("area");
+        var url = '__CONTROLLER__/getAreaList';
+        $.post(url,{'keywords':keywords},function(data){
+            if(data){
+                item.querySelector("select").innerHTML = "";
+                data = '<option value="0">-解除区域-</option>'+ data;
+                item.querySelector("select").innerHTML = data;
+            }else{
+                layer.msg("查无此区域");
+                return;
+            }
+        });
+
+    }
+</script>

@@ -1,0 +1,153 @@
+            <footer class="footer">
+                <!-- <img src="{:C('ADMIN_IMAGE_PATH')}/logo-w.png" /> -->
+                <p class="no-margin">
+                    &copy; <strong>中国联合网络通信有限公司潍坊分公司</strong>. ALL Rights Reserved.
+                </p>
+            </footer>
+        </div>
+       <!-- <audio id="alarmAudio" muted src="__ROOT__/Public/Admin/File/alarm.mp3" style="display:none">不支持的浏览器</audio>-->
+    </body>
+    <script type="text/javascript">
+         var context = new (window.AudioContext || window.webkitAudioContext)();
+            var source = null;
+            var audioBuffer = null;
+            function stopSound() {
+                if (source) {
+                    source.noteOff(0); //立即停止
+                }
+            }
+            function playSound() {
+                source = context.createBufferSource();
+                source.buffer = audioBuffer;
+                source.loop = false;
+                source.connect(context.destination);
+                source.start(0); //立即播放
+            }
+            function initSound(arrayBuffer) {
+                context.decodeAudioData(arrayBuffer, function(buffer) { //解码成功时的回调函数
+                    audioBuffer = buffer;
+                    playSound();
+                }, function(e) { //解码出错时的回调函数
+                    console.log('Error decoding file', e);
+                });
+            }
+            function loadAudioFile(url) {
+                var xhr = new XMLHttpRequest(); //通过XHR下载音频文件
+                xhr.open('GET', url, true);
+                xhr.responseType = 'arraybuffer';
+                xhr.onload = function(e) { //下载完成
+                    initSound(this.response);
+                };
+                xhr.send();
+            }
+        $(function(){
+            var getWindowSize = function(){
+                return ["Height","Width"].map(function(name){
+                  return window["inner"+name] ||
+                    document.compatMode === "CSS1Compat" && document.documentElement[ "client" + name ] || document.body[ "client" + name ]
+                });
+            }
+            var str = getWindowSize();
+            var strs = new Array();
+                strs = str.toString().split(",");
+            var heights = strs[0],Body = $('body');
+            var headerH = $('.top-nav').outerHeight();
+            var currentH = $('#breadcrumb').outerHeight();
+            var footerH = $('.footer').outerHeight();
+            $('#content-wrapper').attr("height",""+window.innerHeight-headerH-currentH-footerH-5+"");
+            if(strs[1]<980){
+                Body.attr('scroll','');
+            }else{
+                Body.attr('scroll','no');
+            }
+
+
+            setInterval(function(){
+                getWarningMessage();
+            },5000);
+        })
+         var html = '';
+        function getWarningMessage() {
+            $.ajax({
+                url:'__APP__/Map/getWarningMessage',
+                data:{last_id:localStorage.getItem('last_id')},
+                dataType: 'json',
+                type:'post',
+                success:function(ret){
+                    if(ret.status == 1){
+                        var data = ret.data;
+                        localStorage.setItem('last_id',data[0].id);
+                        for(var i in data){
+                            if(data[i].type == 2){
+                                html +=
+                                        '<a>'+
+                                        '<span class="notification-icon bg-warning">'+
+                                        '<i class="fa fa-warning"></i>'+
+                                        '</span>'+
+                                        '<span class="m-left-xs">'+data[i].realname+',工号:'+data[i].job_number+'远离区域报警</span>'+
+                                        '<span class="time text-muted">'+data[i].add_time+'</span>'+
+                                        '</a>';
+                            }else if(data[i].type == 4){
+                                html +=
+                                        '<a>'+
+                                        '<span class="notification-icon bg-warning">'+
+                                        '<i class="fa fa-warning"></i>'+
+                                        '</span>'+
+                                        '<span class="m-left-xs">'+data[i].realname+',工号:'+data[i].job_number+'迟到报警</span>'+
+                                        '<span class="time text-muted">'+data[i].add_time+'</span>'+
+                                        '</a>';
+                            }else if(data[i].type == 5){
+                                html +=
+                                        '<a>'+
+                                        '<span class="notification-icon bg-warning">'+
+                                        '<i class="fa fa-warning"></i>'+
+                                        '</span>'+
+                                        '<span class="m-left-xs">'+data[i].realname+',工号:'+data[i].job_number+'旷工报警</span>'+
+                                        '<span class="time text-muted">'+data[i].add_time+'</span>'+
+                                        '</a>';
+                            }else if(data[i].type == 6){
+                                html +=
+                                        '<a>'+
+                                        '<span class="notification-icon bg-warning">'+
+                                        '<i class="fa fa-warning"></i>'+
+                                        '</span>'+
+                                        '<span class="m-left-xs">'+data[i].realname+',工号:'+data[i].job_number+'早退报警</span>'+
+                                        '<span class="time text-muted">'+data[i].add_time+'</span>'+
+                                        '</a>';
+                            } else if(data[i].type == 3){
+                                html +=
+                                        '<a>'+
+                                        '<span class="notification-icon bg-warning">'+
+                                        '<i class="fa fa-warning"></i>'+
+                                        '</span>'+
+                                        '<span class="m-left-xs">'+data[i].realname+',工号:'+data[i].job_number+'设备电量过低</span>'+
+                                        '<span class="time text-muted">'+data[i].add_time+'</span>'+
+                                        '</a>';
+                            }else if(data[i].type == 7){
+                                html +=
+                                        '<a>'+
+                                        '<span class="notification-icon bg-warning">'+
+                                        '<i class="fa fa-warning"></i>'+
+                                        '</span>'+
+                                        '<span class="m-left-xs">'+data[i].realname+',工号:'+data[i].job_number+'静止报警</span>'+
+                                        '<span class="time text-muted">'+data[i].add_time+'</span>'+
+                                        '</a>';
+                            }
+
+                        }
+                        $('#message-list').html(html);
+                        loadAudioFile('__ROOT__/Public/Admin/File/alarm.mp3');
+                    }
+//                    else{
+//                        document.getElementById("reddot").style.display="none";
+//                    }
+                }
+            });
+        }
+
+
+        // loadAudioFile('__ROOT__/Public/Admin/File/alarm.mp3');
+
+
+    </script>
+</html>

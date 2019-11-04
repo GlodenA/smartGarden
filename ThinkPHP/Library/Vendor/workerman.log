@@ -1,0 +1,182 @@
+2019-04-10 12:02:47 pid:16620 Workerman[/www/web/dw/public_html/push.php] start in DAEMON mode
+2019-04-10 12:03:36 pid:16626 Workerman[/www/web/dw/public_html/push.php] start in DAEMON mode
+2019-04-10 12:03:36 pid:16626 Workerman[/www/web/dw/public_html/push.php] already running
+2019-04-10 12:03:53 pid:16627 Workerman[/www/web/dw/public_html/push.php] start in DAEMON mode
+2019-04-10 12:03:53 pid:16627 Workerman[/www/web/dw/public_html/push.php] already running
+2019-04-10 12:04:10 pid:16628 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-04-10 12:04:10 pid:16628 Workerman[/www/web/dw/public_html/push.php] is stopping ...
+2019-04-10 12:04:10 pid:16622 Workerman[push.php] stopping ...
+2019-04-10 12:04:10 pid:16622 Workerman[push.php] has been stopped
+2019-04-10 12:04:10 pid:16628 Workerman[/www/web/dw/public_html/push.php] stop success
+2019-04-10 12:04:13 pid:16629 Workerman[/www/web/dw/public_html/push.php] start in DAEMON mode
+2019-04-10 12:04:20 pid:16633 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-04-10 12:04:20 pid:16633 Workerman[/www/web/dw/public_html/push.php] is stopping ...
+2019-04-10 12:04:20 pid:16631 Workerman[push.php] stopping ...
+2019-04-10 12:04:20 pid:16631 Workerman[push.php] has been stopped
+2019-04-10 12:04:20 pid:16633 Workerman[/www/web/dw/public_html/push.php] stop success
+2019-04-10 12:04:24 pid:16634 Workerman[/www/web/dw/public_html/push.php] start in DAEMON mode
+2019-04-10 23:20:04 pid:16637 Worker[16637] process terminated with ERROR: E_ERROR "Uncaught exception 'Exception' with message 'SQLSTATE[HY000] [1045] Access denied for user 'yuanlindb'@'localhost' (using password: YES)' in /www/web/dw/public_html/medoo.min.php:22
+Stack trace:
+#0 /www/web/dw/public_html/push.php(35): medoo->__construct(Array)
+#1 [internal function]: {closure}()
+#2 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Events/Select.php(239): call_user_func_array(Object(Closure), Array)
+#3 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Events/Select.php(282): Workerman\Events\Select->tick()
+#4 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Worker.php(2321): Workerman\Events\Select->loop()
+#5 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Worker.php(1452): Workerman\Worker->run()
+#6 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Worker.php(1282): Workerman\Worker::forkOneWorkerForLinux(Object(Workerman\Worker))
+#7 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Worker.php(1256): Workerman\Worker::forkWorkersForLinux()
+# in /www/web/dw/public_html/medoo.min.php on line 22"
+2019-04-10 23:20:04 pid:16636 worker[none:16637] exit with status 65280
+2019-04-11 01:00:10 pid:17604 Worker[17604] process terminated with ERROR: E_ERROR "Uncaught exception 'Exception' with message 'SQLSTATE[HY000] [1045] Access denied for user 'yuanlindb'@'localhost' (using password: YES)' in /www/web/dw/public_html/medoo.min.php:22
+Stack trace:
+#0 /www/web/dw/public_html/push.php(24): medoo->__construct(Array)
+#1 [internal function]: {closure}()
+#2 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Events/Select.php(239): call_user_func_array(Object(Closure), Array)
+#3 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Events/Select.php(282): Workerman\Events\Select->tick()
+#4 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Worker.php(2321): Workerman\Events\Select->loop()
+#5 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Worker.php(1452): Workerman\Worker->run()
+#6 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Worker.php(1282): Workerman\Worker::forkOneWorkerForLinux(Object(Workerman\Worker))
+#7 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Worker.php(1256): Workerman\Worker::forkWorkersForLinux()
+# in /www/web/dw/public_html/medoo.min.php on line 22"
+2019-04-11 01:00:10 pid:16636 worker[none:17604] exit with status 65280
+2019-04-11 13:27:51 pid:19211 Workerman[/www/web/dw/public_html/push.php] restart 
+2019-04-11 13:27:51 pid:19211 Workerman[/www/web/dw/public_html/push.php] is stopping ...
+2019-04-11 13:27:51 pid:16636 Workerman[push.php] stopping ...
+2019-04-11 13:27:51 pid:16636 Workerman[push.php] has been stopped
+2019-04-11 13:27:51 pid:19211 Workerman[/www/web/dw/public_html/push.php] stop success
+2019-04-11 23:20:26 pid:19214 Worker[19214] process terminated with ERROR: E_ERROR "Uncaught exception 'Exception' with message 'SQLSTATE[HY000] [1045] Access denied for user 'yuanlindb'@'localhost' (using password: YES)' in /www/web/dw/public_html/medoo.min.php:22
+Stack trace:
+#0 /www/web/dw/public_html/push.php(35): medoo->__construct(Array)
+#1 [internal function]: {closure}()
+#2 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Events/Select.php(239): call_user_func_array(Object(Closure), Array)
+#3 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Events/Select.php(282): Workerman\Events\Select->tick()
+#4 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Worker.php(2321): Workerman\Events\Select->loop()
+#5 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Worker.php(1452): Workerman\Worker->run()
+#6 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Worker.php(1282): Workerman\Worker::forkOneWorkerForLinux(Object(Workerman\Worker))
+#7 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Worker.php(1256): Workerman\Worker::forkWorkersForLinux()
+# in /www/web/dw/public_html/medoo.min.php on line 22"
+2019-04-11 23:20:26 pid:19213 worker[none:19214] exit with status 65280
+2019-04-12 01:00:32 pid:20086 Worker[20086] process terminated with ERROR: E_ERROR "Uncaught exception 'Exception' with message 'SQLSTATE[HY000] [1045] Access denied for user 'yuanlindb'@'localhost' (using password: YES)' in /www/web/dw/public_html/medoo.min.php:22
+Stack trace:
+#0 /www/web/dw/public_html/push.php(24): medoo->__construct(Array)
+#1 [internal function]: {closure}()
+#2 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Events/Select.php(239): call_user_func_array(Object(Closure), Array)
+#3 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Events/Select.php(282): Workerman\Events\Select->tick()
+#4 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Worker.php(2321): Workerman\Events\Select->loop()
+#5 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Worker.php(1452): Workerman\Worker->run()
+#6 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Worker.php(1282): Workerman\Worker::forkOneWorkerForLinux(Object(Workerman\Worker))
+#7 /www/web/dw/public_html/ThinkPHP/Library/Vendor/Workerman/Worker.php(1256): Workerman\Worker::forkWorkersForLinux()
+# in /www/web/dw/public_html/medoo.min.php on line 22"
+2019-04-12 01:00:32 pid:19213 worker[none:20086] exit with status 65280
+2019-04-12 14:55:10 pid:22934 Workerman[/www/web/dw/public_html/push.php] start in DAEMON mode
+2019-04-12 14:55:10 pid:22934 Workerman[/www/web/dw/public_html/push.php] already running
+2019-04-12 14:55:32 pid:22935 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-04-12 14:55:32 pid:22935 Workerman[/www/web/dw/public_html/push.php] is stopping ...
+2019-04-12 14:55:32 pid:19213 Workerman[push.php] stopping ...
+2019-04-12 14:55:32 pid:19213 Workerman[push.php] has been stopped
+2019-04-12 14:55:32 pid:22935 Workerman[/www/web/dw/public_html/push.php] stop success
+2019-04-12 14:55:58 pid:22936 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-04-12 14:55:58 pid:22936 Workerman[/www/web/dw/public_html/push.php] not run
+2019-04-12 14:57:26 pid:22938 Workerman[/www/web/dw/public_html/push.php] restart 
+2019-04-12 14:57:26 pid:22938 Workerman[/www/web/dw/public_html/push.php] is stopping ...
+2019-04-12 14:57:26 pid:22938 Workerman[/www/web/dw/public_html/push.php] stop success
+2019-04-15 13:58:07 pid:30292 Workerman[/www/web/dw/public_html/push.php] restart 
+2019-04-15 13:58:07 pid:30292 Workerman[/www/web/dw/public_html/push.php] is stopping ...
+2019-04-15 13:58:07 pid:22940 Workerman[push.php] stopping ...
+2019-04-15 13:58:07 pid:22940 Workerman[push.php] has been stopped
+2019-04-15 13:58:07 pid:30292 Workerman[/www/web/dw/public_html/push.php] stop success
+2019-05-10 11:18:47 pid:30294 Workerman[push.php] stopping ...
+2019-05-10 11:33:37 pid:2986 Workerman[/www/web/dw/public_html/push.php] start in DAEMON mode
+2019-05-10 16:24:09 pid:3691 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-05-10 16:24:09 pid:3691 Workerman[/www/web/dw/public_html/push.php] is stopping ...
+2019-05-10 16:24:09 pid:2988 Workerman[push.php] stopping ...
+2019-05-10 16:24:09 pid:2988 Workerman[push.php] has been stopped
+2019-05-10 16:24:09 pid:3691 Workerman[/www/web/dw/public_html/push.php] stop success
+2019-05-10 16:24:12 pid:3692 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-05-10 16:24:12 pid:3692 Workerman[/www/web/dw/public_html/push.php] not run
+2019-05-10 16:24:14 pid:3693 Workerman[/www/web/dw/public_html/push.php] start in DAEMON mode
+2019-05-10 16:26:42 pid:3696 Worker[3696] process terminated with ERROR: E_ERROR "Using $this when not in object context in /www/web/dw/public_html/push.php on line 306"
+2019-05-10 16:26:42 pid:3695 worker[none:3696] exit with status 65280
+2019-05-10 16:27:11 pid:3703 Worker[3703] process terminated with ERROR: E_ERROR "Using $this when not in object context in /www/web/dw/public_html/push.php on line 306"
+2019-05-10 16:27:11 pid:3695 worker[none:3703] exit with status 65280
+2019-05-10 16:27:42 pid:3706 Worker[3706] process terminated with ERROR: E_ERROR "Using $this when not in object context in /www/web/dw/public_html/push.php on line 306"
+2019-05-10 16:27:42 pid:3695 worker[none:3706] exit with status 65280
+2019-05-10 16:27:55 pid:3712 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-05-10 16:27:55 pid:3712 Workerman[/www/web/dw/public_html/push.php] is stopping ...
+2019-05-10 16:27:55 pid:3695 Workerman[push.php] stopping ...
+2019-05-10 16:27:57 pid:3695 worker[none:3709] exit with status 9
+2019-05-10 16:27:57 pid:3695 Workerman[push.php] has been stopped
+2019-05-10 16:27:57 pid:3712 Workerman[/www/web/dw/public_html/push.php] stop success
+2019-05-10 16:28:00 pid:3713 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-05-10 16:28:00 pid:3713 Workerman[/www/web/dw/public_html/push.php] not run
+2019-05-10 16:28:01 pid:3714 Workerman[/www/web/dw/public_html/push.php] start in DAEMON mode
+2019-05-10 16:28:41 pid:3717 Worker[3717] process terminated with ERROR: E_ERROR "Using $this when not in object context in /www/web/dw/public_html/push.php on line 306"
+2019-05-10 16:28:41 pid:3716 worker[none:3717] exit with status 65280
+2019-05-10 16:29:10 pid:3720 Worker[3720] process terminated with ERROR: E_ERROR "Using $this when not in object context in /www/web/dw/public_html/push.php on line 306"
+2019-05-10 16:29:10 pid:3716 worker[none:3720] exit with status 65280
+2019-05-10 16:29:38 pid:3723 Worker[3723] process terminated with ERROR: E_ERROR "Using $this when not in object context in /www/web/dw/public_html/push.php on line 306"
+2019-05-10 16:29:38 pid:3716 worker[none:3723] exit with status 65280
+2019-05-10 16:30:08 pid:3726 Worker[3726] process terminated with ERROR: E_ERROR "Using $this when not in object context in /www/web/dw/public_html/push.php on line 306"
+2019-05-10 16:30:08 pid:3716 worker[none:3726] exit with status 65280
+2019-05-10 16:30:35 pid:3753 Worker[3753] process terminated with ERROR: E_ERROR "Using $this when not in object context in /www/web/dw/public_html/push.php on line 306"
+2019-05-10 16:30:35 pid:3716 worker[none:3753] exit with status 65280
+2019-05-10 16:31:04 pid:3756 Worker[3756] process terminated with ERROR: E_ERROR "Using $this when not in object context in /www/web/dw/public_html/push.php on line 306"
+2019-05-10 16:31:04 pid:3716 worker[none:3756] exit with status 65280
+2019-05-10 16:31:32 pid:3759 Worker[3759] process terminated with ERROR: E_ERROR "Using $this when not in object context in /www/web/dw/public_html/push.php on line 306"
+2019-05-10 16:31:32 pid:3716 worker[none:3759] exit with status 65280
+2019-05-10 16:32:01 pid:3762 Worker[3762] process terminated with ERROR: E_ERROR "Using $this when not in object context in /www/web/dw/public_html/push.php on line 306"
+2019-05-10 16:32:01 pid:3716 worker[none:3762] exit with status 65280
+2019-05-10 16:32:29 pid:3765 Worker[3765] process terminated with ERROR: E_ERROR "Using $this when not in object context in /www/web/dw/public_html/push.php on line 306"
+2019-05-10 16:32:29 pid:3716 worker[none:3765] exit with status 65280
+2019-05-10 16:32:58 pid:3771 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-05-10 16:32:58 pid:3771 Workerman[/www/web/dw/public_html/push.php] is stopping ...
+2019-05-10 16:32:58 pid:3716 Workerman[push.php] stopping ...
+2019-05-10 16:32:58 pid:3716 Workerman[push.php] has been stopped
+2019-05-10 16:32:58 pid:3771 Workerman[/www/web/dw/public_html/push.php] stop success
+2019-05-10 16:32:59 pid:3772 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-05-10 16:32:59 pid:3772 Workerman[/www/web/dw/public_html/push.php] not run
+2019-05-10 16:33:00 pid:3773 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-05-10 16:33:00 pid:3773 Workerman[/www/web/dw/public_html/push.php] not run
+2019-05-10 16:33:11 pid:3774 Workerman[/www/web/dw/public_html/push.php] start in DAEMON mode
+2019-05-10 16:49:13 pid:3824 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-05-10 16:49:13 pid:3824 Workerman[/www/web/dw/public_html/push.php] is stopping ...
+2019-05-10 16:49:13 pid:3776 Workerman[push.php] stopping ...
+2019-05-10 16:49:13 pid:3776 Workerman[push.php] has been stopped
+2019-05-10 16:49:13 pid:3824 Workerman[/www/web/dw/public_html/push.php] stop success
+2019-05-10 16:49:15 pid:3825 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-05-10 16:49:15 pid:3825 Workerman[/www/web/dw/public_html/push.php] not run
+2019-05-10 16:49:17 pid:3826 Workerman[/www/web/dw/public_html/push.php] start in DAEMON mode
+2019-05-13 10:39:32 pid:15695 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-05-13 10:39:32 pid:15695 Workerman[/www/web/dw/public_html/push.php] is stopping ...
+2019-05-13 10:39:32 pid:3828 Workerman[push.php] stopping ...
+2019-05-13 10:39:32 pid:3828 Workerman[push.php] has been stopped
+2019-05-13 10:39:32 pid:15695 Workerman[/www/web/dw/public_html/push.php] stop success
+2019-05-13 10:39:34 pid:15696 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-05-13 10:39:34 pid:15696 Workerman[/www/web/dw/public_html/push.php] not run
+2019-05-13 10:39:36 pid:15697 Workerman[/www/web/dw/public_html/push.php] start in DAEMON mode
+2019-05-13 18:10:43 pid:15700 Worker[15700] process terminated with ERROR: E_ERROR "Call to undefined function trace() in /www/web/dw/public_html/push.php on line 1123"
+2019-05-13 18:10:43 pid:15699 worker[none:15700] exit with status 65280
+2019-05-14 11:11:07 pid:17315 Worker[17315] process terminated with ERROR: E_ERROR "Call to undefined function trace() in /www/web/dw/public_html/push.php on line 1123"
+2019-05-14 11:11:07 pid:15699 worker[none:17315] exit with status 65280
+2019-05-27 11:22:01 pid:4026 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-05-27 11:22:01 pid:4026 Workerman[/www/web/dw/public_html/push.php] is stopping ...
+2019-05-27 11:22:01 pid:15699 Workerman[push.php] stopping ...
+2019-05-27 11:22:01 pid:15699 Workerman[push.php] has been stopped
+2019-05-27 11:22:01 pid:4026 Workerman[/www/web/dw/public_html/push.php] stop success
+2019-05-27 11:22:02 pid:4027 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-05-27 11:22:02 pid:4027 Workerman[/www/web/dw/public_html/push.php] not run
+2019-05-27 11:22:06 pid:4028 Workerman[/www/web/dw/public_html/push.php] start in DAEMON mode
+2019-05-27 11:24:02 pid:4034 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-05-27 11:24:02 pid:4034 Workerman[/www/web/dw/public_html/push.php] is stopping ...
+2019-05-27 11:24:02 pid:4030 Workerman[push.php] stopping ...
+2019-05-27 11:24:02 pid:4030 Workerman[push.php] has been stopped
+2019-05-27 11:24:02 pid:4034 Workerman[/www/web/dw/public_html/push.php] stop success
+2019-05-27 11:24:03 pid:4035 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-05-27 11:24:03 pid:4035 Workerman[/www/web/dw/public_html/push.php] not run
+2019-05-27 11:24:04 pid:4036 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-05-27 11:24:04 pid:4036 Workerman[/www/web/dw/public_html/push.php] not run
+2019-05-27 11:24:05 pid:4037 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-05-27 11:24:05 pid:4037 Workerman[/www/web/dw/public_html/push.php] not run
+2019-05-27 11:24:05 pid:4038 Workerman[/www/web/dw/public_html/push.php] stop 
+2019-05-27 11:24:05 pid:4038 Workerman[/www/web/dw/public_html/push.php] not run
+2019-05-27 11:24:07 pid:4039 Workerman[/www/web/dw/public_html/push.php] start in DAEMON mode

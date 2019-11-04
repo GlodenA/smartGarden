@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{:C('WEB_NAME')}</title>
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <link rel="shortcut icon" href="/favicon.ico" />
+    	<link rel="bookmark" href="/favicon.ico" />
+	    <link href="{:C('ADMIN_CSS_PATH')}/bootstrap.min.css" rel="stylesheet">
+		<link href="{:C('ADMIN_CSS_PATH')}/font-awesome.min.css" rel="stylesheet">
+		<link href="{:C('ADMIN_CSS_PATH')}/common.css" rel="stylesheet">
+		<script src="{:C('ADMIN_JS_PATH')}/jquery-1.11.1.min.js"></script>
+	    <script src="{:C('ADMIN_JS_PATH')}/bootstrap.min.js" type="text/javascript"></script>
+	    <script src="{:C('ADMIN_JS_PATH')}/common.js"></script>
+	    <script src="{:C('ADMIN_JS_PATH')}/jquery.slimscroll.min.js"></script>
+	    <script src="{:C('ADMIN_JS_PATH')}/layer/layer.js"></script>
+	    <!-- <script src="{:C('ADMIN_JS_PATH')}/admin_template.js"></script>
+	    <script src="{:C('ADMIN_JS_PATH')}/admin.js"></script> -->
+	    <style>
+            .reddot:after {
+                content: "";
+                position: absolute;
+                top: 14px;
+                right: 5px;
+                padding: 3px;
+                z-index: 9999999;
+                background: #d9534f;
+                border-radius: 50%;
+                font-size: 0;
+                line-height: 0;
+                border: 1px solid #d43f3a;
+            }
+</style>
+    </head>
+    <body class="overflow-hidden">
+    	<div class="wrapper preload">
+    		<header class="top-nav">
+				<div class="top-nav-inner">
+					<div class="nav-header">
+						<button type="button" class="navbar-toggle pull-left sidebar-toggle" id="sidebarToggleSM">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<ul class="nav-notification pull-right">
+							<li>
+								<a href="__MODULE__" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog fa-lg"></i></a>
+								<span class="badge badge-danger bounceIn">1</span>
+								<ul class="dropdown-menu dropdown-sm pull-right user-dropdown">
+									<li class="user-avatar">
+										<img src="<if condition="session('admin_avatar')">{:session('admin_avatar')}<else />{:C('ADMIN_IMAGE_PATH')}/profile/profile1.jpg</if>" alt="" class="img-circle">
+										<div class="user-content">
+											<h5 class="no-m-bottom">{:session('admin_realname')}</h5>
+											<div class="m-top-xs">
+												<!--<a href="javascript:;" onclick="openItem(6,'manager.php?s=/Admin/myAdminEdit')" class="m-right-sm">我的资料</a>-->
+												<a href="manager.php?s=/Index/logout">退出</a>
+											</div>
+										</div>
+									</li>
+								</ul>
+							</li>
+						</ul>
+
+						<!-- <a href="__MODULE__" class="brand">
+							<img src="{:C('ADMIN_IMAGE_PATH')}/cyyl_logo.png" />
+						</a> -->
+					</div>
+					<div class="nav-container">
+						<button type="button" class="navbar-toggle pull-left sidebar-toggle" id="sidebarToggleLG">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<div class="pull-right m-right-sm">
+							<div class="user-block hidden-xs">
+								<a href="#" id="userToggle" data-toggle="dropdown">
+									<img src="<if condition="session('admin_avatar')">{:session('admin_avatar')}<else />{:C('ADMIN_IMAGE_PATH')}/avatar.jpg</if>" alt="" class="img-circle inline-block user-profile-pic">
+									<div class="user-detail inline-block">
+										<if condition="session('admin_realname')">{:session('admin_realname')}<else />{:session('admin_username')}</if>
+										<i class="fa fa-angle-down"></i>
+									</div>
+								</a>
+								<div class="panel border dropdown-menu user-panel">
+									<div class="panel-body paddingTB-sm">
+										<ul>
+											<!--<li>-->
+												<!--<a href="javascript:;" onclick="openItem(6,'manager.php?s=/Admin/myAdminEdit')">-->
+													<!--<i class="fa fa-edit fa-lg"></i><span class="m-left-xs">我的资料</span>-->
+												<!--</a>-->
+											<!--</li>-->
+											<li>
+												<a href="manager.php?s=/Index/logout">
+													<i class="fa fa-power-off fa-lg"></i><span class="m-left-xs">退出登录</span>
+												</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<ul class="nav-notification">
+                                <li>
+                                    <a href="#" data-toggle="dropdown"><i class="fa fa-bell fa-lg"></i></a>
+                                    <span class="reddot" id="reddot"></span>
+                                    <ul class="dropdown-menu notification dropdown-3 pull-right" style="min-width:300px;">
+                                        <!--<li><a href="#">员工脱离工作区域告警</a></li>-->
+                                        <li id="message-list">
+                                            <a>
+                                                <span class="notification-icon bg-warning">
+                                                    <i class="fa fa-warning"></i>
+                                                </span>
+                                                <span class="m-left-xs">暂无新报警</span>
+                                                <span class="time text-muted">现在</span>
+                                            </a>
+                                        </li>
+                                        <!--<li><a href="#">查看全部告警信息</a></li>-->
+                                    </ul>
+                                </li>
+
+                            </ul>
+						</div>
+					</div>
+				</div><!-- ./top-nav-inner -->
+			</header>

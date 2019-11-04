@@ -1,0 +1,48 @@
+<aside class="sidebar-menu fixed">
+    <div class="sidebar-inner scrollable-sidebar">
+        <div class="main-menu">
+            <ul class="accordion">
+                <li class="bg-palette1 open">
+                    <a href="__MODULE__">
+                        <span class="menu-content block">
+                            <span class="menu-icon"><i class="block fa fa-dashboard fa-lg"></i></span>
+                            <span class="text m-left-sm">控制台</span>
+                        </span>
+                        <span class="menu-content-hover block">首页</span>
+                    </a>
+                </li>
+                <php>$__MENU__ = session('ADMIN_MENU_LIST');</php>
+                <foreach name="__MENU__" item="v">
+                    <if condition="$v['children']">
+                        <li class="openable bg-palette1" menu-id={$v['id']}>
+                            <a href="__MODULE__/{$v['c']}/{$v['a']}/{$v['data']}">
+                                <span class="menu-content block">
+                                    <span class="menu-icon"><i class="block fa fa-{$v['icon_class']} fa-lg"></i></span>
+                                    <span class="text m-left-sm">{$v['name']}</span>
+                                    <span class="submenu-icon"></span>
+                                </span>
+                                <span class="menu-content-hover block">{$v['name']}</span>
+                            </a>
+                            <ul class="submenu">
+                                <foreach name="v['children']" item="r">
+                                <li><a href="javascript:;" onclick="openItem({$r['id']},'__MODULE__/{$r['c']}/{$r['a']}/{$r['data']}')" id="menu-{$r['id']}"><span class="submenu-label">{$r['name']}</span></a></li>
+                                </foreach>
+                            </ul>
+                        </li>
+                    <else />
+                        <li class="openable bg-palette1" menu-id={$v['id']}>
+                            <a href="javascript:;" onclick="openItem({$r['id']},'__MODULE__/{$r['c']}/{$r['a']}/{$r['data']}')" id="menu-{$r['id']}">
+                                <span class="menu-content block">
+                                    <span class="menu-icon"><i class="block fa fa-{$v['icon_class']} fa-lg"></i></span>
+                                    <span class="text m-left-sm">{$v['name']}</span>
+                                    <span class="submenu-icon"></span>
+                                </span>
+                                <span class="menu-content-hover block">{$v['name']}</span>
+                            </a>
+                        </li>
+                    </if>
+                </foreach>
+            </ul>
+        </div>
+    </div>
+</aside>

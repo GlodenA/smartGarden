@@ -1,0 +1,102 @@
+<form class="form-horizontal no-margin" method="post" id="form">
+	<input type="hidden" name="id" value="{$id}">
+	<div class="form-group">
+		<label class="control-label col-md-3"></label>
+		<div class="col-md-5">
+			<select class="form-control m-top-md" name="info[parent_id]">
+              	<option value="0">作为一级菜单</option>
+               	<foreach name="parentData" item="v">
+				<option value="{$v['id']}" <php>if($v['id']==$parent_id){</php>selected=""<php>}</php>>{$v['name']}</option>
+               	</foreach>
+            </select>
+        </div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-md-3">菜单名称</label>
+		<div class="col-md-5">
+			<input type="text" class="form-control input-sm" name="info[name]" value="{$name}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-md-3">模块名称</label>
+		<div class="col-md-5">
+			<input type="text" class="form-control input-sm" name="info[m]" value="{$m}" readonly="">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-md-3">控制器名称</label>
+		<div class="col-md-5">
+			<input type="text" class="form-control input-sm" name="info[c]" value="{$c}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-md-3">方法名</label>
+		<div class="col-md-5">
+			<input type="text" class="form-control input-sm" name="info[a]" value="{$a}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-md-3">自定义参数</label>
+		<div class="col-md-5">
+			<input type="text" class="form-control input-sm" name="info[data]" value="{$data}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-md-3">排序</label>
+		<div class="col-md-5">
+			<input type="text" class="form-control input-sm" name="info[sort]" value="{$sort}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-md-3">图标CLASS</label>
+		<div class="col-md-5">
+			<input type="text" class="form-control input-sm" name="info[icon_class]" value="{$icon_class}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-md-3"></label>
+		<div class="col-md-5">
+			<div class="radio inline-block">
+				<div class="custom-radio m-right-xs">
+					<input type="radio" id="display1" name="info[is_show]" value="1" <if condition="$is_show eq 1">checked</if>>
+					<label for="display1"></label>
+				</div>
+				<div class="inline-block vertical-top">显示</div>
+				<div class="custom-radio m-right-xs">
+					<input type="radio" id="display2" name="info[is_show]" value="0" <if condition="$is_show eq 0">checked</if>>
+					<label for="display2"></label>
+				</div>
+				<div class="inline-block vertical-top">隐藏</div>
+			</div>
+			<!-- <div id="errorMessageArea1"></div> -->
+		</div>
+	</div>
+	<div class="text-center m-top-md">
+		<button type="submit" class="btn btn-info">提交</button>
+	</div>
+</form>
+<script src="{:C('ADMIN_JS_PATH')}/jquery.validate.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+	$(function(){
+        $("#form").validate({
+	        submitHandler:function(form){
+	            confirm();
+	        }
+	    });
+    })
+	function confirm() {
+		DMS.ajaxPost("__CONTROLLER__/menuEdit",$('#form').serialize(),function(ret){
+			if(ret.status==1){
+            	DMS.success("提交成功",0,function(){
+					if(ret.url){
+            			window.location.href = ret.url;
+            		}else{
+            			window.location.href = window.location.href;
+            		}
+				});
+            }else{
+            	DMS.error("提交失败",0);
+            }
+		})
+    }
+</script>

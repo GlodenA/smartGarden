@@ -1,0 +1,157 @@
+<div class="padding-md">
+	<div class="smart-widget widget-dark-blue">
+		<div class="smart-widget-header">
+            基本设置
+		</div>
+		<div class="smart-widget-inner">
+			<div class="smart-widget-body">
+				<!-- <a class="btn btn-warning btn-sm active" data-toggle="modal" data-target="#normalModal">基本设置</a>
+				<a class="btn btn-success btn-sm" data-toggle="modal" data-target="#normalModal">系统设置</a> -->
+				<form class="form-horizontal no-margin" method="post" id="form">
+					<div class="form-group">
+						<label class="control-label col-md-3">站点名称</label>
+						<div class="col-md-5">
+							<input type="text" class="form-control input-sm" name="info[site_name]" value="{$site_name}" required>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">站点标题</label>
+						<div class="col-md-5">
+							<input type="text" class="form-control input-sm" name="info[site_title]" value="{$site_title}" required>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">URL</label>
+						<div class="col-md-5">
+							<input type="text" class="form-control input-sm" name="info[site_url]" value="{$site_url}" required>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">关键词</label>
+						<div class="col-md-5">
+							<input type="text" class="form-control input-sm" name="info[site_keywords]" value="{$site_keywords}" required>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">描述</label>
+						<div class="col-md-5">
+							<textarea type="text" class="form-control input-sm" name="info[site_description]" required>{$site_description}</textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">站点LOGO</label>
+						<div class="col-md-5">
+							<button type="button" class="btn btn-success btn-sm" id="selector">选取图片</button>
+							<button type="button" class="btn btn-warning btn-sm hide" id="upload">上传</button>
+							<span id="filepath"></span>
+							<input type="hidden" name="info[site_logo]" value="{$site_logo}" />
+							<p class="m-top-sm"><img src="<if condition="$site_logo">{$site_logo}<else />{:C('ADMIN_IMAGE_PATH')}/noimg.png</if>" width="30%" id="site_logo"/></p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">备案号</label>
+						<div class="col-md-5">
+							<input type="text" class="form-control input-sm" name="info[icp_number]" value="{$icp_number}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">站点状态</label>
+						<div class="col-md-5">
+							<div class="radio inline-block">
+								<div class="custom-radio m-right-xs">
+									<input type="radio" id="status1" name="info[site_status]" value="1" checked>
+									<label for="status1"></label>
+								</div>
+								<div class="inline-block vertical-top">开启</div>
+								<div class="custom-radio m-right-xs">
+									<input type="radio" id="status2" name="info[site_status]" value="0">
+									<label for="status2"></label>
+								</div>
+								<div class="inline-block vertical-top">关闭</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">关闭原因</label>
+						<div class="col-md-5">
+							<textarea type="text" class="form-control input-sm" name="info[closed_reason]" >{$closed_reason}</textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-3">热门搜索</label>
+						<div class="col-md-5">
+							<input type="text" class="form-control input-sm" name="info[hot_search]" value="{$hot_search}" placeholder="多个关键词用逗号隔开">
+						</div>
+					</div>
+					<div class="text-center m-top-md">
+						<button type="submit" class="btn btn-info">提交</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="{:C('ADMIN_JS_PATH')}/jquery.validate.min.js" type="text/javascript"></script>
+<script src="{:C('ADMIN_JS_PATH')}/ajaxupload.js" type="text/javascript"></script>
+<script type="text/javascript">
+	$(function(){
+        $("#form").validate({
+	        submitHandler:function(form){
+	            confirm();
+	        }
+	    });
+        // 创建一个上传参数
+        var uploadOption = {
+            // 提交目标
+            action: "/util.php/Attachment/Index/adminUploadOne",
+			// 服务端接收的名称
+			name: "file",
+            // 自动提交
+            autoSubmit: true,
+            // 选择文件之后…
+            onChange: function (file, extension) {
+                if (new RegExp(/(jpg)|(jpeg)|(gif)|(png)/i).test(extension)) {
+                	$("#upload").removeClass("hide");
+                    $("#filepath").text(file);
+                } else {
+                    DMS.alert("只限上传图片文件，请重新选择！");
+                }
+            },
+            // 开始上传文件
+            onSubmit: function (file, extension) {
+                $("#upload").text("正在上传");
+            },
+            // 上传完成之后
+            onComplete: function (file, response) {
+            	var response = JSON.parse(jQuery(response).text());
+            	if(response.status == 'success'){
+            		$("#upload").text("上传完成");
+            		$("[name='info[site_logo]']").val(response.path);
+            		$("#site_logo").attr("src",response.path);
+            	}
+            }
+        }
+
+        // 初始化图片上传框
+        var oAjaxUpload = new AjaxUpload('#selector', uploadOption);
+        // 给上传按钮增加上传动作
+        $("#upload").click(function (){
+            oAjaxUpload.submit();
+        });
+    })
+	function confirm() {
+		DMS.ajaxPost("__CONTROLLER__/siteSetting",$('#form').serialize(),function(ret){
+			if(ret.status==1){
+            	DMS.success("提交成功",0,function(){
+					if(ret.url){
+            			window.location.href = ret.url;
+            		}else{
+            			window.location.href = window.location.href;
+            		}
+				});
+            }else{
+            	DMS.error("提交失败",0);
+            }
+		})
+    }
+</script>

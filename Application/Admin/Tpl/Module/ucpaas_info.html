@@ -1,0 +1,63 @@
+<div class="padding-md">
+	<div class="smart-widget widget-dark-blue">
+        <div class="paddingTLR-md">
+            <a href="#" class="btn btn-xs btn-info">平台信息</a>
+            <a href="__CONTROLLER__/ucpaasSetting" class="btn btn-xs">配置</a>
+            <a href="__CONTROLLER__/ucpaasTpl" class="btn btn-xs">短信模板</a>
+        </div>
+		<div class="smart-widget-inner">
+			<div class="smart-widget-body">
+                <div class="alert alert-warning alert-custom alert-dismissible" role="alert">
+                    <i class="fa fa-exclamation-circle m-right-xs"></i> <strong>说明</strong>
+                    使用云之讯短信模块前，请点击上方配置按钮，进行相关配置
+                </div>
+                <table class="table table-striped table-bordered m-top-sm" id="dataTable">
+                    <tbody>
+                        <tr>
+                            <td>accountSid</td>
+                            <td>{$ucpaasInfo->resp->account->accountSid}</td>
+                        </tr>
+                        <tr>
+                            <td>状态</td>
+                            <td>
+                                <php>if($ucpaasInfo->resp->respCode == '000000'){</php>
+                                <strong class="text-success">正常</strong>
+                                <php>}else if($ucpaasInfo->resp->respCode == '100001'){</php>
+                                <strong class="text-danger">余额不足</strong>
+                                <php>}else{</php>
+                                <strong class="text-danger">错误代码：{$ucpaasInfo->resp->respCode}，请参考（<a href="http://docs.ucpaas.com/doku.php?id=rest_error" target="_blank">http://docs.ucpaas.com/doku.php?id=rest_error</a>）</strong>
+                                <php>}</php>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>姓名</td>
+                            <td>{$ucpaasInfo->resp->account->nickName}</td>
+                        </tr>
+                        <tr>
+                            <td>账户余额</td>
+                            <td><strong class="text-success">{$ucpaasInfo->resp->account->balance} 元</strong></td>
+                        </tr>
+                        <tr>
+                            <td>电话</td>
+                            <td>{$ucpaasInfo->resp->account->mobile}</td>
+                        </tr>
+                        <tr>
+                            <td>邮箱</td>
+                            <td>{$ucpaasInfo->resp->account->email}</td>
+                        </tr>
+                        <tr>
+                            <td>云之讯账户创建时间</td>
+                            <td>{$ucpaasInfo->resp->account->createDate}</td>
+                        </tr>
+                        <tr>
+                            <td>更新时间</td>
+                            <td>{$ucpaasInfo->resp->account->updateDate}</td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+			</div>
+		</div>
+	</div>
+</div>

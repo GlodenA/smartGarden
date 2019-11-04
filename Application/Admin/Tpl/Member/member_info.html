@@ -1,0 +1,50 @@
+<table class="table table-striped table-bordered">
+    <tbody>
+    <tr>
+        <td>姓名</td>
+        <td>{$realname}</td>
+    </tr>
+    <tr>
+        <td>员工号</td>
+        <td>{$job_number}</td>
+    </tr>
+    <tr>
+        <td>手机号</td>
+        <td>{$mobile}</td>
+    </tr>
+    <tr>
+        <td>职位</td>
+        <td>{$position|getPositionName}</td>
+    </tr>
+    <if condition="$parent_id gt 0">
+        <tr>
+            <td>管理人员</td>
+            <td>{$parent_name}</td>
+        </tr>
+    </if>
+    <tr>
+        <td>性别</td>
+        <td>
+            <if condition="$sex eq 1">
+                男
+                <elseif condition="$sex eq 2"/>
+                女
+                <else/>
+                未知
+            </if>
+        </td>
+    </tr>
+    <tr>
+        <td>状态</td>
+        <td>
+            <if condition="$job_status eq 1">
+                <span class="label label-success">在岗</span>
+                <elseif condition="$job_status eq 2"/>
+                <span class="label label-danger">未上岗</span>
+                <else/>
+                <span class="label label-warning">离岗</span>
+            </if>
+        </td>
+    </tr>
+    </tbody>
+</table>

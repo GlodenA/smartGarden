@@ -1,0 +1,55 @@
+<div class="padding-md">
+	<div class="smart-widget widget-dark-blue">
+		<div class="smart-widget-inner">
+			<div class="smart-widget-body">
+                <div class="alert alert-warning alert-custom alert-dismissible" role="alert">
+                    <i class="fa fa-exclamation-circle m-right-xs"></i> <strong>说明</strong>
+                    支付模块集成了ping++的支付宝和微信支付。请前往ping++官方网站注册ping++账号，并按说明文档进行相关设置。
+                    ping++官方网站（<a href="https://www.pingxx.com/" target="_blank">https://www.pingxx.com/</a>）
+                </div>
+				<form class="form-horizontal m-top-sm" method="post" id="form">
+                    <div class="form-group">
+                        <label class="control-label col-md-2">pingxx_app_id</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control input-sm" name="pingxx_app_id" value="{$pingxx_app_id}" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">pingxx_secret_key</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control input-sm" name="pingxx_secret_key" value="{$pingxx_secret_key}" required>
+                        </div>
+                    </div>
+                    <div class="text-center m-top-md">
+                        <button type="submit" class="btn btn-info">提交</button>
+                    </div>
+                </form>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="{:C('ADMIN_JS_PATH')}/jquery.validate.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function(){
+        $("#form").validate({
+            submitHandler:function(form){
+                confirm();
+            }
+        });
+    })
+    function confirm() {
+        DMS.ajaxPost("__CONTROLLER__/paySetting",$('#form').serialize(),function(ret){
+            if(ret.status==1){
+                DMS.success(ret.info,0,function(){
+                    if(ret.url){
+                        window.location.href = ret.url;
+                    }else{
+                        window.location.href = window.location.href;
+                    }
+                });
+            }else{
+                DMS.error(''+ret.info+'',0);
+            }
+        })
+    }
+</script>

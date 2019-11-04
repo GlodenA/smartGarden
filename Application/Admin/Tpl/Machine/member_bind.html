@@ -1,0 +1,171 @@
+<div class="padding-md">
+    <div class="smart-widget widget-dark-blue">
+        <div class="smart-widget-inner padding-md">
+            <div class="smart-widget-body">
+                <form class="form-horizontal no-margin padding-md" id="search_form">
+                    <div class="form-group">
+                        <label class="control-label col-md-2">提示</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="news" value="<if condition='$job_number'>当前设备已绑定员工<else/>当前设备暂无员工绑定</if>" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">当前设备IMEI</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" value="{$machine_imei}" readonly>
+                        </div>
+                    </div>
+                    <if condition='$job_number'>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">当前绑定的员工信息</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" value="员工号：{$job_number}---姓名：{$realname}" readonly>
+                        </div>
+                    </div>
+                        </if>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">员工搜索</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="keyword" placeholder="请输入员工号">
+                        </div>
+                        <a href="javascript:getMemberInfo();" class="btn btn-sm btn-success">查询</a>
+                    </div>
+                </form>
+                <form class="form-horizontal no-margin hide" method="post" id="form">
+                    <input type="hidden" class="form-control" name="info[new_userid]" id="userid">
+                    <input type="hidden" class="form-control" name="info[type]" readonly id="type">
+                    <input type="hidden" class="form-control" name="info[machine_id]" value="{$machine_id}" readonly>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">员工号</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" name="info[job_number]" id="job_number" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">姓名</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" name="info[realname]" id="realname" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group hide" id="machine">
+                        <label class="control-label col-md-2" id="machine_echo">已绑定设备IMEI</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" name="machine_imei" id="machine_imei" readonly>
+                        </div>
+                    </div>
+                    <div class="text-center m-top-md">
+                        <button type="submit" class="btn btn-info" id="sub">确定绑定</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{:C('ADMIN_JS_PATH')}/jquery.validate.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(this).keydown( function(e) {
+        var key = window.event?e.keyCode:e.which;
+        if(key.toString() == "13"){
+            return false;
+        }
+    });
+    var type;
+    // 查询操作
+    function getMemberInfo(){
+        var keywords = $('#keyword').val();
+        if(!keywords){
+            $("#form").addClass("hide");
+//            DMS.error('请输入手机号',0);
+            layer.msg("请输入员工号");
+            return;
+        }
+        DMS.ajaxPost("__CONTROLLER__/getMemberInfo",{keywords:keywords},function(ret){
+            if(ret.status==1){
+                //查询员工已绑定设备
+                var machine_imei = "{$machine_imei}";
+                if(ret.data.machine_imei == machine_imei){
+                    layer.msg("当前员工已与此设备绑定，无需再次绑定");
+                }else{
+                    $("#form").removeClass("hide");
+                    type = 1;
+                    $("#type").val(1);
+                    $("#job_number").val(ret.data.job_number);
+                    $("#realname").val(ret.data.realname);
+                    $("#machine").removeClass("hide");
+                    $("#machine_imei").val(ret.data.machine_imei);
+                    $("#userid").val(ret.data.userid);
+                    $("#sub").html("确认换绑");
+                }
+
+//                $("#machine_imei").val(ret.data.machine_imei);
+
+//                $("#keywords").val(keywords);
+//                $("#userid").val(ret.data.userid);
+//                $("#company_name").val(ret.data.company_name);
+//                $("#send_mobile").val(ret.data.mobile);
+            }else{
+                if(ret.data){
+                    $("#form").removeClass("hide");
+                    $("#userid").val(ret.data.userid);
+                    $("#job_number").val(ret.data.job_number);
+                    $("#realname").val(ret.data.realname);
+                    $("#machine").addClass("hide");
+                    if("{$job_number}"){
+                        //type 1=换绑2=绑定
+                        type = 1;
+                        $("#type").val(1);
+                        $("#sub").html("确认换绑");
+                    }else{
+                        type = 2;
+                        $("#type").val(2);
+                        $("#sub").html("确认绑定");
+                    }
+                }else{
+                    $("#form").addClass("hide");
+                    layer.msg("无此员工信息");
+                }
+            }
+        })
+    }
+    $(function(){
+        $("#form").validate({
+            submitHandler:function(form){
+                save();
+            }
+        });
+    })
+    function save() {
+        if(type == 1){
+            layer.confirm('您确定要换绑员工吗？', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                DMS.ajaxPost("__CONTROLLER__/memberBind",$('#form').serialize(),function(ret,err){
+                    layer.closeAll();
+                    if(ret.status==1){
+                        DMS.success(ret.info,1000,function(){
+                            window.location.reload();
+                        });
+                    }else{
+                        layer.msg(ret.info, {icon: 2});
+                    }
+                })
+            }, function(){
+                layer.close();
+            });
+        }else{
+            DMS.ajaxPost("__CONTROLLER__/memberBind",$('#form').serialize(),function(ret,err){
+                if(ret.status==1){
+                    DMS.success(ret.info,1000,function(){
+                        if(ret.url){
+                            window.location.href = ret.url;
+                        }else{
+                            window.location.href = window.location.href;
+                        }
+                    });
+                }else{
+                    layer.msg(ret.info, {icon: 1});
+                }
+            })
+        }
+    }
+</script>

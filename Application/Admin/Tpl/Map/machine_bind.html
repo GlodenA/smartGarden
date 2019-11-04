@@ -1,0 +1,94 @@
+<div class="padding-md">
+    <div class="smart-widget" style="margin-bottom: 1px;">
+        <div class="smart-widget-inner">
+            <div class="smart-widget-body">
+
+                <form class="form-horizontal m-top-sm" method="post" id="form">
+                    <input type="hidden" name="area_id" value="{$id}">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">绑定信息</label>
+                        <div class="col-md-5">
+                            <p>区域名称：{$area_name}</p>
+                            <!--<p>区域设备绑定总数：{$employee_num}</p>-->
+                            <!--<p>区域已绑定设备数：{$machineNum}</p>-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">设备IEMI</label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control input-sm" name="machine_imei" id="machine_imei" value="{$machineInfo['machine_imei']}" placeholder="请输入设备IEMI" >
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="form-control " onclick="checkMachine()" >查询</button>
+                        </div>
+                    </div>
+                    <div class="form-group hide" id="shebei">
+                        <label class="control-label col-md-3">设备情况</label>
+                        <div class="col-md-5" id="machine">
+
+                        </div>
+                    </div>
+                    <div class="text-center m-top-md hide" id="bang">
+                        <button type="submit" class="btn btn-info">绑定</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{:C('ADMIN_JS_PATH')}/jquery.validate.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function(){
+        $("#form").validate({
+            submitHandler:function(form){
+                confirm();
+            }
+        });
+    })
+    function confirm(){
+        DMS.ajaxPost("__CONTROLLER__/machineBind",$('#form').serialize(),function(ret,err){
+            if(ret.status==1){
+                layer.msg("绑定成功",{icon: 1, time: 2000},function(){
+                    if(ret.url){
+                        window.location.href = ret.url;
+                    }else{
+                        window.location.href = window.location.href;
+                    }
+                });
+            }else{
+                layer.msg(''+ret.info+'',{icon: 0, time: 2000});
+            }
+        })
+    }
+    function checkMachine(){
+        var machine_imei=$("#machine_imei").val();
+        if(!machine_imei){
+            layer.msg("请输入设备IEMI", {icon: 0, time: 2000})
+        }
+        DMS.ajaxPost("__MODULE__/Map/checkMachine",{machine_imei:machine_imei},function(ret){
+            console.log(ret)
+            if(ret.status==1){
+                if(!ret.machine.machine_imei){
+                    layer.msg("未查询到此设备", {icon: 0, time: 2000});
+                }else{
+                    var str= "";
+                    if(ret.machine.machine_name){
+                        var str=" 设备名称:"+ret.machine.machine_name+"<br/>";
+                    }
+                    if(ret.is_bind > 0){
+                        $("#shebei").removeClass("hide");
+                        str+=" 状态：该设备已绑定<br/>";
+                        str+=" 绑定区域："+ret.area_name;
+                    }else{
+                        $("#shebei").removeClass("hide");
+                        $("#bang").removeClass("hide");
+                        str+=" 状态：该设备暂未绑定"
+                    }
+                    $("#machine").html(str);
+                }
+            }else{
+                layer.msg("未查询到此设备", {icon: 0, time: 2000});
+            }
+        })
+    }
+</script>

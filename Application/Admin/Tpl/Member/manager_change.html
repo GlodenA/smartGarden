@@ -1,0 +1,38 @@
+<form class="form-horizontal no-margin" method="post" id="form">
+    <input type="hidden" name="userids" value="{$userids}">
+    <div class="form-group">
+        <label class="control-label col-md-3"></label>
+        <div class="col-md-5">
+            <select class="form-control m-top-md" name="parent_id">
+                <option value="0">--解除管理人员--</option>
+                <foreach name="managerList" item="v">
+                    <option value="{$v['userid']}">{$v['realname']}</option>
+                </foreach>
+            </select>
+        </div>
+    </div>
+    <div class="text-center m-top-md">
+        <button type="submit" class="btn btn-info">提交</button>
+    </div>
+</form>
+<script src="{:C('ADMIN_JS_PATH')}/jquery.validate.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function(){
+        $("#form").validate({
+            submitHandler:function(form){
+                confirm();
+            }
+        });
+    })
+    function confirm() {
+        DMS.ajaxPost("__CONTROLLER__/membersManagerChange",$('#form').serialize(),function(ret){
+            if(ret.status==1){
+                DMS.success("提交成功",0,function(){
+                    window.location.reload();
+                });
+            }else{
+                DMS.error(''+ret.info+'',0);
+            }
+        })
+    }
+</script>

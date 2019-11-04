@@ -1,0 +1,70 @@
+<div class="padding-md">
+	<div class="smart-widget widget-dark-blue">
+		<div class="smart-widget-header">
+            管理组权限设置
+		</div>
+		<div class="smart-widget-inner">
+            <div class="smart-widget-body">
+                <div class="alert alert-success alert-custom alert-dismissible" role="alert">
+                    当前管理组:<strong class="text-danger">{$title}</strong>
+                </div>
+                <a class="btn btn-success marginTB-xs" onclick="confirm()">提交</a>
+                <foreach name="ruleList" item="v">
+                    <div class="menu-check">
+                        <div class="m-top-md">
+                            <div class="custom-checkbox m-right-xs">
+                                <input class="auth-menus menus-row" type="checkbox" id="id-{$v['id']}" name="ids[]" value="{$v['id']}" <php>if(in_array($v['id'], $rules)){</php>checked<php>}</php>>
+                                <label for="id-{$v['id']}"></label>
+                            </div>
+                            <div class="inline-block vertical-top text-danger">{$v['title']}</div>
+                        </div>
+                        <div class="child-row">
+                        <foreach name="v['children']" item="r">
+                            <div class="custom-checkbox m-right-xs m-top-md">
+                                <input class="auth-menus menus-list" type="checkbox" id="id-{$r['id']}" name="ids[]" value="{$r['id']}" parent-id="{$v['id']}" <php>if(in_array($r['id'], $rules)){</php>checked<php>}</php> >
+                                <label for="id-{$r['id']}" parent-id="{$v['id']}" class="checkboxs"></label>
+                            </div>
+                            <div class="inline-block vertical-top text-primary m-top-md">{$r['title']}</div>&nbsp;&nbsp;&nbsp;&nbsp;
+                        </foreach>
+                        </div>
+                    </div>
+                </foreach>
+            </div>
+    </div>
+	</div>
+</div>
+<script type="text/javascript">
+$(function(){
+    $('.menus-row').on('change',function(){
+        $(this).closest('.menu-check').find('.child-row').find('input').prop('checked',this.checked);
+    });
+    $('.menus-list').on('change',function(){
+    	var parentId = $(this).attr("parent-id");
+    	if($("input[parent-id='"+parentId+"']:checked").length){
+    		$("#id-"+parentId).prop("checked",true);
+    	}else{
+    		$("#id-"+parentId).prop("checked",false);
+    	}
+    });
+
+})
+function confirm(){
+	var ids='';
+	$("input[name='ids[]']:checked").each(function(i, n){
+		ids += $(n).val() + ',';
+	});
+	ids = ids.substring(0,ids.length-1);
+	if(ids=='') {
+		DMS.alert("请至少选择一个规则");
+		return false;
+	}else{
+		DMS.ajaxPost("__CONTROLLER__/groupSettingRule",{groupId:'{$id}',ids:''+ids+''},function(ret){
+			if(ret.status==1){
+            	DMS.success("提交成功",0);
+            }else{
+            	DMS.error("提交失败",0);
+            }
+		})
+	}
+}
+</script>
