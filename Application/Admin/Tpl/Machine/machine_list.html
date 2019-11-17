@@ -18,9 +18,26 @@
 						<i class="fa fa-plus"></i>增加设备
 					</a>
 					<a href="javascript:areaBinds()" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="批量换绑或解除区域" data-original-title="批量换绑或解除区域">换绑或解除区域</a>
-					<a href="javascript:manager('changeSchedules')" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="批量切换班组" data-original-title="批量切换班组">切换班组</a>
-					<a href="javascript:changeSchedules()" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="一键切换班组" data-original-title="一键切换班组">切换班组</a>
+					<a href="javascript:manager('changeSchedules')" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="批量切换班组" data-original-title="批量切换班组">部分切换班组</a>
+					<a href="javascript:changeSchedules()" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="一键切换班组" data-original-title="一键切换班组">全部切换班组</a>
 					<a href="javascript:manager('delMachine')" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="批量删除设备" data-original-title="批量删除设备">删除设备</a>
+					<div class="searchTop-form form-inline pull-right">
+						<div class="form-group">
+							<input type="text" id="filename" class="form-control" readonly="">
+						</div>
+						<a class="btn btn-sm btn-info" id="selector">
+							选择文件
+						</a>
+						<button type="button" class="btn btn-warning btn-sm hide" id="media_upload">上传</button>
+						<a href="javascript:fnImport();" class="btn btn-sm btn-info">
+							导入
+						</a>
+						<a href="__ROOT__/Public/Admin/File/shebei.xlsx" class="btn btn-sm btn-info form-inline">
+							下载模板
+						</a>
+					</div>
+				</div>
+				<div class="info-line">
 					<form class="searchTop-form form-inline pull-right p-l-10" id="search-form" action="__ACTION__" method="post">
 						<div class="form-group">
 							<label for="machine_status">设备状态</label>
@@ -54,21 +71,6 @@
 						</div>
 						<a id="search" url="__ACTION__" class="btn btn-sm btn-success">搜索</a>
 					</form>
-					<div class="searchTop-form form-inline pull-right">
-						<div class="form-group">
-							<input type="text" id="filename" class="form-control" readonly="">
-						</div>
-						<a class="btn btn-sm btn-info" id="selector">
-							选择文件
-						</a>
-						<button type="button" class="btn btn-warning btn-sm hide" id="media_upload">上传</button>
-						<a href="javascript:fnImport();" class="btn btn-sm btn-info">
-							导入
-						</a>
-						<a href="__ROOT__/Public/Admin/File/shebei.xlsx" class="btn btn-sm btn-info form-inline">
-							下载模板
-						</a>
-					</div>
 				</div>
 				<div class="smart-widget-inner">
 					<table class="table table-striped table-bordered" id="dataTable">

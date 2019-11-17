@@ -111,24 +111,24 @@ class AttendanceController extends BaseController {
             }
             if($status == 11){
                 //异常的
-                $whereStatus["a.first_result"] = array("gt",1);
-                $whereStatus["a.second_result"] = array("gt",2);
-                $whereStatus["a.third_result"] = array("gt",1);
-                $whereStatus["a.fourth_result"] = array("gt",2);
+                $whereStatus["a.first_result"] = array("neq",1);
+                $whereStatus["a.second_result"] = array("neq",2);
+                $whereStatus["a.third_result"] = array("neq",1);
+                $whereStatus["a.fourth_result"] = array("neq",2);
                 $whereStatus['_logic'] = 'or';
                 $where['_complex'] = $whereStatus;
             }
             if($status == 12){
                 //上午异常
-                $whereStatus["a.first_result"] = array("gt",1);
-                $whereStatus["a.second_result"] = array("gt",2);
+                $whereStatus["a.first_result"] = array("neq",1);
+                $whereStatus["a.second_result"] = array("neq",2);
                 $whereStatus['_logic'] = 'or';
                 $where['_complex'] = $whereStatus;
             }
             if($status == 13){
                 //下午异常
-                $whereStatus["third_result"] = array("gt",1);
-                $whereStatus["fourth_result"] = array("gt",2);
+                $whereStatus["third_result"] = array("neq",1);
+                $whereStatus["fourth_result"] = array("neq",2);
                 $whereStatus['_logic'] = 'or';
                 $where['_complex'] = $whereStatus;
             }
@@ -303,24 +303,24 @@ class AttendanceController extends BaseController {
             }
             if($status == 11){
                 //异常的
-                $whereStatus["a.first_result"] = array("gt",1);
-                $whereStatus["a.second_result"] = array("gt",2);
-                $whereStatus["a.third_result"] = array("gt",1);
-                $whereStatus["a.fourth_result"] = array("gt",2);
+                $whereStatus["a.first_result"] = array("neq",1);
+                $whereStatus["a.second_result"] = array("neq",2);
+                $whereStatus["a.third_result"] = array("neq",1);
+                $whereStatus["a.fourth_result"] = array("neq",2);
                 $whereStatus['_logic'] = 'or';
                 $where['_complex'] = $whereStatus;
             }
             if($status == 12){
                 //上午异常
-                $whereStatus["a.first_result"] = array("gt",1);
-                $whereStatus["a.second_result"] = array("gt",2);
+                $whereStatus["a.first_result"] = array("neq",1);
+                $whereStatus["a.second_result"] = array("neq",2);
                 $whereStatus['_logic'] = 'or';
                 $where['_complex'] = $whereStatus;
             }
             if($status == 13){
                 //下午异常
-                $whereStatus["third_result"] = array("gt",1);
-                $whereStatus["fourth_result"] = array("gt",2);
+                $whereStatus["third_result"] = array("neq",1);
+                $whereStatus["fourth_result"] = array("neq",2);
                 $whereStatus['_logic'] = 'or';
                 $where['_complex'] = $whereStatus;
             }
@@ -345,140 +345,169 @@ class AttendanceController extends BaseController {
         }
         $attList =array();
         foreach($list as $k=>$v){
-            if($v["first_result"] == 1 && $v["second_result"] == 2 && $v["third_result"] == 1 && $v["fourth_result"] == 2){
-                $list[$k]['result'] = '正常';
-            }elseif($v["first_result"] == 0 && $v["second_result"] == 0 && $v["third_result"] == 0 && $v["fourth_result"] == 0){
-                $list[$k]['result'] = '旷工';
-            }else{
-                if($status == 11){
-                    //异常的
-                    if(($v["first_result"] == 5 || $v["first_result"] == 0) && $v["second_result"] == 0){
-                        $list[$k]['result'] = $list[$k]['result']."上午旷工\n";
-                    }else{
-                        if($v["first_result"] == 1){
-                            $list[$k]['result'] = "";
-                        }elseif($v["first_result"] == 3){
-                            $list[$k]['result'] = "上班1迟到 ";
-                        }elseif($v["first_result"] == 5){
-                            $list[$k]['result'] = "上班1旷工 ";
-                        }else{
-                            $list[$k]['result'] = "上班1缺卡 ";
-                        }
-                        if($v["second_result"] == 2){
-                            $list[$k]['result'] = $list[$k]['result']."";
-                        }elseif($v["second_result"] == 4){
-                            $list[$k]['result'] = $list[$k]['result']."下班1早退\n";
-                        }else{
-                            $list[$k]['result'] = $list[$k]['result']."下班1缺卡\n";
-                        }
-                    }
-                    if(($v["third_result"] == 5 || $v["third_result"] == 0) && $v["fourth_result"] == 0){
-                        $list[$k]['result'] = $list[$k]['result']."下午旷工";
-                    }else{
-                        if($v["third_result"] == 1){
-                            $list[$k]['result'] =$list[$k]['result']."";
-                        }elseif($v["third_result"] == 3){
-                            $list[$k]['result'] = $list[$k]['result']."上班2迟到 ";
-                        }elseif($v["third_result"] == 5){
-                            $list[$k]['result'] = $list[$k]['result']."上班2旷工 ";
-                        }else{
-                            $list[$k]['result'] = $list[$k]['result']."上班2缺卡 ";
-                        }
-                        if($v["fourth_result"] == 2){
-                            $list[$k]['result'] = $list[$k]['result']."";
-                        }elseif($v["fourth_result"] == 4){
-                            $list[$k]['result'] = $list[$k]['result']."下班2早退";
-                        }else{
-                            $list[$k]['result'] = $list[$k]['result']."下班2缺卡";
-                        }
-                    }
-                }elseif($status == 12){
-                    //上午异常
-                    if(($v["first_result"] == 5 || $v["first_result"] == 0) && $v["second_result"] == 0){
-                        $list[$k]['result'] = $list[$k]['result']."上午旷工\n";
-                    }else{
-                        if($v["first_result"] == 1){
-                            $list[$k]['result'] = "";
-                        }elseif($v["first_result"] == 3){
-                            $list[$k]['result'] = "上班1迟到 ";
-                        }elseif($v["first_result"] == 5){
-                            $list[$k]['result'] = "上班1旷工 ";
-                        }else{
-                            $list[$k]['result'] = "上班1缺卡 ";
-                        }
-                        if($v["second_result"] == 2){
-                            $list[$k]['result'] = $list[$k]['result']."";
-                        }elseif($v["second_result"] == 4){
-                            $list[$k]['result'] = $list[$k]['result']."下班1早退\n";
-                        }else{
-                            $list[$k]['result'] = $list[$k]['result']."下班1缺卡\n";
-                        }
-                    }
-                }elseif($status == 13){
-                    //下午异常
-                    if(($v["third_result"] == 5 || $v["third_result"] == 0) && $v["fourth_result"] == 0){
-                        $list[$k]['result'] = $list[$k]['result']."下午旷工";
-                    }else{
-                        if($v["third_result"] == 1){
-                            $list[$k]['result'] =$list[$k]['result']."";
-                        }elseif($v["third_result"] == 3){
-                            $list[$k]['result'] = $list[$k]['result']."上班2迟到 ";
-                        }elseif($v["third_result"] == 5){
-                            $list[$k]['result'] = $list[$k]['result']."上班2旷工 ";
-                        }else{
-                            $list[$k]['result'] = $list[$k]['result']."上班2缺卡 ";
-                        }
-                        if($v["fourth_result"] == 2){
-                            $list[$k]['result'] = $list[$k]['result']."";
-                        }elseif($v["fourth_result"] == 4){
-                            $list[$k]['result'] = $list[$k]['result']."下班2早退";
-                        }else{
-                            $list[$k]['result'] = $list[$k]['result']."下班2缺卡";
-                        }
-                    }
+            //保安
+            if($v["position"] == 3 || $v["position"] == 4){
+                if($v["first_result"] == 1 && $v["second_result"] == 2){
+                    $list[$k]['result'] = $list[$k]['result']."正常";
+                }elseif(($v["first_result"] < 1 || $v["first_result"] == 5 ) && $v["second_result"] < 2){
+                    $list[$k]['result'] = $list[$k]['result']."旷工";
                 }else{
-                    if(($v["first_result"] == 5 || $v["first_result"] == 0) && $v["second_result"] == 0){
-                        $list[$k]['result'] = $list[$k]['result']."上午旷工\n";
+                    if($v["first_result"] == 1){
+                        $list[$k]['result'] = "";
+                    }elseif($v["first_result"] == 3){
+                        $list[$k]['result'] = "上班1迟到 ";
+                    }elseif($v["first_result"] == 5){
+                        $list[$k]['result'] = "上班1旷工 ";
                     }else{
-                        if($v["first_result"] == 1){
-                            $list[$k]['result'] = "上班1正常 ";
-                        }elseif($v["first_result"] == 3){
-                            $list[$k]['result'] = "上班1迟到 ";
-                        }elseif($v["first_result"] == 5){
-                            $list[$k]['result'] = "上班1旷工 ";
-                        }else{
-                            $list[$k]['result'] = "上班1缺卡 ";
-                        }
-                        if($v["second_result"] == 2){
-                            $list[$k]['result'] = $list[$k]['result']."下班1正常\n";
-                        }elseif($v["second_result"] == 4){
-                            $list[$k]['result'] = $list[$k]['result']."下班1早退\n";
-                        }else{
-                            $list[$k]['result'] = $list[$k]['result']."下班1缺卡\n";
-                        }
+                        $list[$k]['result'] = "上班1缺卡 ";
                     }
-                    if(($v["third_result"] == 5 || $v["third_result"] == 0) && $v["fourth_result"] == 0){
-                        $list[$k]['result'] = $list[$k]['result']."下午旷工";
+                    if($v["second_result"] == 2){
+                        $list[$k]['result'] = $list[$k]['result']."";
+                    }elseif($v["second_result"] == 4){
+                        $list[$k]['result'] = $list[$k]['result']."下班1早退";
                     }else{
-                        if($v["third_result"] == 1){
-                            $list[$k]['result'] =$list[$k]['result']."上班2正常 ";
-                        }elseif($v["third_result"] == 3){
-                            $list[$k]['result'] = $list[$k]['result']."上班2迟到 ";
-                        }elseif($v["third_result"] == 5){
-                            $list[$k]['result'] = $list[$k]['result']."上班2旷工 ";
-                        }else{
-                            $list[$k]['result'] = $list[$k]['result']."上班2缺卡 ";
-                        }
-                        if($v["fourth_result"] == 2){
-                            $list[$k]['result'] = $list[$k]['result']."下班2正常";
-                        }elseif($v["fourth_result"] == 4){
-                            $list[$k]['result'] = $list[$k]['result']."下班2早退";
-                        }else{
-                            $list[$k]['result'] = $list[$k]['result']."下班2缺卡";
-                        }
+                        $list[$k]['result'] = $list[$k]['result']."下班1缺卡";
                     }
-                    if((($v["first_result"] == 5 || $v["first_result"] == 0) && $v["second_result"] == 0) && (($v["third_result"] == 5 || $v["third_result"] == 0) && $v["fourth_result"] == 0)){
-                        $list[$k]['result'] = "旷工";
+                }
+            }else{
+                //普通员工
+                if($v["first_result"] == 1 && $v["second_result"] == 2 && $v["third_result"] == 1 && $v["fourth_result"] == 2){
+                    $list[$k]['result'] = '正常';
+                }elseif(($v["first_result"] == 5 || $v["first_result"] == 0) && $v["second_result"] == 0 && ($v["third_result"] == 5 || $v["third_result"] == 0) && $v["fourth_result"] == 0){
+                    $list[$k]['result'] = '旷工';
+                }else{
+                    switch ($status)
+                    {
+                        case 11:
+                            //异常的
+                            if(($v["first_result"] == 5 || $v["first_result"] == 0) && $v["second_result"] == 0){
+                                $list[$k]['result'] = $list[$k]['result']."上午旷工\n";
+                            }else{
+                                if($v["first_result"] == 1){
+                                    $list[$k]['result'] = "";
+                                }elseif($v["first_result"] == 3){
+                                    $list[$k]['result'] = "上班1迟到 ";
+                                }elseif($v["first_result"] == 5){
+                                    $list[$k]['result'] = "上班1旷工 ";
+                                }else{
+                                    $list[$k]['result'] = "上班1缺卡 ";
+                                }
+                                if($v["second_result"] == 2){
+                                    $list[$k]['result'] = $list[$k]['result']."";
+                                }elseif($v["second_result"] == 4){
+                                    $list[$k]['result'] = $list[$k]['result']."下班1早退\n";
+                                }else{
+                                    $list[$k]['result'] = $list[$k]['result']."下班1缺卡\n";
+                                }
+                            }
+                            if(($v["third_result"] == 5 || $v["third_result"] == 0) && $v["fourth_result"] == 0){
+                                $list[$k]['result'] = $list[$k]['result'] . "下午旷工";
+                            }else{
+                                if($v["third_result"] == 1){
+                                    $list[$k]['result'] =$list[$k]['result']."";
+                                }elseif($v["third_result"] == 3){
+                                    $list[$k]['result'] = $list[$k]['result']."上班2迟到 ";
+                                }elseif($v["third_result"] == 5){
+                                    $list[$k]['result'] = $list[$k]['result']."上班2旷工 ";
+                                }else{
+                                    $list[$k]['result'] = $list[$k]['result']."上班2缺卡 ";
+                                }
+                                if($v["fourth_result"] == 2){
+                                    $list[$k]['result'] = $list[$k]['result']."";
+                                }elseif($v["fourth_result"] == 4){
+                                    $list[$k]['result'] = $list[$k]['result']."下班2早退";
+                                }else{
+                                    $list[$k]['result'] = $list[$k]['result']."下班2缺卡";
+                                }
+                            }
+                            break;
+                        case 12:
+                            //上午异常
+                            if(($v["first_result"] == 5 || $v["first_result"] == 0) && $v["second_result"] == 0){
+                                $list[$k]['result'] = $list[$k]['result']."上午旷工";
+                            }else{
+                                if($v["first_result"] == 1){
+                                    $list[$k]['result'] = "";
+                                }elseif($v["first_result"] == 3){
+                                    $list[$k]['result'] = "上班1迟到 ";
+                                }elseif($v["first_result"] == 5){
+                                    $list[$k]['result'] = "上班1旷工 ";
+                                }else{
+                                    $list[$k]['result'] = "上班1缺卡 ";
+                                }
+                                if($v["second_result"] == 2){
+                                    $list[$k]['result'] = $list[$k]['result']."";
+                                }elseif($v["second_result"] == 4){
+                                    $list[$k]['result'] = $list[$k]['result']."下班1早退";
+                                }else{
+                                    $list[$k]['result'] = $list[$k]['result']."下班1缺卡";
+                                }
+                            }
+                            break;
+                        case 13:
+                            //下午异常
+                            if(($v["third_result"] == 5 || $v["third_result"] == 0) && $v["fourth_result"] == 0){
+                                $list[$k]['result'] = $list[$k]['result']."下午旷工";
+                            }else{
+                                if($v["third_result"] == 1){
+                                    $list[$k]['result'] =$list[$k]['result']."";
+                                }elseif($v["third_result"] == 3){
+                                    $list[$k]['result'] = $list[$k]['result']."上班2迟到 ";
+                                }elseif($v["third_result"] == 5){
+                                    $list[$k]['result'] = $list[$k]['result']."上班2旷工 ";
+                                }else{
+                                    $list[$k]['result'] = $list[$k]['result']."上班2缺卡 ";
+                                }
+                                if($v["fourth_result"] == 2){
+                                    $list[$k]['result'] = $list[$k]['result']."";
+                                }elseif($v["fourth_result"] == 4){
+                                    $list[$k]['result'] = $list[$k]['result']."下班2早退";
+                                }else{
+                                    $list[$k]['result'] = $list[$k]['result']."下班2缺卡";
+                                }
+                            }
+                        default:
+                            //查询全部考勤
+                            if(($v["first_result"] == 5 || $v["first_result"] == 0) && $v["second_result"] == 0){
+                                $list[$k]['result'] = $list[$k]['result']."上午旷工\n";
+                            }else{
+                                if($v["first_result"] == 1){
+                                    $list[$k]['result'] = "上班1正常 ";
+                                }elseif($v["first_result"] == 3){
+                                    $list[$k]['result'] = "上班1迟到 ";
+                                }elseif($v["first_result"] == 5){
+                                    $list[$k]['result'] = "上班1旷工 ";
+                                }else{
+                                    $list[$k]['result'] = "上班1缺卡 ";
+                                }
+                                if($v["second_result"] == 2){
+                                    $list[$k]['result'] = $list[$k]['result']."下班1正常\n";
+                                }elseif($v["second_result"] == 4){
+                                    $list[$k]['result'] = $list[$k]['result']."下班1早退\n";
+                                }else{
+                                    $list[$k]['result'] = $list[$k]['result']."下班1缺卡\n";
+                                }
+                            }
+                            if(($v["third_result"] == 5 || $v["third_result"] == 0) && $v["fourth_result"] == 0){
+                                $list[$k]['result'] = $list[$k]['result']."下午旷工";
+                            }else{
+                                if($v["third_result"] == 1){
+                                    $list[$k]['result'] =$list[$k]['result']."上班2正常 ";
+                                }elseif($v["third_result"] == 3){
+                                    $list[$k]['result'] = $list[$k]['result']."上班2迟到 ";
+                                }elseif($v["third_result"] == 5){
+                                    $list[$k]['result'] = $list[$k]['result']."上班2旷工 ";
+                                }else{
+                                    $list[$k]['result'] = $list[$k]['result']."上班2缺卡 ";
+                                }
+                                if($v["fourth_result"] == 2){
+                                    $list[$k]['result'] = $list[$k]['result']."下班2正常";
+                                }elseif($v["fourth_result"] == 4){
+                                    $list[$k]['result'] = $list[$k]['result']."下班2早退";
+                                }else{
+                                    $list[$k]['result'] = $list[$k]['result']."下班2缺卡";
+                                }
+                            }
                     }
                 }
             }
@@ -646,7 +675,7 @@ class AttendanceController extends BaseController {
         $end_time = $start_time+24*3600-1;
         $where['add_time'] = array('between',array($start_time,$end_time));
         $where['type'] = array("lt",3);
-        $leaveInfo = M('Warning_message')->where($where)->select();
+        $leaveInfo = M('Warning_message')->where($where)->order("add_time desc")->select();
         $whereAttendance['add_time'] = array('between',array($start_time,$end_time));
         $whereAttendance['is_delete'] = 0;
         $whereAttendance['userid'] = I("userid");

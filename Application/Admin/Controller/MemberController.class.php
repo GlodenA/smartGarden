@@ -32,6 +32,42 @@ class MemberController extends BaseController
                 //离岗
                 $where["job_status"] = 0;
             }
+            if($status == 4){
+                //未上岗但有考勤
+                //先查出状态为未上岗并且有考勤的
+                $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y'));
+                $whereMember["m.job_status"] = 2;
+                $whereMember["a.add_time"] = array("gt",$beginToday);
+                $whereMember["m.is_delete"] = 0;
+                $whereMember["_string"] = "m.userid = a.userid";
+                $useridList = M("Member")->table("__MEMBER__ m,__ATTENDANCE__ a")->where($whereMember)->field("a.userid")->select();
+                $useridArr = array();
+                if($useridList){
+                    foreach ($useridList as $key => $value) {
+                        Array_push($useridArr,$value["userid"]);
+                    }
+                }
+                $where["userid"] = array('in',$useridArr);
+                $where["job_status"] = 2;
+            }
+            if($status == 5){
+                //未上岗且无考勤
+                //先查出状态为未上岗并且有考勤的
+                $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y'));
+                $whereMember["m.job_status"] = 2;
+                $whereMember["a.add_time"] = array("gt",$beginToday);
+                $whereMember["m.is_delete"] = 0;
+                $whereMember["_string"] = "m.userid = a.userid";
+                $useridList = M("Member")->table("__MEMBER__ m,__ATTENDANCE__ a")->where($whereMember)->field("a.userid")->select();
+                $useridArr = array();
+                if($useridList){
+                    foreach ($useridList as $key => $value) {
+                        Array_push($useridArr,$value["userid"]);
+                    }
+                }
+                $where["userid"] = array('not in',$useridArr);
+                $where["job_status"] = 2;
+            }
         }
         $where["is_delete"] = 0;
         //查询职位列表
@@ -497,15 +533,59 @@ class MemberController extends BaseController
         }
         $status = I("status");
         if($status){
-            $where["job_status"] = $status;
             if($status == 1){
+                //在岗
+                $where["job_status"] = 1;
                 $fileName = $title = "在岗员工统计表";
-            }elseif($status == 2){
+            }
+            if($status == 2){
+                //未上岗
+                $where["job_status"] = 2;
                 $fileName = $title = "未上岗员工统计表";
-            }else{
+            }
+            if($status == 3){
+                //离岗
+                $where["job_status"] = 0;
                 $fileName = $title = "离岗员工统计表";
             }
-
+            if($status == 4){
+                //未上岗但有考勤
+                //先查出状态为未上岗并且有考勤的
+                $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y'));
+                $whereMember["m.job_status"] = 2;
+                $whereMember["a.add_time"] = array("gt",$beginToday);
+                $whereMember["m.is_delete"] = 0;
+                $whereMember["_string"] = "m.userid = a.userid";
+                $useridList = M("Member")->table("__MEMBER__ m,__ATTENDANCE__ a")->where($whereMember)->field("a.userid")->select();
+                $useridArr = array();
+                if($useridList){
+                    foreach ($useridList as $key => $value) {
+                        Array_push($useridArr,$value["userid"]);
+                    }
+                }
+                $where["userid"] = array('in',$useridArr);
+                $where["job_status"] = 2;
+                $fileName = $title = "未上岗但有考勤员工统计表";
+            }
+            if($status == 5){
+                //未上岗且无考勤
+                //先查出状态为未上岗并且有考勤的
+                $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y'));
+                $whereMember["m.job_status"] = 2;
+                $whereMember["a.add_time"] = array("gt",$beginToday);
+                $whereMember["m.is_delete"] = 0;
+                $whereMember["_string"] = "m.userid = a.userid";
+                $useridList = M("Member")->table("__MEMBER__ m,__ATTENDANCE__ a")->where($whereMember)->field("a.userid")->select();
+                $useridArr = array();
+                if($useridList){
+                    foreach ($useridList as $key => $value) {
+                        Array_push($useridArr,$value["userid"]);
+                    }
+                }
+                $where["userid"] = array('not in',$useridArr);
+                $where["job_status"] = 2;
+                $fileName = $title = "未上岗且无考勤员工统计表";
+            }
         }else{
             $fileName = $title = "员工统计表";
         }

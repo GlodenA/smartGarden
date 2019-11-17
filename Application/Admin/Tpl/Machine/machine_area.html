@@ -33,9 +33,13 @@
         <div class="smart-widget-inner">
             <div class="smart-widget-body">
                 <form class="form-inline no-margin form-border">
-                    <div class="form-group" style="padding-bottom: 0">
-                        <input type="hidden" class="form-control" name="machine_id" value="{$machine_id}">
-                        <input type="text" class="form-control" id="searchTime" name="searchTime" value="{$searchTime}" placeholder="选择时间">
+                    <input type="hidden" class="form-control" name="machine_id" value="{$machine_id}">
+                    <div class="form-group">
+                        <input type="text" class="form-control time-input" name="start_time" id="start_time" value="{$start_time}" placeholder="起始时间">
+                    </div>
+                    <div class="form-group">
+                        <label for="end_time">～</label>
+                        <input type="text" class="form-control time-input" name="end_time" id="end_time" value="{$end_time}" placeholder="结束时间">
                     </div>
                     <button type="button" class="btn btn-success marginTB-xs margin-r-10" onclick="getMachineOrbit()">搜索</button>
                     <button type="button" onclick="window.location.reload();" class="btn btn-primary marginTB-xs"><i class="fa fa-refresh m-right-xs"></i>刷新</button>
@@ -99,18 +103,37 @@
     })
 
     //日期选择
-    $(document).ready(function () {
-        layui.use('laydate', function () {
+    $(document).ready(function(){
+        layui.use('laydate', function(){
             var laydate = layui.laydate;
             var start = laydate.render({
-                elem: '#searchTime',
-                type: 'date',
+                elem: '#start_time',
+                type: 'datetime',
                 theme: 'grid',
                 festival: true, //显示节日
                 calendar: true,
-                max: 0,
-                done: function (value, date) {
-                    $('#searchTime').val(value);
+                value: new Date(new Date().getTime() - 5 * 60 * 60 * 1000),
+                max:new Date().valueOf(),
+                done: function(value, date){
+                    endMax = end.config.max;
+                    end.config.min = date;
+                    end.config.min.month = date.month -1;
+//                    end.config.min.date = date.date;
+                }
+            });
+
+            var end = laydate.render({
+                elem: '#end_time',
+                type: 'datetime',
+                theme: 'grid',
+                festival: true, //显示节日
+                calendar: true,
+                value: new Date(),
+                max:new Date().valueOf(),
+                done: function(value, date){
+                    start.config.max = date;
+                    start.config.max.month = date.month -1;
+                    start.config.max.date = date.date;
                 }
             });
         });
@@ -267,8 +290,8 @@
 
              //添加鼠标绘制工具监听事件，用于获取绘制结果
             drawingManager.addEventListener('overlaycomplete', overlaycomplete);
-            
-            getMachineOrbit();
+            map.clearOverlays();
+            getOrbit();
         });
     });
     var opts = {
@@ -295,108 +318,85 @@
         map.openInfoWindow(infoWindow,point); //开启信息窗口
     }
     function getMachineOrbit(){
+        map.clearOverlays();
+        getOrbit();
         var machine_id = "{$machine_id}";
-        var searchTime = $('#searchTime').val();
-        var add_time = '';
+        var start_time = $('#start_time').val();
+        var end_time = $('#end_time').val();
         var parm = {
             'machine_id':machine_id,
-            'searchTime':searchTime,
+            'start_time':start_time,
+            'end_time':end_time,
+//            'type':type
         }
         DMS.ajaxPost('__CONTROLLER__/getMachineOrbit',parm, function (ret) {
-            map.clearOverlays();
-            //设备所属区域
-            if(area_id){
-                var data = JSON.parse('[{$areaInfo.coordinate}]');
-                // 百度地图API功能
-                var arrPois = [];
-                var polyLine = "";
-                for(var i = 0; i < data.length;i++){
-                    if(i==0){
-                        map.centerAndZoom(new BMap.Point(data[0].lon,data[0].lat), rank); // 分割后的坐标作为起始坐标
-                    }
-                    arrPois.push(new BMap.Point(data[i].lon,data[i].lat));// 循环数组中每一组的坐标
-                }
-                polyLine = new BMap.Polygon(arrPois, {strokeColor:"red",fillColor:"red", strokeWeight: 1 ,fillOpacity: 0.3, strokeOpacity: 0.3});// 展示围栏
-                map.addOverlay(polyLine);
-            }
             if (ret.status == 1) {
-                var list = ret.listOne;
                 //第一条轨迹
-                if(list.length > 0){
-                    var points = [];
-                    for(var j=0;j<list.length;j++){
-                        var content = '设备imei:'+machine_imei+'<br/>采集时间:'+list[j].deviceUtcDate;
-                        points.push(new BMap.Point(list[j].baiduLng, list[j].baiduLat));
-                        if(j==0){
-                            //设置中心点
-                            if(!area_id){
-                                map.centerAndZoom(new BMap.Point(list[j].baiduLng, list[j].baiduLat), rank);
-                            }
-                            var listStartIcon = new BMap.Icon("{:C('ADMIN_IMAGE_PATH')}/start.png", new BMap.Size(30,30));
-                            var listStart =  new BMap.Marker(new BMap.Point(list[j].baiduLng, list[j].baiduLat),{icon:listStartIcon});  // 创建标注
-                            map.addOverlay(listStart);
-                            addClickHandler(content,listStart);
-                        }
-                        if(j>0 && j==(list.length-1)){
-                            var listEndIcon = new BMap.Icon("{:C('ADMIN_IMAGE_PATH')}/end.png", new BMap.Size(30,30));
-                            var listEnd =  new BMap.Marker(new BMap.Point(list[j].baiduLng, list[j].baiduLat),{icon:listEndIcon});  // 创建标注
-                            map.addOverlay(listEnd);
-                            addClickHandler(content,listEnd);
-                        }
-//                        else{
-//                            var listMarker =  new BMap.Marker(new BMap.Point(list[j].lon, list[j].lat));  // 创建标注
-//                            map.addOverlay(listMarker);
-//                            addMouseoverHandler(content,listMarker);
-//                        }
-                    }
-                    //连接所有点
-                    if(ret.listTwo.length>0){
-                        map.addOverlay(new BMap.Polyline(points, {strokeColor: "blue", strokeWeight: 3, strokeOpacity: 1}));
-                    }else{
-                        map.addOverlay(new BMap.Polyline(points, {strokeColor: "green", strokeWeight: 3, strokeOpacity: 1}));
-                    }
-                }
+                orbitArrOne = ret.listOne;
                 //第二条轨迹
-                var list = ret.listTwo;
-                if(list.length > 0){
-                    var points = [];
-                    for(var k=0;k<list.length;k++){
-                        var content = '设备imei:'+machine_imei+'<br/>采集时间:'+list[k].deviceUtcDate;
-                        points.push(new BMap.Point(list[k].baiduLng, list[k].baiduLat));
-                        if(k==0){
-                            //设置中心点
-                            if(!area_id && !ret.listOne){
-                                map.centerAndZoom(new BMap.Point(list[k].baiduLng, list[k].baiduLat), rank);
-                                console.log(222);
-                            }
-
-                            var listStartIcon = new BMap.Icon("{:C('ADMIN_IMAGE_PATH')}/start.png", new BMap.Size(30,30));
-                            var listStart =  new BMap.Marker(new BMap.Point(list[k].baiduLng, list[k].baiduLat),{icon:listStartIcon});  // 创建标注
-                            map.addOverlay(listStart);
-                            addClickHandler(content,listStart);
-                        }
-                        if(k>0 && k==(list.length-1)){
-                            var listEndIcon = new BMap.Icon("{:C('ADMIN_IMAGE_PATH')}/end.png", new BMap.Size(30,30));
-                            var listEnd =  new BMap.Marker(new BMap.Point(list[k].baiduLng, list[k].baiduLat),{icon:listEndIcon});  // 创建标注
-                            map.addOverlay(listEnd);
-                            addClickHandler(content,listEnd);
-                        }
-//                        else{
-//                            var listMarker =  new BMap.Marker(new BMap.Point(list[k].lon, list[k].lat));  // 创建标注
-//                            map.addOverlay(listMarker);
-//                            addMouseoverHandler(content,listMarker);
-//                        }
-                    }
-                    map.enableScrollWheelZoom();
-                    //连接所有点
-                    map.addOverlay(new BMap.Polyline(points, {strokeColor: "green", strokeWeight: 3, strokeOpacity: 1}));
-                }
+//                orbitArrTwo = ret.listTwo;
+                showArea();
             }else{
                 layer.msg("暂无轨迹");
             }
         })
     }
+    function showArea(){
+        if (orbitArrOne) {
+            //第一条轨迹
+            if(orbitArrOne.length > 0){
+                var points = [];
+                for(var j=0;j<orbitArrOne.length;j++){
+                    var content = '设备imei:'+machine_imei+'<br/>采集时间:'+orbitArrOne[j].deviceUtcDate;
+                    points.push(new BMap.Point(orbitArrOne[j].baiduLng, orbitArrOne[j].baiduLat));
+                    if(j==0){
+                        //设置中心点
+                        map.centerAndZoom(new BMap.Point(orbitArrOne[j].baiduLng, orbitArrOne[j].baiduLat), rank);
+                        var listStartIcon = new BMap.Icon("{:C('ADMIN_IMAGE_PATH')}/start.png", new BMap.Size(30,30));
+                        var listStart =  new BMap.Marker(new BMap.Point(orbitArrOne[j].baiduLng, orbitArrOne[j].baiduLat),{icon:listStartIcon});  // 创建标注
+                        map.addOverlay(listStart);
+                        addClickHandler(content,listStart);
+                    }
+                    if(j>0 && j==(orbitArrOne.length-1)){
+                        var listEndIcon = new BMap.Icon("{:C('ADMIN_IMAGE_PATH')}/end.png", new BMap.Size(30,30));
+                        var listEnd =  new BMap.Marker(new BMap.Point(orbitArrOne[j].baiduLng, orbitArrOne[j].baiduLat),{icon:listEndIcon});  // 创建标注
+                        map.addOverlay(listEnd);
+                        addClickHandler(content,listEnd);
+                    }
+//                        else{
+//                            var listMarker =  new BMap.Marker(new BMap.Point(list[j].lon, list[j].lat));  // 创建标注
+//                            map.addOverlay(listMarker);
+//                            addMouseoverHandler(content,listMarker);
+//                        }
+                }
+                //连接所有点
+//                if(orbitArrTwo && orbitArrTwo.length>0){
+//                    map.addOverlay(new BMap.Polyline(points, {strokeColor: "blue", strokeWeight: 3, strokeOpacity: 1}));
+//                }else{
+                map.addOverlay(new BMap.Polyline(points, {strokeColor: "green", strokeWeight: 3, strokeOpacity: 1}));
+//                }
+            }
 
+        }
+    }
+    //获取设备区域
+    function getOrbit(){
+        //设备所属区域
+        if(area_id){
+            var data = JSON.parse('[{$areaInfo.coordinate}]');
+            // 百度地图API功能
+            var arrPois = [];
+            var polyLine = "";
+            for(var i = 0; i < data.length;i++){
+                if(i==0){
+                    map.centerAndZoom(new BMap.Point(data[0].lon,data[0].lat), rank); // 分割后的坐标作为起始坐标
+                }
+                arrPois.push(new BMap.Point(data[i].lon,data[i].lat));// 循环数组中每一组的坐标
+            }
+            polyLine = new BMap.Polygon(arrPois, {strokeColor:"red",fillColor:"red", strokeWeight: 1 ,fillOpacity: 0.3, strokeOpacity: 0.3});// 展示围栏
+            map.addOverlay(polyLine);
+        }
+    }
     // 删除绘制区域       
     function clearAll() {
         for(var i = 0; i < overlays.length; i++){
