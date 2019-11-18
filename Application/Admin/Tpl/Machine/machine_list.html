@@ -2,6 +2,9 @@
 	.el-link+.el-link{
 		margin-left: 8px;
 	}
+	input[type=file]{
+		display: none;
+	}
 </style>
 <div class="padding-md" id="MACHINELIST">
 	<div class="smart-widget" style="margin-bottom: 1px;">
@@ -20,7 +23,7 @@
         </el-breadcrumb>
 				<el-divider></el-divider>
 				<div class="flex px3 justify-between items-start">
-					<el-button icon="el-icon-plus" type="primary" >
+					<el-button icon="el-icon-plus" type="primary" @click="create.createDviceDialog = true">
 						添加设备
 					</el-button>
 					<el-form inline>
@@ -113,7 +116,7 @@
 				</el-table>
 					<div class="flex justify-between items-center mt4">
 						<div class="">
-							<el-button icon="el-icon-sort" type="primary" :disabled="!hasSelection">
+							<el-button icon="el-icon-sort" type="primary" :disabled="!hasSelection" @click="batchChangeBindDialog = true">
 								批量换绑或解除
 							</el-button>
 							<el-button type="warning" icon="el-icon-refresh-left" :disabled="!hasSelection">
@@ -124,22 +127,84 @@
 							</el-button>
 						</div>
 						<el-pagination
-						background
-						layout="prev, pager, next"
-						:total="totalNumber"
-						:current-page="queryCondition.page"
-						@current-change="pageChange">
-					</el-pagination>
+							background
+							layout="prev, pager, next"
+							:total="totalNumber"
+							:current-page="queryCondition.page"
+							@current-change="pageChange">
+						</el-pagination>
 				</div>
       </div>
 		</div>
 	</div>
+	<el-dialog :visible.sync="batchChangeBindDialog" title="批量换绑或者解除区域" width="480px">
+		<el-form label-width="100px">
+			<el-form-item label="关键字查询">
+				<el-input v-model="batchChangeBindDialogFormData.keyword"/>
+				<el-button type="primary">
+					查询
+				</el-button>
+			</el-form-item>
+			<el-form-item label="解除区域">
+				<el-select style="width:100%;" v-model="batchChangeBindDialogFormData.area">
+					<el-option :label="`选项${n}`" v-for="n in 4" :key="n" :value="n"></el-option>
+				</el-select>
+			</el-form-item>
+		</el-form>
+		<div class="row justify-center" slot="footer">
+			<el-button type="primary">
+				提交
+			</el-button>
+		</div>
+	</el-dialog>
+	<el-dialog :visible.sync="create.createDviceDialog" title="添加设备" width="480px">
+		<div class="flex justify-center">
+			<el-radio-group v-model="create.type" style="margin-bottom: 30px;">
+				<el-radio-button label="handy">手动添加</el-radio-button>
+				<el-radio-button label="batch">批量添加</el-radio-button>
+			</el-radio-group>
+		</div>
+		<el-form label-width="100px" v-if="create.type === 'handy'">
+			<el-form-item label="设备名称">
+				<el-input v-model="create.formData.deviceName"></el-input>
+			</el-form-item>
+			<el-form-item label="设备IMEI">
+				<el-input v-model="create.formData.emei"></el-input>
+			</el-form-item>
+		</el-form>
+		<div v-else class="column items-center">
+			<el-link href="__ROOT__/Public/Admin/File/shebei.xlsx" type="primary" class="mb3">下载批量带入模板</el-link>
+			<el-upload
+			  drag
+			  action="">
+			  <i class="el-icon-upload"></i>
+			  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+			</el-upload>
+		</div>
+		<div class="row justify-center" slot="footer">
+			<el-button type="primary">
+				提交
+			</el-button>
+		</div>
+	</el-dialog>
 </div>
 <script type="text/javascript">
 	const MACHINELIST = new Vue({
 		el: '#MACHINELIST',
 		data(){
 			return {
+				create: {
+					createDviceDialog: false,
+					type: 'handy',
+					formDataRules: {
+						deviceName: [
+						]
+					},
+					formData: {
+						diviceName: '',
+						imei: ''
+					}
+				},
 				batchSelections: [],
 				tableData: [{
 					deviceNumber: '2983452-42930',
@@ -186,8 +251,16 @@
 					['area', '所属区域名称'],
 					['group', '班组'],
 					['rowOperations', '操作']
-				]
+				],
+				batchChangeBindDialog: false,
+				batchChangeBindDialogFormData: {
+					keyword: '',
+					area: '',
+				}
 			}
+		},
+		created(){
+			// 从接口获取数据
 		},
 		methods: {
 			/**
