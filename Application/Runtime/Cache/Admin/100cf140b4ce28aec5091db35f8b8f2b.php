@@ -27,107 +27,168 @@
     </head>
     <body class="overflow-hidden">
 
-<div class="padding-md">
-	<!-- 面包屑导航 -->
-	<div>
-		<ul class="breadcrumb">
-			当前位置：
-			<li><a href="/smartGarden/manager.php?s=/Index/main"> 主页</a></li>
-			<li><a href="#">区域管理</a></li>
-		</ul>
-	</div>
+<div class="padding-md" id="AREALIST">
 	<div class="smart-widget" style="margin-bottom: 1px;">
 		<div class="smart-widget-inner">
 			<div class="smart-widget-body">
-				<div class="header-text">
-					区域管理
-				</div>
-				<div class="info-line">
-					<a href="/smartGarden/manager.php?s=/Map/mapFence" class="btn btn-sm btn-info">
-						<i class="fa fa-plus"></i>区域添加
-					</a>
-					<form class="searchTop-form form-inline pull-right p-l-10" id="search-form" action="/smartGarden/manager.php?s=/Map/areaList" method="post">
-						<div class="form-group">
-							<input type="text" name="keywords" placeholder="请输入区域名称..." class="form-control input" value="<?php echo ($keywords); ?>">
-						</div>
-						<a id="search" url="/smartGarden/manager.php?s=/Map/areaList" class="btn btn-sm btn-info">搜索</a>
-					</form>
-				</div>
-				<div class="smart-widget-inner">
-					<table class="table table-striped table-bordered" id="dataTable">
-						<thead>
-						<tr>
-							<th>区域名称</th>
-							<!--<th>设置员工数</th>-->
-							<th>添加时间</th>
-							<th>状态</th>
-							<th>操作</th>
-						</tr>
-						</thead>
-						<tbody>
-						<?php if(is_array($areaList)): foreach($areaList as $key=>$v): ?><tr>
-								<td><?php echo ($v['area_name']); ?></td>
-								<!--<td><?php echo ($v['employee_num']); ?></td>-->
-								<td><?php echo (date("Y-m-d H:i:s",$v['add_time'])); ?></td>
-								<td>
-									<?php if($v['is_show'] == 1): ?>显示
-										<?php else: ?>
-									隐藏<?php endif; ?>
-								</td>
-								<td class="manager">
-									<a href="/smartGarden/manager.php?s=/Map/machineList/id/<?php echo ($v['id']); ?>" style="cursor: pointer"><i class="fa fa-pencil-square-o m-right-xs"></i>设备绑定列表</a>&nbsp;|&nbsp;
-									<a href="/smartGarden/manager.php?s=/Map/areaInfo/id/<?php echo ($v['id']); ?>" class="text-success"><i class="fa fa-info-circle m-right-xs"></i>详情</a>&nbsp;|&nbsp;
-									<a href="/smartGarden/manager.php?s=/Map/mapEdit/id/<?php echo ($v['id']); ?>" style="cursor: pointer"><i class="fa fa-pencil-square-o m-right-xs"></i>编辑</a>&nbsp;|&nbsp;
-									<a style="cursor: pointer" onclick="areaDelete('<?php echo ($v["id"]); ?>')" class="text-danger"><i class="fa fa-trash-o m-right-xs"></i>删除</a>
-								</td>
-							</tr><?php endforeach; endif; ?>
-						</tbody>
-					</table>
-					<div class="content text-right">
-						<ul class="pagination">
-							<?php echo ($page); ?>
-						</ul>
+				<el-breadcrumb separator="/">
+					<el-breadcrumb-item>
+						<a href="">首页</a>
+					</el-breadcrumb-item>
+					<el-breadcrumb-item>
+						区域管理
+					</el-breadcrumb-item>
+					<el-breadcrumb-item>
+						区域列表
+					</el-breadcrumb-item>
+				</el-breadcrumb>
+				<el-divider></el-divider>
+				<div class="flex justify-between mb3">
+					<el-button icon="el-icon-plus" type="primary" @click="create.dialog = true">
+						区域添加
+					</el-button>
+					<div class="row items-center pr2">
+						<el-input v-model="queryCondition.keyword" class="mr2">
+						</el-input>
+						<el-button type="primary">搜索</el-button>
 					</div>
+				</div>
+				<el-table :data="tableData">
+					<el-table-column prop="name" label="区域名称"></el-table-column>
+					<el-table-column prop="addTime" label="添加时间"></el-table-column>
+					<el-table-column prop="status" label="状态">
+						<template #default="{ row }">
+							<el-tag :type="row.status === 1 ? 'primary' : 'danger'">
+								{{ row.status === 1 ? '显示' : '隐藏' }}
+							</el-tag>
+						</template>
+					</el-table-column>
+					<el-table-column label="操作">
+						<template #default="{ row }">
+							<el-link type="primary">设备绑定列表</el-link>
+							<el-link type="primary" class="mx2">详情</el-link>
+							<el-link type="danger">删除</el-link>
+						</template>
+					</el-table-column>
+				</el-table>
+				<div class="row justify-end mt3">
+					<el-pagination background layout="prev, pager, next" :total="totalNumber" :current-page="queryCondition.page" @current-change="pageChange">
+					</el-pagination>
 				</div>
 			</div>
 		</div>
 	</div>
+	<el-dialog :visible.sync="create.dialog" title="区域添加">
+		<div class="flex justify-center">
+			<el-form inline :model="create.formData" :rules="create.formRules">
+				<el-form-item label="区域名称" prop="name">
+					<el-input v-model="create.formData.name"></el-input>
+				</el-form-item>
+				<el-form-item label="区域划分" prop="area">
+					<el-button type="primary" @click="points = []">
+						重新绘制
+					</el-button>
+				</el-form-item>
+			</el-form>
+		</div>
+		<baidu-map style="width:100%;height:300px;" :center="create.mapData.center"
+			:zoom="create.mapData.zoom"
+			@click="({ point }) => { points.push(point) }"
+			@ready="mapReady">
+			<bm-control anchor="BMAP_ANCHOR_TOP_RIGHT" :offset="{
+				width: 20,
+				height: 20
+			}">
+				<el-button icon="el-icon-crop" round>
+
+				</el-button>
+				<el-button icon="el-icon-aim" round>
+
+				</el-button>
+			</bm-control>
+			<bm-polygon
+				:path="points"
+				stroke-color="blue"
+				:stroke-opacity="1"
+				:stroke-weight="2"
+				:editing="true"
+				@lineupdate="({ target }) => { points = target.getPath() }"
+				></bm-polygon>
+		</baidu-map>
+		<div slot="footer" class="row justify-center">
+			<el-button type="primary">
+				提交
+			</el-button>
+		</div>
+	</el-dialog>
 </div>
-<script src="<?php echo C('ADMIN_JS_PATH');?>/ajaxupload.js" type="text/javascript"></script>
+<script src="https://unpkg.com/vue-baidu-map"></script>
 <script type="text/javascript">
-	$(function(){
-		//搜索功能
-		$("#search").click(function(){
-			var url = $(this).attr('url');
-			var query  = $('form').find('.input').serialize();
-			if( url.indexOf('?')>0 ){
-				url += '&' + query;
-			}else{
-				url += '?' + query;
-			}
-			window.location.href = url;
-		});
+	Vue.use(VueBaiduMap.default, {
+		ak: 'NENpvHSwTNZ6ftZOKdfiiPDxGKKPHjtg'
 	})
+	const AREALIST = new Vue({
+		el: '#AREALIST',
+		data() {
+			return {
+				points: [],
+				BMap: null,
+				map: null,
+				create: {
+					dialog: false,
+					mapData: {
+						center: {
+							lng: 116.404,
+							lat: 39.915
+						},
+						zoom: 15
+					},
+					formRules: {
 
-	function memberBind(id){
-		DMS.ajaxShow("员工绑定","/smartGarden/manager.php?s=/Map/memberBind/machine_id/"+id);
-	}
-	function areaDelete(id){
-		DMS.dialog("确定要删除吗?",function(){
-			DMS.ajaxPost("/smartGarden/manager.php?s=/Map/areaDelete",{id:id},function(ret){
-				if(ret.status==1){
-					layer.msg(ret.info, {icon: 1, time: 2000}, function () {
-						window.location.href = window.location.href;
-					});
-				}else{
-					layer.msg(ret.info, {icon: 0, time: 2000}, function () {
-						window.location.href = window.location.href;
-					});
-				}
-			})
-		});
-	}
-
+					},
+					formData: {
+						name: '',
+						area: ''
+					}
+				},
+				totalNumber: 1000,
+				queryCondition: {
+					page: 1,
+					keyword: ''
+				},
+				tableData: [{
+					name: '马喜忠负责区域',
+					addTime: '2019-11-18 14:42:23',
+					status: 1,
+				}, {
+					name: '马喜忠负责区域',
+					addTime: '2019-11-18 14:42:23',
+					status: 2,
+				}, {
+					name: '马喜忠负责区域',
+					addTime: '2019-11-18 14:42:23',
+					status: 1
+				}],
+			}
+		},
+		methods: {
+			mapReady({
+				BMap,
+				map
+			}) {
+				[
+					this.BMap,
+					this.map
+				] = [
+					BMap,
+					map
+				]
+			},
+			pageChange(p) {
+				this.queryCondition.page = p
+			}
+		},
+	})
 </script>
 
             <!-- <footer class="footer">
