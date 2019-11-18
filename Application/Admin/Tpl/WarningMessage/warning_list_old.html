@@ -1,0 +1,234 @@
+<link href="{:C('ADMIN_JS_PATH')}/layui/css/layui.css" rel="stylesheet">
+<div class="padding-md">
+    <!-- 面包屑导航 -->
+    <div>
+        <ul class="breadcrumb">
+            当前位置：
+            <li><a href="__MODULE__/Index/main">主页</a></li>
+            <li><a href="__ACTION__">告警管理</a></li>
+        </ul>
+    </div>
+    <div class="smart-widget" style="margin-bottom: 1px;">
+        <div class="smart-widget-inner">
+            <div class="smart-widget-body">
+                <div class="header-text">
+                    告警管理
+                </div>
+                <div class="info-line clearfix">
+                    <form class="navtop-form form-inline pull-left" id="search-form" action="__ACTION__" method="post">
+                        <div class="form-group">
+                            <label for="keywords">关键字：</label>
+                            <input type="text" class="form-control time-input" id="keywords" name="keywords" value="{$keywords}" placeholder="根据员工号或者姓名查询">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control time-input" name="start_time" id="start_time" value="{$start_time}" placeholder="起始时间">
+                        </div>
+                        <div class="form-group">
+                            <label for="end_time">～</label>
+                            <input type="text" class="form-control time-input" name="end_time" id="end_time" value="{$end_time}" placeholder="结束时间">
+                        </div>
+                        <div class="form-group">
+                            <label for="position">职位</label>
+                            <select class="form-control searchbody time-input" name="position" id="position" onchange="changePosition(this)">
+                                <option value="0">--全部--</option>
+                                <volist name="positionList" id="pl">
+                                    <option value="{$pl.id}"<if condition="$position eq $pl['id']">selected</if>>{$pl.name}</option>
+                                </volist>
+                            </select>
+                        </div>
+                        <div class="form-group" id="member_manager">
+                            <label for="parent_id">管理人员</label>
+                            <select class="form-control searchbody time-input" name="parent_id" id="parent_id">
+                                <option value="0">--全部--</option>
+                                <volist name="managerList" id="sl">
+                                    <option value="{$sl.userid}"<if condition="$parent_id eq $sl['userid']">selected</if>>{$sl.realname}</option>
+                                </volist>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="type">报警类型</label>
+                            <select class="form-control searchbody time-input" name="type" id="type">
+                                <option value="0">--全部--</option>
+                                <option value="2"<if condition="$type eq 2">selected</if>>远离区域报警</option>
+                                <option value="3"<if condition="$type eq 3">selected</if>>低电量报警</option>
+                                <option value="4"<if condition="$type eq 4">selected</if>>迟到报警</option>
+                                <option value="5"<if condition="$type eq 5">selected</if>>旷工报警</option>
+                                <option value="6"<if condition="$type eq 6">selected</if>>早退报警</option>
+                                <option value="7"<if condition="$type eq 7">selected</if>>怠工超过设定时间告警</option>
+                            </select>
+                        </div>
+                        <a id="search" url="__ACTION__" class="btn btn-sm btn-info">
+                            查询
+                        </a>
+                        <a id="excel" url="__CONTROLLER__/warningExcel" class="btn btn-sm btn-success">导出</a>
+                    </form>
+                </div>
+                <div class="smart-widget-inner">
+                    <table class="table table-striped table-bordered" id="dataTable">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>设备名称</th>
+                            <th>设备号</th>
+                            <th>绑定员工</th>
+                            <th>工号</th>
+                            <th>职位</th>
+                            <th>管理人员</th>
+                            <th>告警时间</th>
+                            <th>告警类型</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <foreach name="warningMessageList" item="v" key="k">
+                            <tr id="data-{$v['id']}">
+                                <td>{$k +1 + $number}</td>
+                                <td>{$v['machine_name']}</td>
+                                <td>{$v['machine_imei']}</td>
+                                <td><a href="javascript:userInfo('{$v.uid}');">{$v['realname']}</a></td>
+                                <td>{$v['job_number']}</td>
+                                <td>{$v['position']|getPositionName}</td>
+                                <td>{$v['parent_id']|getMemberManager}</td>
+                                <td>
+                                    {$v['add_time']|date="Y-m-d H:i:s",###}
+                                </td>
+                                <td>
+                                    <if condition="$v['type'] eq 1 ">
+                                        远离工作区域
+                                        <elseif condition="$v['type'] eq 2" />
+                                        <a href="__MODULE__/Machine/machineOrbit/machine_id/{$v['machine_id']}/searchTime/{$v['add_time']|date='Y-m-d',###}">远离区域报警</a>
+                                        <elseif condition="$v['type'] eq 3" />
+                                        低电量报警
+                                        <elseif condition="$v['type'] eq 4" />
+                                        <a href="__MODULE__/Machine/machineOrbit/machine_id/{$v['machine_id']}/searchTime/{$v['add_time']|date='Y-m-d',###}">迟到报警</a>
+                                        <elseif condition="$v['type'] eq 5" />
+                                        <a href="__MODULE__/Machine/machineOrbit/machine_id/{$v['machine_id']}/searchTime/{$v['add_time']|date='Y-m-d',###}">旷工报警</a>
+                                        <elseif condition="$v['type'] eq 6" />
+                                        <a href="__MODULE__/Machine/machineOrbit/machine_id/{$v['machine_id']}/searchTime/{$v['add_time']|date='Y-m-d',###}">早退报警</a>
+                                        <elseif condition="$v['type'] eq 7" />
+                                        <a href="__MODULE__/Machine/machineOrbit/machine_id/{$v['machine_id']}/searchTime/{$v['add_time']|date='Y-m-d',###}">怠工超过设定时间告警</a>
+                                    </if>
+                                </td>
+                            </tr>
+                        </foreach>
+                        </tbody>
+                    </table>
+                    <div class="content text-right">
+                        <ul class="pagination">
+                            {$page}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="{:C('ADMIN_JS_PATH')}/layui/layui.js"></script>
+<script src="{:C('ADMIN_JS_PATH')}/time.js"></script>
+<script type="text/javascript">
+    $(function() {
+        //搜索功能
+        $("#search").click(function () {
+            var url = $(this).attr('url');
+            var query = $('#search-form').find('.time-input').serialize();
+
+            if (url.indexOf('?') > 0) {
+                url += '&' + query;
+            } else {
+                url += '?' + query;
+            }
+            window.location.href = url;
+        });
+        //导出功能
+        $("#excel").click(function () {
+            var url = $(this).attr('url');
+            var query = $('#search-form').find('.time-input').serialize();
+            if (url.indexOf('?') > 0) {
+                url += '&' + query;
+            } else {
+                url += '?' + query;
+            }
+            window.location.href = url;
+        });
+    })
+    $(document).ready(function(){
+        layui.use('laydate', function(){
+            var laydate = layui.laydate;
+            var start = laydate.render({
+                elem: '#start_time',
+                type: 'date',
+                theme: 'grid',
+                festival: true, //显示节日
+                calendar: true,
+                max:0,
+                done: function(value, date){
+                    endMax = end.config.max;
+                    end.config.min = date;
+                    end.config.min.month = date.month -1;
+                    end.config.min.date = date.date;
+                }
+            });
+
+            var end = laydate.render({
+                elem: '#end_time',
+                type: 'date',
+                theme: 'grid',
+                festival: true, //显示节日
+                calendar: true,
+                max:0,
+                done: function(value, date){
+                    start.config.max = date;
+                    start.config.max.month = date.month -1;
+                    start.config.max.date = date.date;
+                }
+            });
+        });
+    });
+
+    function leaveInfo(userid,first_time,second_time){
+        layer.open({
+            type: 2,
+            title:"离岗详情",
+            shadeClose: true,
+            shade: 0.2,
+            scrollbar: false,
+            area: ['800px', '600px'],
+            content: "__CONTROLLER__/leaveInfo/userid/"+userid+"/first_time/"+first_time+"/second_time/"+second_time
+        });
+    }
+    function userInfo(userid){
+        layer.open({
+            type: 2,
+            title:"员工详情",
+            shadeClose: true,
+            shade: 0.2,
+            scrollbar: false,
+            area: ['800px', '400px'],
+            content: "__MODULE__/Member/memberInfo/userid/"+userid
+        });
+    }
+    function changePosition(obj){
+        var option = obj.value;
+        var item = document.getElementById("member_manager");
+        if(option>0){
+            var url = '__MODULE__/Member/getMemberManager';
+            $.post(url, {'parent_id':option}, function(ret){
+                if(ret.status == 1){
+//                    item.style.display = "inline-block";
+                    item.querySelector("select").innerHTML = "";
+                    item.querySelector("select").innerHTML= '<option value="">--全部--</option>';
+                    for(i in ret.data){
+                        item.querySelector("select").innerHTML += '<option value='+ret.data[i].userid+'<if condition="$parent_id eq '+ret.data[i].userid+'">selected</if>>'+ret.data[i].realname+'</option>';
+                    }
+                } else{
+//                    item.style.display = "none";
+                    item.querySelector("select").innerHTML = "";
+                    item.querySelector("select").innerHTML= '<option value="">--全部--</option>';
+                }
+            });
+        }
+//        else{
+//            item.style.display = "none";
+//        }
+    }
+</script>

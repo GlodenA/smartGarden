@@ -49,7 +49,7 @@
 					</el-button>
 					<div class="row items-center">
 						<el-input placeholder="请输入区域名称" class="mr2"></el-input>
-						<el-button type="primary" >
+						<el-button type="primary">
 							查询
 						</el-button>
 					</div>
@@ -64,43 +64,108 @@
 					<el-table-column prop="status" label="状态">
 						<template #default="{ row }">
 							<el-tag :type="row.status === 1 ? 'primary' : 'danger'">
-								{{ row.status === 1 ? '在线' : '离线' }}
+								{{ row.status === 1 ? '显示' : '隐藏' }}
 							</el-tag>
 						</template>
 					</el-table-column>
 					<el-table-column prop="rowOperations" label="操作">
-						<el-button type="primary" plain size="mini">
-							编辑
-						</el-button>
-						<el-button type="danger" plain size="mini">
-							删除
-						</el-button>
+						<template #default="{ row }">
+							<el-button type="primary" plain size="mini" @click="() => {
+								edit.formData = {
+									name: row.areaName,
+									weeks: row.addTime.weekArr,
+									timeFields: [],
+									status: row.status
+								}
+								edit.dialog = true
+							}">
+								编辑
+							</el-button>
+							<el-button type="danger" plain size="mini" @click="showDelDialog(row)">
+								删除
+							</el-button>
+						</template>
 					</el-table-column>
 				</el-table>
 				<div class="flex justify-end mt4">
-					<el-pagination
-					background
-					layout="prev, pager, next"
-					:total="totalNumber"
-					:current-page="queryCondition.page"
-					@current-change="pageChange">
-				</el-pagination>
-			</div>
+					<el-pagination background layout="prev, pager, next" :total="totalNumber" :current-page="queryCondition.page" @current-change="pageChange">
+					</el-pagination>
+				</div>
 			</div>
 		</div>
 	</div>
-	<el-dialog :visible.sync="create.dialog" title="添加班组">
-		<el-form>
+	<el-dialog :visible.sync="create.dialog" title="添加班组" width="660px">
+		<el-form label-width="120px" :model="create.formData" :rules="create.formDataRules" ref="createForm">
 			<el-form-item label="班组名称" prop="name">
 				<el-input v-model="create.formData.name"></el-input>
 			</el-form-item>
-
+			<el-form-item prop="weeks" label="工作日设置">
+				<el-checkbox-group v-model="create.formData.weeks" size="small">
+					<el-checkbox-button v-for="w in create.weeks" :label="w + 1" :key="">
+						{{ w }}
+					</el-checkbox-button>
+				</el-checkbox-group>
+			</el-form-item>
+			<el-form-item label="时间段设置" prop="timeFields">
+				<el-checkbox-group v-model="create.formData.timeFields">
+					<el-checkbox v-for="(t, i) in create.times" :label="i" :key="t">
+						{{ t }}
+					</el-checkbox>
+				</el-checkbox-group>
+			</el-form-item>
+			<el-form-item label="状态" prop="status">
+				<el-radio v-model="create.formData.status" :label="1">显示</el-radio>
+				<el-radio v-model="create.formData.status" :label="2">隐藏</el-radio>
+			</el-form-item>
 		</el-form>
-		<div slot="content flex justify-center">
-			<el-button>
+		<div slot="footer" class=" flex justify-center">
+			<el-button @click="() => {
+				let f = $refs.createForm
+				if(f){
+					f.resetFields()
+				}
+			}">
 				重置
 			</el-button>
-			<el-button type="primary" class="ml2">
+			<el-button type="primary" class="ml2" @click="submitCreate">
+				提交
+			</el-button>
+		</div>
+	</el-dialog>
+	<el-dialog :visible.sync="edit.dialog" title="编辑班组信息" width="660px">
+		<el-form label-width="120px" :model="create.formData" :rules="edit.formDataRules" ref="editForm">
+			<el-form-item label="班组名称" prop="name">
+				<el-input v-model="edit.formData.name"></el-input>
+			</el-form-item>
+			<el-form-item prop="weeks" label="工作日设置">
+				<el-checkbox-group v-model="edit.formData.weeks" size="small">
+					<el-checkbox-button v-for="w in create.weeks" :label="w" :key="">
+						{{ w }}
+					</el-checkbox-button>
+				</el-checkbox-group>
+			</el-form-item>
+			<el-form-item label="时间段设置" prop="timeFields">
+				<el-checkbox-group v-model="edit.formData.timeFields">
+					<el-checkbox v-for="(t, i) in create.times" :label="i" :key="t">
+						{{ t }}
+					</el-checkbox>
+				</el-checkbox-group>
+			</el-form-item>
+			<el-form-item label="状态" prop="status">
+				<el-radio v-model="edit.formData.status" :label="1">显示</el-radio>
+				<el-radio v-model="edit.formData.status" :label="2">隐藏</el-radio>
+			</el-form-item>
+		</el-form>
+		<div slot="footer" class=" flex justify-center">
+			<el-button @click="() => {
+				let f = $refs.editForm
+				if(f){
+					f.resetFields()
+				}
+			}">
+				重置
+			</el-button>
+			<el-button type="primary" class="ml2" @click="submitCreate">
 				提交
 			</el-button>
 		</div>
@@ -109,12 +174,32 @@
 <script>
 	const GROUPMANAGE = new Vue({
 		el: '#GROUPMANAGE',
-		data(){
+		data() {
 			return {
-				create: {
+				edit: {
 					dialog: false,
 					formData: {
-						name: ''
+						name: '',
+						weeks: [],
+						timeFields: [],
+						status: 1
+					},
+				},
+				create: {
+					weeks: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+					times: [
+						'冬季上午班(07:00:00-11:00:00)',
+						'冬季下午班(13:00:00-17:00:00)'
+					],
+					dialog: false,
+					formDataRules: {
+
+					},
+					formData: {
+						name: '',
+						weeks: [],
+						timeFields: [],
+						status: 1
 					}
 				},
 				totalNumber: 1000,
@@ -162,7 +247,26 @@
 			}
 		},
 		methods: {
-			pageChange(p){
+			// 展示删除弹窗
+			showDelDialog(row) {
+				this.$confirm(`确认删除${ row.areaName }吗?`, '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					// 执行删除逻辑
+					this.$message({
+						type: 'success',
+						message: '删除成功!',
+						showClose: true
+					})
+				}).catch(() => {})
+			},
+			// 提交创建弹窗的数据
+			submitCreate() {
+
+			},
+			pageChange(p) {
 				this.queryCondition.page = p
 				// 这里进行分页查询
 			}

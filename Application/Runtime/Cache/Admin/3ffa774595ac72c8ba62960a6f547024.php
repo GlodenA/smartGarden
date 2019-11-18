@@ -286,8 +286,16 @@
 		},
 		created(){
 			// 从接口获取数据
+			this.getData()
 		},
 		methods: {
+			getData(){
+				DMS.ajaxPost('路径' , {
+					page: this.queryCondition.page,
+				}, res => {
+					this.tableData = res.arr
+				})
+			},
 			/**
 			 * [pageChange 分页页数变化触发事件]
 			 * @param  {[type]} p [需要查询数据的那一页]
@@ -295,6 +303,7 @@
 			 */
 			pageChange(p){
 				// 在这里用 p 向后台ajax获取分页数据
+				this.getData()
 				console.log(`新的页码：${p}`)
 			},
 
