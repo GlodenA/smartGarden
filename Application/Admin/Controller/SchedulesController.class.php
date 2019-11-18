@@ -197,4 +197,8 @@ class SchedulesController extends BaseController {
         }
 	}
 
+	public function groupAttendence(){
+		$this->display('group_attendence');
+	}
+
 }
