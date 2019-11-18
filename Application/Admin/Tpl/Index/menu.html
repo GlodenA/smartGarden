@@ -58,12 +58,12 @@
         <foreach name="__MENU__" item="v">
           <li menu-id={$v['id']}>
             <a
-              class="flex justify-between items-center"
+              class="flex justify-between items-center">
               <if condition="$v['children']">
                 <else />
                 href="__MODULE__/{$v['c']}/{$v['a']}/{$v['data']}"
               </if>
-            >
+
               <div class="flex items-center">
                 <i class="fa fa-{$v['icon_class']} fa-lg"></i>
                 <span class="ml2">{$v['name']}</span>
@@ -85,6 +85,15 @@
             </if>
           </li>
         </foreach>
+        <li class="bg-palette1">
+          <a href="__MODULE__/Map/mapFull" target="_blank">
+                        <span class="menu-content block">
+                            <span class="menu-icon"><i class="block fa fa-map fa-lg"></i></span>
+                            <span class="text m-left-sm">全屏展示</span>
+                        </span>
+            <span class="menu-content-hover block">全屏</span>
+          </a>
+        </li>
       </ul>
     </div>
   </div>
