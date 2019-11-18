@@ -3,13 +3,13 @@
     background-color: #03454b;
   }
 
-  #SIDEMENU ul.yl-side-menu>li{
+  #SIDEMENU ul.yl-side-menu>li {
     position: relative;
     overflow: visible;
   }
 
   #SIDEMENU ul.yl-side-menu>li>a,
-  #SIDEMENU ul.yl-side-menu ul.yl-side-menu--sub-menu>li>a{
+  #SIDEMENU ul.yl-side-menu ul.yl-side-menu--sub-menu>li>a {
     padding: 18px 24px;
     color: #fff;
     cursor: pointer;
@@ -20,7 +20,7 @@
     background-color: #00383d;
   }
 
-  #SIDEMENU ul.yl-side-menu li ul.yl-side-menu--sub-menu{
+  #SIDEMENU ul.yl-side-menu li ul.yl-side-menu--sub-menu {
     position: absolute;
     top: 0;
     right: 0;
@@ -32,15 +32,15 @@
     display: none;
   }
 
-  #SIDEMENU ul.yl-side-menu li:hover ul.yl-side-menu--sub-menu{
+  #SIDEMENU ul.yl-side-menu li:hover ul.yl-side-menu--sub-menu {
     display: block;
   }
 
-  #SIDEMENU ul.yl-side-menu ul.yl-side-menu--sub-menu>li>a{
+  #SIDEMENU ul.yl-side-menu ul.yl-side-menu--sub-menu>li>a {
     display: block;
   }
 
-  #SIDEMENU ul.yl-side-menu ul.yl-side-menu--sub-menu>li>a:hover{
+  #SIDEMENU ul.yl-side-menu ul.yl-side-menu--sub-menu>li>a:hover {
     color: #33D792;
   }
 </style>
@@ -49,16 +49,15 @@
     <div>
       <ul class="yl-side-menu">
         <li>
-          <a href="__MODULE__" style="display: block;">
+          <a href="__MODULE__" class="flex items-center">
             <i class="el-icon-s-home"></i>
-            首页
+            <span class="ml2">首页</span>
           </a>
         </li>
         <php>$__MENU__ = session('ADMIN_MENU_LIST');</php>
         <foreach name="__MENU__" item="v">
           <li menu-id={$v['id']}>
-            <a
-              class="flex justify-between items-center">
+            <a class="flex justify-between items-center">
               <if condition="$v['children']">
                 <else />
                 href="__MODULE__/{$v['c']}/{$v['a']}/{$v['data']}"
@@ -85,13 +84,10 @@
             </if>
           </li>
         </foreach>
-        <li class="bg-palette1">
-          <a href="__MODULE__/Map/mapFull" target="_blank">
-                        <span class="menu-content block">
-                            <span class="menu-icon"><i class="block fa fa-map fa-lg"></i></span>
-                            <span class="text m-left-sm">全屏展示</span>
-                        </span>
-            <span class="menu-content-hover block">全屏</span>
+        <li>
+          <a href="" class="flex items-center">
+            <i class="el-icon-full-screen"></i>
+            <span class="ml2">大屏展示</span>
           </a>
         </li>
       </ul>

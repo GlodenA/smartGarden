@@ -133,43 +133,32 @@
           page: 1
         },
         tableData: [{
-          deviceName: 'cjl_0239429',
-          deviceNumber: '092348023409809',
-          bindEmployee: '孙继红',
-          workNumber: '9239',
-          position: '养护工人',
-          manager: '王红艳',
-          warningTime: '2019-11-05',
-          warningType: '迟到报警'
+          manager: '孙继红',
+          fullAttendence: 4,
+          late: 3,
+          leavePosition: 0,
+          warningTime: '2019-11-18'
         }, {
-          deviceName: 'cjl_0239429',
-          deviceNumber: '092348023409809',
-          bindEmployee: '孙继红',
-          workNumber: '9239',
-          position: '养护工人',
-          manager: '王红艳',
-          warningTime: '2019-11-05',
-          warningType: '怠工超过设定时间报警'
+          manager: '孙继红',
+          fullAttendence: 4,
+          late: 3,
+          leavePosition: 0,
+          warningTime: '2019-11-18'
         }, {
-          deviceName: 'cjl_0239429',
-          deviceNumber: '092348023409809',
-          bindEmployee: '孙继红',
-          workNumber: '9239',
-          position: '养护工人',
-          manager: '王红艳',
-          warningTime: '2019-11-05',
-          warningType: '迟到报警'
+          manager: '孙继红',
+          fullAttendence: 4,
+          late: 3,
+          leavePosition: 0,
+          warningTime: '2019-11-18'
         }],
         tableColumns: [
           ['serialNumber', '序号'],
-          ['deviceName', '设备名称'],
-          ['deviceNumber', '设备号'],
-          ['bindEmployee', '绑定员工'],
-          ['workNumber', '工号'],
-          ['position', '职位'],
+          ['manager', '管理员姓名'],
+          ['fullAttendence', '满勤'],
+          ['late', '迟到'],
+          ['leavePosition', '离岗'],
           ['manager', '管理人员'],
-          ['warningTime', '告警时间'],
-          ['warningType', '告警类型']
+          ['warningTime', '告警时间']
         ]
       }
     },

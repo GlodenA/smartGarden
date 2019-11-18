@@ -145,13 +145,13 @@ const header = new Vue({
     background-color: #03454b;
   }
 
-  #SIDEMENU ul.yl-side-menu>li{
+  #SIDEMENU ul.yl-side-menu>li {
     position: relative;
     overflow: visible;
   }
 
   #SIDEMENU ul.yl-side-menu>li>a,
-  #SIDEMENU ul.yl-side-menu ul.yl-side-menu--sub-menu>li>a{
+  #SIDEMENU ul.yl-side-menu ul.yl-side-menu--sub-menu>li>a {
     padding: 18px 24px;
     color: #fff;
     cursor: pointer;
@@ -162,7 +162,7 @@ const header = new Vue({
     background-color: #00383d;
   }
 
-  #SIDEMENU ul.yl-side-menu li ul.yl-side-menu--sub-menu{
+  #SIDEMENU ul.yl-side-menu li ul.yl-side-menu--sub-menu {
     position: absolute;
     top: 0;
     right: 0;
@@ -174,15 +174,15 @@ const header = new Vue({
     display: none;
   }
 
-  #SIDEMENU ul.yl-side-menu li:hover ul.yl-side-menu--sub-menu{
+  #SIDEMENU ul.yl-side-menu li:hover ul.yl-side-menu--sub-menu {
     display: block;
   }
 
-  #SIDEMENU ul.yl-side-menu ul.yl-side-menu--sub-menu>li>a{
+  #SIDEMENU ul.yl-side-menu ul.yl-side-menu--sub-menu>li>a {
     display: block;
   }
 
-  #SIDEMENU ul.yl-side-menu ul.yl-side-menu--sub-menu>li>a:hover{
+  #SIDEMENU ul.yl-side-menu ul.yl-side-menu--sub-menu>li>a:hover {
     color: #33D792;
   }
 </style>
@@ -191,18 +191,17 @@ const header = new Vue({
     <div>
       <ul class="yl-side-menu">
         <li>
-          <a href="/smartGarden/manager.php?s=" style="display: block;">
+          <a href="/smartGarden/manager.php?s=" class="flex items-center">
             <i class="el-icon-s-home"></i>
-            首页
+            <span class="ml2">首页</span>
           </a>
         </li>
         <?php $__MENU__ = session('ADMIN_MENU_LIST'); ?>
         <?php if(is_array($__MENU__)): foreach($__MENU__ as $key=>$v): ?><li menu-id=<?php echo ($v['id']); ?>>
-            <a
-              class="flex justify-between items-center"
+            <a class="flex justify-between items-center">
               <?php if($v['children']): else: ?>
                 href="/smartGarden/manager.php?s=/<?php echo ($v['c']); ?>/<?php echo ($v['a']); ?>/<?php echo ($v['data']); ?>"<?php endif; ?>
-            >
+
               <div class="flex items-center">
                 <i class="fa fa-<?php echo ($v['icon_class']); ?> fa-lg"></i>
                 <span class="ml2"><?php echo ($v['name']); ?></span>
@@ -217,6 +216,12 @@ const header = new Vue({
                   </li><?php endforeach; endif; ?>
               </ul><?php endif; ?>
           </li><?php endforeach; endif; ?>
+        <li>
+          <a href="" class="flex items-center">
+            <i class="el-icon-full-screen"></i>
+            <span class="ml2">大屏展示</span>
+          </a>
+        </li>
       </ul>
     </div>
   </div>
