@@ -17,418 +17,228 @@
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin_template.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/layer/layer.js"></script>
-
+      <!-- Vue, element, 间距工具类 相关 -->
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/Css//util/flex.css">
+      <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
+      <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/element/index.css">
+      <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+      <!-- Vue, element, 间距工具类 相关 -->
     </head>
     <body class="overflow-hidden">
 
-<div class="padding-md">
-	<!-- 面包屑导航 -->
-	<div>
-		<ul class="breadcrumb">
-			当前位置：
-			<li><a href="/WFGarden/manager.php?s=/Index/main"> 主页</a></li>
-			<li><a href="/WFGarden/manager.php?s=/Machine/machineList">设备管理</a></li>
-		</ul>
-	</div>
+<style media="screen">
+	.el-link+.el-link{
+		margin-left: 8px;
+	}
+</style>
+<div class="padding-md" id="MACHINELIST">
 	<div class="smart-widget" style="margin-bottom: 1px;">
 		<div class="smart-widget-inner">
 			<div class="smart-widget-body">
-				<div class="header-text">
-					设备管理
+				<el-breadcrumb separator="/">
+          <el-breadcrumb-item>
+            <a href="">首页</a>
+          </el-breadcrumb-item>
+          <el-breadcrumb-item>
+            设备管理
+          </el-breadcrumb-item>
+          <el-breadcrumb-item>
+            设备列表
+          </el-breadcrumb-item>
+        </el-breadcrumb>
+				<el-divider></el-divider>
+				<div class="flex px3 justify-between items-start">
+					<el-button icon="el-icon-plus" type="primary" >
+						添加设备
+					</el-button>
+					<el-form inline>
+						<el-form-item label="设备状态">
+							<el-select v-model="queryCondition.status" style="width:100px;">
+								<el-option v-for="(l, i) in ['全部', '在线', '离线']" :label="l" :key="i" :value="i">
+								</el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item label="职位">
+							<el-select v-model="queryCondition.position" style="width:100px;">
+								<el-option label="全部" :value="0">
+								</el-option>
+								<?php if(is_array($positionList)): $i = 0; $__LIST__ = $positionList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["name"]); ?>" value="<?php echo ($pl["id"]); ?>">
+									</el-option><?php endforeach; endif; else: echo "" ;endif; ?>
+							</el-select>
+						</el-form-item>
+						<el-form-item label="管理人员">
+							<el-select v-model="queryCondition.manager" style="width:100px;">
+								<el-option label="全部" :value="0">
+								</el-option>
+								<?php if(is_array($managerList)): $i = 0; $__LIST__ = $managerList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["realname"]); ?>" value="<?php echo ($pl["userid"]); ?>">
+									</el-option><?php endforeach; endif; else: echo "" ;endif; ?>
+							</el-select>
+						</el-form-item>
+						<el-form-item label="关键字" prop="keyword">
+							<el-input v-model="queryCondition.keyword"/>
+						</el-form-item>
+						<el-form-item>
+							<el-button icon="el-icon-search" type="primary">
+								查询
+							</el-button>
+						</el-form-item>
+					</el-form>
 				</div>
-				<div class="info-line">
-					<a href="javascript:machineAdd();" class="btn btn-sm btn-info">
-						<i class="fa fa-plus"></i>增加设备
-					</a>
-					<a href="javascript:areaBinds()" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="批量换绑或解除区域" data-original-title="批量换绑或解除区域">换绑或解除区域</a>
-					<a href="javascript:manager('changeSchedules')" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="批量切换班组" data-original-title="批量切换班组">切换班组</a>
-					<a href="javascript:changeSchedules()" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="一键切换班组" data-original-title="一键切换班组">切换班组</a>
-					<a href="javascript:manager('delMachine')" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="批量删除设备" data-original-title="批量删除设备">删除设备</a>
-					<form class="searchTop-form form-inline pull-right p-l-10" id="search-form" action="/WFGarden/manager.php?s=/Machine/machineList" method="post">
-						<div class="form-group">
-							<label for="machine_status">设备状态</label>
-							<select class="form-control searchbody input-sm" name="machine_status" id="machine_status">
-								<option value="0" <?php if($machine_status == 0): ?>selected<?php endif; ?>>--全部--</option>
-								<option value="1" <?php if($machine_status == 1): ?>selected<?php endif; ?>>在线</option>
-								<option value="2" <?php if($machine_status == 2): ?>selected<?php endif; ?>>离线</option>
-							</select>
+				<el-table :data="tableData" @selection-change="s => batchSelections = s">
+					<el-table-column
+					type="selection"
+					width="55">
+				</el-table-column>
+				<template v-for="([prop, label], i) in tableColumns">
+					<el-table-column :key="prop" :prop="prop" :label="label" v-if="prop === 'serialNumber'">
+						<template #default="{ $index }">
+							{{ $index + 1 }}
+						</template>
+					</el-table-column>
+					<el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'deviceStatus'">
+						<template #default="{ row }">
+							<el-tag v-if="row.deviceStatus === 1" type="primary">在线</el-tag>
+							<el-tag v-else type="danger">离线</el-tag>
+						</template>
+					</el-table-column>
+					<el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'rowOperations'" :width="320">
+						<template #default="{ row }">
+							<el-link :underline="false" type="primary">
+								设备位置
+							</el-link>
+							<el-link :underline="false" type="primary">
+								设备轨迹
+							</el-link>
+							<el-link :underline="false" type="primary">
+								划分区域
+							</el-link>
+							<el-link :underline="false" type="primary">
+								所属区域
+							</el-link>
+							<el-link :underline="false" type="danger">
+								解除区域
+							</el-link>
+							<el-link :underline="false" type="primary">
+								设置班组
+							</el-link>
+							<el-link :underline="false" type="primary">
+								绑定员工
+							</el-link>
+							<el-link :underline="false" type="primary">
+								编辑
+							</el-link>
+							<el-link :underline="false" type="danger">
+								删除
+							</el-link>
+						</template>
+					</el-table-column>
+					<el-table-column :key="prop" :prop="prop" :label="label" v-else></el-table-column>
+				</template>
+				</el-table>
+					<div class="flex justify-between items-center mt4">
+						<div class="">
+							<el-button icon="el-icon-sort" type="primary" :disabled="!hasSelection">
+								批量换绑或解除
+							</el-button>
+							<el-button type="warning" icon="el-icon-refresh-left" :disabled="!hasSelection">
+								批量切换班组
+							</el-button>
+							<el-button type="danger" icon="el-icon-delete" :disabled="!hasSelection">
+								批量删除设备
+							</el-button>
 						</div>
-						<div class="form-group">
-							<label for="position">职位</label>
-							<select class="form-control searchbody input-sm" name="position" id="position" onchange="changePosition(this)">
-								<option value="0">--全部--</option>
-								<?php if(is_array($positionList)): $i = 0; $__LIST__ = $positionList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><option value="<?php echo ($pl["id"]); ?>"<?php if($position == $pl['id']): ?>selected<?php endif; ?>><?php echo ($pl["name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
-							</select>
-						</div>
-						<div class="form-group" id="member_manager">
-							<label for="parent_id">管理人员</label>
-							<select class="form-control searchbody input-sm" name="parent_id" id="parent_id">
-								<option value="0">--全部--</option>
-								<?php if(is_array($managerList)): $i = 0; $__LIST__ = $managerList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$sl): $mod = ($i % 2 );++$i;?><option value="<?php echo ($sl["userid"]); ?>"<?php if($parent_id == $sl['userid']): ?>selected<?php endif; ?>><?php echo ($sl["realname"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
-							</select>
-						</div>
-						<div class="form-group">
-							<label for="keywords">关键字：</label>
-							<input type="text" class="form-control input-sm" id="keywords" name="keywords" value="<?php echo ($keywords); ?>" placeholder="根据关键字查询">
-						</div>
-						<a id="search" url="/WFGarden/manager.php?s=/Machine/machineList" class="btn btn-sm btn-success">搜索</a>
-					</form>
-					<div class="searchTop-form form-inline pull-right">
-						<div class="form-group">
-							<input type="text" id="filename" class="form-control" readonly="">
-						</div>
-						<a class="btn btn-sm btn-info" id="selector">
-							选择文件
-						</a>
-						<button type="button" class="btn btn-warning btn-sm hide" id="media_upload">上传</button>
-						<a href="javascript:fnImport();" class="btn btn-sm btn-info">
-							导入
-						</a>
-						<a href="/WFGarden/Public/Admin/File/shebei.xlsx" class="btn btn-sm btn-info form-inline">
-							下载模板
-						</a>
-					</div>
+						<el-pagination
+						background
+						layout="prev, pager, next"
+						:total="totalNumber"
+						:current-page="queryCondition.page"
+						@current-change="pageChange">
+					</el-pagination>
 				</div>
-				<div class="smart-widget-inner">
-					<table class="table table-striped table-bordered" id="dataTable">
-						<thead>
-						<tr>
-							<th>
-								<div class="custom-checkbox">
-									<input type="checkbox" id="checkall" class="check-all" >
-									<label for="checkall"></label>
-								</div>
-							</th>
-							<th>#</th>
-							<th>设备号</th>
-							<th>设备名称</th>
-							<th>设备状态</th>
-							<th>电量</th>
-							<th>工号</th>
-							<th>负责人</th>
-							<th>职位</th>
-							<th>管理人员</th>
-							<th>所属区域名称</th>
-							<th>班组</th>
-							<!-- <th>添加时间</th> -->
-							<th>操作</th>
-						</tr>
-						</thead>
-						<tbody>
-						<?php if(is_array($machineList)): foreach($machineList as $k=>$v): ?><tr id="data-<?php echo ($v['machine_id']); ?>">
-								<td>
-									<div class="custom-checkbox">
-										<input type="checkbox" value="<?php echo ($v['machine_id']); ?>" name="machineids[]" id="machineid-<?php echo ($v['machine_id']); ?>" class="ids" >
-										<label for="machineid-<?php echo ($v['machine_id']); ?>"></label>
-									</div>
-								</td>
-								<td><?php echo ($k +1 + $number); ?></td>
-								<td><?php echo ($v['machine_imei']); ?></td>
-								<td><?php echo ($v['machine_name']); ?></td>
-								<td><?php echo ($v['machine_status']); ?></td>
-								<td><?php echo ($v['electricity']); ?></td>
-								<td><?php echo ($v['job_number']); ?></td>
-								<td><?php echo ($v['realname']); ?></td>
-								<td>
-									<?php echo ($v['position_name']); ?>
-								</td>
-								<td>
-									<?php echo ($v['parent_name']); ?>
-								</td>
-								<td><?php echo ($v['area_name']); ?></td>
-								<td>
-									<?php echo ($v['schedulesInfo']['schedules_name']); ?>
-									<!--&nbsp;&nbsp;-->
-									<!--<?php if($v['schedulesInfo']['work_day']): ?>-->
-										<!--【<?php echo ($v['schedulesInfo']['work_day']); ?>-->
-										<!--<?php if($v['schedulesInfo']['timeList']): ?>-->
-											<!--(<?php if(is_array($v["schedulesInfo"]["timeList"])): $kk = 0; $__LIST__ = $v["schedulesInfo"]["timeList"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vv): $mod = ($kk % 2 );++$kk;?>&nbsp;<?php echo ($vv['start_time']); ?>~<?php echo ($vv['end_time']); ?>&nbsp;<?php endforeach; endif; else: echo "" ;endif; ?>)-->
-										<!--<?php endif; ?>-->
-										<!--】-->
-									<!--<?php endif; ?>-->
-								</td>
-								<!-- <td><?php echo (date("Y-m-d H:i:s",$v['add_time'])); ?></td> -->
-								<td class="manager">
-									<a href="/WFGarden/manager.php?s=/Machine/machineMap/machine_id/<?php echo ($v['machine_id']); ?>" class="text-success"><i class="fa fa-info-circle m-right-xs"></i>设备位置</a>&nbsp;|&nbsp;
-									<a href="/WFGarden/manager.php?s=/Machine/machineOrbit/machine_id/<?php echo ($v['machine_id']); ?>" class="text-success"><i class="fa fa-info-circle m-right-xs"></i>设备轨迹</a>&nbsp;|&nbsp;
-									<a href="/WFGarden/manager.php?s=/Machine/machineArea/machine_id/<?php echo ($v['machine_id']); ?>" class="text-success"><i class="fa fa-info-circle m-right-xs"></i>划分区域</a>&nbsp;|&nbsp;
-									<?php if($v['area_id']): ?><a href="/WFGarden/manager.php?s=/Map/areaInfo/id/<?php echo ($v['area_id']); ?>" class="text-success"><i class="fa fa-info-circle m-right-xs"></i>所属区域</a>&nbsp;|&nbsp;
-										<a href="javascript:areaUnbind('<?php echo ($v["machine_id"]); ?>');" class="text-danger"><i class="fa fa fa-trash-o m-right-xs"></i>解除区域</a>&nbsp;|&nbsp;
-										<?php else: ?>
-										<a href="javascript:areaBind('<?php echo ($v["machine_id"]); ?>');" style="cursor: pointer"><i class="fa fa-pencil-square-o m-right-xs"></i>绑定区域</a>&nbsp;|&nbsp;<?php endif; ?>
-									<a href="javascript:schedulesBind(<?php echo ($v['machine_id']); ?>);" style="cursor: pointer"><i class="fa fa-pencil-square-o m-right-xs"></i>设置班组</a>&nbsp;|&nbsp;
-									<a href="javascript:memberBind(<?php echo ($v['machine_id']); ?>);" style="cursor: pointer"><i class="fa fa-pencil-square-o m-right-xs"></i>绑定员工</a>&nbsp;|&nbsp;
-									<!--<a href="/WFGarden/manager.php?s=/Machine/machineInfo/machine_imei/<?php echo ($v['machine_imei']); ?>" class="text-success"><i class="fa fa-info-circle m-right-xs"></i>详情</a>&nbsp;|&nbsp;-->
-									<a href="javascript:machineEdit(<?php echo ($v['machine_id']); ?>);" style="cursor: pointer"><i class="fa fa-pencil-square-o m-right-xs"></i>编辑</a>&nbsp;|&nbsp;
-									<a style="cursor: pointer" onclick="machineDelete('<?php echo ($v["machine_id"]); ?>')" class="text-danger"><i class="fa fa-trash-o m-right-xs"></i>删除</a>
-								</td>
-							</tr><?php endforeach; endif; ?>
-						</tbody>
-					</table>
-					<div class="content text-right">
-						<ul class="pagination">
-							<?php echo ($page); ?>
-						</ul>
-					</div>
-				</div>
-			</div>
+      </div>
 		</div>
 	</div>
 </div>
-<script src="<?php echo C('ADMIN_JS_PATH');?>/ajaxupload.js" type="text/javascript"></script>
 <script type="text/javascript">
-	$(function(){
-		//搜索功能
-		$("#search").click(function () {
-			var url = $(this).attr('url');
-			var query = $('#search-form').find('.input-sm').serialize();
-
-			if (url.indexOf('?') > 0) {
-				url += '&' + query;
-			} else {
-				url += '?' + query;
+	const MACHINELIST = new Vue({
+		el: '#MACHINELIST',
+		data(){
+			return {
+				batchSelections: [],
+				tableData: [{
+					deviceNumber: '2983452-42930',
+					deviceName: '设备1',
+					deviceStatus: 1,
+					battery: 78,
+					workNumber: 290824,
+					principal: '张晓晨',
+					position: '维护工人',
+					manager: '王大拿',
+					area: '渭河西岸',
+					group: '保安常白'
+				}, {
+					deviceNumber: '489423948-290398',
+					deviceName: '设备2',
+					deviceStatus: 2,
+					battery: 90,
+					workNumber: 23432,
+					principal: '王安琪',
+					position: '工人组长',
+					manager: '刘璇',
+					area: '渭河东岸',
+					group: '保安常黑'
+				}],
+				queryCondition: {
+					keyword: '',
+					status: 0,
+					position: 0,
+					manager: 0,
+					page: 1
+				},
+				// 分页总数据条数
+				totalNumber: 1000,
+				tableColumns: [
+					['serialNumber', '序号'],
+					['deviceNumber', '设备号'],
+					['deviceName', '设备名称'],
+					['deviceStatus', '设备状态'],
+					['battery', '电量'],
+					['workNumber', '工号'],
+					['principal', '负责人'],
+					['position', '职位'],
+					['manager', '管理人员'],
+					['area', '所属区域名称'],
+					['group', '班组'],
+					['rowOperations', '操作']
+				]
 			}
-			window.location.href = url;
-		});
-		$(".check-all").click(function(){
-			$(".ids").prop("checked", this.checked);
-		});
-		$(".ids").click(function(){
-			var option = $(".ids");
-			option.each(function(i){
-				if(!this.checked){
-					$(".check-all").prop("checked", false);
-					return false;
-				}else{
-					$(".check-all").prop("checked", true);
-				}
-			});
-		});
-		// 创建一个上传参数
-		var uploadOption = {
-			// 提交目标
-			action: "/util.php?m=Attachment&c=Index&a=excelUpload",
-			// 服务端接收的名称
-			name: "file",
-			// 自动提交
-			autoSubmit: true,
-			// 选择文件之后…
-			onChange: function (file, extension) {
-				if (new RegExp(/(xls)|(xlsx)/i).test(extension)) {
-					$("#media_upload").removeClass("hide");
-					$("#filename").val(file);
-				} else {
-					DMS.alert("只限上传xls文件，请重新选择！");
-					return;
-				}
+		},
+		methods: {
+			/**
+			 * [pageChange 分页页数变化触发事件]
+			 * @param  {[type]} p [需要查询数据的那一页]
+			 * @return {[type]}   [无]
+			 */
+			pageChange(p){
+				// 在这里用 p 向后台ajax获取分页数据
+				console.log(`新的页码：${p}`)
 			},
-			// 开始上传文件
-			onSubmit: function (file, extension) {
-				$("#media_upload").text("正在上传");
-			},
-			// 上传完成之后
-			onComplete: function (file, response) {
-				var response = JSON.parse(jQuery(response).text());
-				console.log(response);
-				if(response.status == 'success'){
-					$("#media_upload").text("上传完成");
-					$("#filename").val(response.path);
-				}else{
-					$("#media_upload").addClass("hide");
-					DMS.alert("上传文件过大/上传失败！");
-					return false;
-				}
-			}
-		};
 
-		// 初始化图片上传框
-		var oAjaxUpload = new AjaxUpload('#selector', uploadOption);
-		// 给上传按钮增加上传动作
-		$("#media_upload").click(function (){
-			oAjaxUpload.submit();
-		})
+			/**
+			 * [doQuery 查询触发事件]
+			 * @return {[type]} [description]
+			 */
+			doQuery(){
+				// 在这里将查询条件传后台获取查询结果
+			}
+		},
+		computed: {
+			hasSelection(){
+				return this.batchSelections.length > 0
+			}
+		}
 	})
-	function manager(type){
-		var machineids='';
-		$("input[name='machineids[]']:checked").each(function(i, n){
-			machineids += $(n).val() + ',';
-		});
-		machineids = machineids.substring(0,machineids.length-1);
-
-		if(machineids=='') {
-			DMS.alert("请先选择设备")
-			return false;
-		}else{
-			switch (type) {
-				case 'unArea':
-					var url = "/WFGarden/manager.php?s=/Machine/areaDels";
-					break;
-				case 'delMachine':
-					var url = "/WFGarden/manager.php?s=/Machine/machineDels";
-					break;
-				case 'changeSchedules':
-					var url = "/WFGarden/manager.php?s=/Machine/changeSchedules";
-					break;
-			}
-			if(url){
-				if(type == 'changeSchedules'){
-					DMS.ajaxShow("批量切换班组",url+"/machineids/"+machineids);
-					return;
-				}
-				DMS.dialog("确定要执行当前操作吗?",function(){
-					DMS.ajaxPost(url,{machineids:machineids},function(ret){
-						if(ret.status==1){
-							DMS.success(ret.info,0,function(){
-								window.location.href = window.location.href;
-							});
-						}else{
-							DMS.error(ret.info,0);
-						}
-					})
-				});
-			}
-		}
-	}
-	function fnImport(){
-		var excel = $('#filename').val();
-		if(!excel){
-			DMS.error('请先上传文件');
-			return;
-		}
-		DMS.ajaxPost("/WFGarden/manager.php?s=/Machine/importFile",{"filename":excel},function(ret){
-			if(ret.status==1){
-				DMS.success(ret.info,1000,function(){
-					submitStatus = true;
-					if(ret.url){
-						window.location.href = ret.url;
-					}else{
-						window.location.href = window.location.href;
-					}
-				})
-			}else{
-				DMS.error(''+ret.info+'',0,function(){
-					submitStatus = true;
-				})
-			}
-		})
-	}
-	function machineAdd(){
-		DMS.ajaxShow("新增设备","/WFGarden/manager.php?s=/Machine/machineAdd");
-	}
-	function machineEdit(id){
-		DMS.ajaxShow("设备编辑","/WFGarden/manager.php?s=/Machine/machineEdit/machine_id/"+id);
-	}
-//	function fnEdit(id){
-//		DMS.ajaxShow("设备编辑","/WFGarden/manager.php?s=/Machine/machineEdit/machine_id/"+id);
-//	}
-	function memberBind(id){
-		DMS.ajaxShow("员工绑定","/WFGarden/manager.php?s=/Machine/memberBind/machine_id/"+id);
-	}
-
-	function changeSchedules(){
-		DMS.ajaxShow("一键切换班组","/WFGarden/manager.php?s=/Machine/changeSchedules");
-	}
-
-	function areaBinds(){
-		var machineids='';
-		$("input[name='machineids[]']:checked").each(function(i, n){
-			machineids += $(n).val() + ',';
-		});
-		machineids = machineids.substring(0,machineids.length-1);
-		if(machineids=='') {
-			DMS.alert("请先选择设备");
-			return false;
-		}else{
-			DMS.ajaxShow("批量换绑或解除区域","/WFGarden/manager.php?s=/Machine/areaBinds/machineids/"+machineids);
-		}
-
-	}
-
-	function schedulesBind(id){
-		DMS.ajaxShow("班组设置","/WFGarden/manager.php?s=/Machine/schedulesBind/machine_id/"+id);
-	}
-	function machineDelete(id){
-		DMS.dialog("确定要删除吗?",function(){
-			DMS.ajaxPost("/WFGarden/manager.php?s=/Machine/machineDelete",{machine_id:id},function(ret){
-				if(ret.status==1){
-					DMS.success(ret.info,0,function(){
-						$("#data-"+id).remove();
-					});
-				}else{
-					DMS.error(ret.info,0);
-				}
-			})
-		});
-	}
-	function areaUnbind(machine_id){
-		DMS.dialog("确定要解除区域吗?",function(){
-			DMS.ajaxPost("/WFGarden/manager.php?s=/Machine/areaUnbind",{machine_id:machine_id},function(ret){
-				if(ret.status==1){
-					DMS.success(ret.info,0,function(){
-						window.location.href = window.location.href;
-					});
-				}else{
-					DMS.error(ret.info,0);
-				}
-			})
-		});
-	}
-	function machineLocation(machine_id){
-		DMS.dialog("确定要发送定位命令吗?",function(){
-			DMS.ajaxPost("/WFGarden/manager.php?s=/Machine/machineLocation",{machine_id:machine_id},function(ret){
-				console.log(JSON.stringify(ret));
-				if(ret.status==1){
-					DMS.success(ret.info,0,function(){
-						window.location.href = window.location.href;
-					});
-				}else{
-					DMS.error(ret.info,0);
-				}
-			})
-		});
-	}
-	//绑定区域
-	function areaBind(machine_id){
-		DMS.ajaxShow("区域绑定","/WFGarden/manager.php?s=/Machine/areaBind/machine_id/"+machine_id);
-	}
-	//切换班组
-	function changeTime(num){
-		DMS.dialog("确定要切换班组吗?",function(){
-			DMS.ajaxPost("/WFGarden/manager.php?s=/Machine/changeTime",{num:num},function(ret){
-				if(ret.status==1){
-					DMS.success(ret.info,0,function(){
-						window.location.href = window.location.href;
-					});
-				}else{
-					DMS.error(ret.info,0);
-				}
-			})
-		});
-	}
-	function changePosition(obj){
-		var option = obj.value;
-		var item = document.getElementById("member_manager");
-		if(option>0){
-			var url = '/WFGarden/manager.php?s=/Member/getMemberManager';
-			$.post(url, {'parent_id':option}, function(ret){
-				if(ret.status == 1){
-//                    item.style.display = "inline-block";
-					item.querySelector("select").innerHTML = "";
-					item.querySelector("select").innerHTML= '<option value="0">--全部--</option>';
-					for(i in ret.data){
-						item.querySelector("select").innerHTML += '<option value='+ret.data[i].userid+'<?php if($parent_id == '+ret.data[i].userid+'): ?>selected<?php endif; ?>>'+ret.data[i].realname+'</option>';
-					}
-				} else{
-//                    item.style.display = "none";
-					item.querySelector("select").innerHTML = "";
-					item.querySelector("select").innerHTML= '<option value="0">--全部--</option>';
-				}
-			});
-		}
-//        else{
-//            item.style.display = "none";
-//        }
-	}
 </script>
 
             <!-- <footer class="footer">

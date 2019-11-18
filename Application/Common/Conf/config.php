@@ -8,10 +8,10 @@ return array(
 
     /* 数据库配置 */
     'DB_TYPE'   => 'mysql',
-    'DB_HOST'   => 'localhost',
-    'DB_NAME'   => 'testdwdb',
-    'DB_USER'   => 'root',
-    'DB_PWD'    => '',
+    'DB_HOST'   => '10.19.9.55',
+    'DB_NAME'   => 'smartGarden',
+    'DB_USER'   => 'smartGarden',
+    'DB_PWD'    => 'smartGarden',
     'DB_PORT'   => '3306',
     'DB_PREFIX' => 'yl_',
     //附件上传目录

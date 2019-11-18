@@ -103,7 +103,7 @@ class SchedulesController extends BaseController {
             $whereTime['is_delete'] = 0;
             $whereTime['is_show'] = 1;
             $timeList = M("Schedules_time")->where($whereTime)->order('id asc')->select();
-            $this->assign('timeList',$timeList); 
+            $this->assign('timeList',$timeList);
             $this->display("schedules_edit");
         }
 	}
@@ -125,17 +125,24 @@ class SchedulesController extends BaseController {
 	//时间列表
 	public function timeList(){
 		$keywords = I('keywords');
-        if($keywords){
-            $where['title'] = array('like',"%".$keywords."%");
-            $this->assign("keywords",$keywords);
-        }
+    if($keywords){
+        $where['title'] = array('like',"%".$keywords."%");
+        $this->assign("keywords",$keywords);
+    }
 		$where['is_delete'] = 0;
 		$count = M("Schedules_time")->where($where)->count();
-        $Page = new \Think\Page($count,20);
-        $list = M("Schedules_time")->limit($Page->firstRow.','.$Page->listRows)->where($where)->order('id asc')->select();
-        $show = $Page->show();
-        $this->assign('page',$show);
-        $this->assign('list',$list);
+    $Page = new \Think\Page($count,10);
+    $list = M("Schedules_time")->limit($Page->firstRow.','.$Page->listRows)->where($where)->order('id asc')->select();
+    $show = $Page->show();
+    $this->assign('page',$show);
+		$this->assign('total', $count);
+    $this->assign('list',$list);
+		$getPage = function(){
+			return $this->nowPage;
+		};
+		$getPageMethod = $getPage->bindTo($Page, \Think\Page::class);
+		$currentPage = $getPageMethod();
+		$this->assign('currentPage', $currentPage);
 		$this->display('time_list');
 	}
 
@@ -150,7 +157,7 @@ class SchedulesController extends BaseController {
             adminLog("添加时间段".$data["name"]);
         }else{
             $this->display("time_add");
-        }		
+        }
 	}
 
 	//编辑时间段
@@ -189,4 +196,5 @@ class SchedulesController extends BaseController {
             $this->error("删除失败");
         }
 	}
+
 }

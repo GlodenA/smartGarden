@@ -17,7 +17,13 @@
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin_template.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/layer/layer.js"></script>
-
+      <!-- Vue, element, 间距工具类 相关 -->
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/Css//util/flex.css">
+      <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
+      <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/element/index.css">
+      <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+      <!-- Vue, element, 间距工具类 相关 -->
     </head>
     <body class="overflow-hidden">
 
@@ -30,15 +36,15 @@
     <div>
         <ul class="breadcrumb">
             当前位置：
-            <li><a href="/WFGarden/manager.php?s=/Index/main"> 主页</a></li>
-            <li><a href="/WFGarden/manager.php?s=/Machine/machineList">设备管理</a></li>
+            <li><a href="/smartGarden/manager.php?s=/Index/main"> 主页</a></li>
+            <li><a href="/smartGarden/manager.php?s=/Machine/machineList">设备管理</a></li>
             <li><a href="#">设备位置</a></li>
         </ul>
     </div>
     <div class="smart-widget widget-dark-blue">
         <div class="smart-widget-inner">
             <div class="smart-widget-body">
-                <form class="form-inline no-margin form-border" action="/WFGarden/manager.php?s=/Machine/machineMap" method="post">
+                <form class="form-inline no-margin form-border" action="/smartGarden/manager.php?s=/Machine/machineMap" method="post">
                     <!--<div class="form-group" style="padding-bottom: 0">-->
                         <!--<input type="hidden" class="form-control" name="machine_imei" value="<?php echo ($searchInfo["machine_imei"]); ?>" id="imei">-->
                         <!--<input type="date" class="form-control" name="start_date" value="<?php echo ($searchInfo["start_date"]); ?>" placeholder="开始时间"> - -->
@@ -208,7 +214,7 @@
             // 创建标注
             var marker = new BMap.Marker(point);  // 创建标注
             map.addOverlay(marker);
-            var content = '设备imei:'+imei+'<br/>员工姓名:'+realname+'<br/>员工手机号:'+mobile+'<br/>工号:'+job_number+'<br/>职位:'+position_name+'<br/>管理人员:'+parent_name+'<br/>采集时间:'+add_time+'<br/><a href="/WFGarden/manager.php?s=/Machine/machineOrbit/machine_id/'+machineId+'" class="home-nav-title">查看轨迹</a>';
+            var content = '设备imei:'+imei+'<br/>员工姓名:'+realname+'<br/>员工手机号:'+mobile+'<br/>工号:'+job_number+'<br/>职位:'+position_name+'<br/>管理人员:'+parent_name+'<br/>采集时间:'+add_time+'<br/><a href="/smartGarden/manager.php?s=/Machine/machineOrbit/machine_id/'+machineId+'" class="home-nav-title">查看轨迹</a>';
             addClickHandler(content,marker);
         }else{
             map.centerAndZoom(new BMap.Point("<?php echo C('CITY_CENTER_LON');?>","<?php echo C('CITY_CENTER_LAT');?>"),rank);
@@ -233,7 +239,7 @@
 
 
     function fnSearch(){
-        var url = '/WFGarden/manager.php?s=/Machine/machineMap';
+        var url = '/smartGarden/manager.php?s=/Machine/machineMap';
         var query  = $('form').find('.form-control').serialize();
         if( url.indexOf('?')>0 ){
             url += '&' + query;

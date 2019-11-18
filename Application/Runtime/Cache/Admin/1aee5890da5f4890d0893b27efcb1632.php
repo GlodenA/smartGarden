@@ -17,7 +17,13 @@
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin_template.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/layer/layer.js"></script>
-
+      <!-- Vue, element, 间距工具类 相关 -->
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/Css//util/flex.css">
+      <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
+      <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/element/index.css">
+      <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+      <!-- Vue, element, 间距工具类 相关 -->
     </head>
     <body class="overflow-hidden">
 
@@ -59,7 +65,7 @@
 							<td>
 								<a href="javascript:showInfo(<?php echo ($v['uid']); ?>);" style="color: #edbc6c;"><i class="fa fa-info-circle m-right-xs"></i>详情</a>
 								<a href="javascript:adminEdit(<?php echo ($v['uid']); ?>);" ><i class="fa fa-pencil-square-o m-right-xs"></i>编辑</a>
-								<!-- <a href="/WFGarden/manager.php?s=/Admin/adminEdit/uid/1" class="btn btn-manager btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a> -->
+								<!-- <a href="/smartGarden/manager.php?s=/Admin/adminEdit/uid/1" class="btn btn-manager btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a> -->
 								<a href="javascript:adminDelete(<?php echo ($v['uid']); ?>);" style="color: #f03939;"><i class="fa fa-trash-o m-right-xs"></i>删除</a>
 							</td>
 						</tr><?php endforeach; endif; ?>
@@ -76,17 +82,17 @@
 </div>
 <script type="text/javascript">
 	function adminAdd(){
-		DMS.ajaxShow("新增管理员","/WFGarden/manager.php?s=/Admin/adminAdd");
+		DMS.ajaxShow("新增管理员","/smartGarden/manager.php?s=/Admin/adminAdd");
 	}
 	function adminEdit(uid){
-		DMS.ajaxShow("编辑管理员","/WFGarden/manager.php?s=/Admin/adminEdit/uid/"+uid);
+		DMS.ajaxShow("编辑管理员","/smartGarden/manager.php?s=/Admin/adminEdit/uid/"+uid);
 	}
 	function showInfo(uid){
-		DMS.loadUrl("管理员详情","/WFGarden/manager.php?s=/Admin/adminInfo/uid/"+uid);
+		DMS.loadUrl("管理员详情","/smartGarden/manager.php?s=/Admin/adminInfo/uid/"+uid);
 	}
 	function adminDelete(uid){
 		DMS.dialog("确定要删除吗?",function(){
-			DMS.ajaxPost("/WFGarden/manager.php?s=/Admin/adminDelete",{uid:uid},function(ret,err){
+			DMS.ajaxPost("/smartGarden/manager.php?s=/Admin/adminDelete",{uid:uid},function(ret,err){
 				if(ret.status==1){
 	            	DMS.success(ret.info,0,function(){
 	            		$("#data-"+uid).remove();

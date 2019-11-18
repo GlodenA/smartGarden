@@ -17,7 +17,13 @@
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin_template.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/layer/layer.js"></script>
-
+      <!-- Vue, element, 间距工具类 相关 -->
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/Css//util/flex.css">
+      <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
+      <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/element/index.css">
+      <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+      <!-- Vue, element, 间距工具类 相关 -->
     </head>
     <body class="overflow-hidden">
 
@@ -26,7 +32,7 @@
 	<div>
 	   <ul class="breadcrumb">
 	      当前位置：
-		   <li><a href="/WFGarden/manager.php?s=/Index/main">主页</a></li>
+		   <li><a href="/smartGarden/manager.php?s=/Index/main">主页</a></li>
 		   <li>班组管理</li>
 	      <!-- <li><a href="javascript:void(0);" onclick="openItem(0,'/manager.php?s=')"> 排班管理</a></li>
 	      <li><a href="javascript:void(0);" onclick="openItem(26,27,'/manager.php?s=/Schedules/schedulesList')">排班设置</a></li> -->
@@ -46,7 +52,7 @@
 	                    <div class="form-group">
 	                    	<input type="text" class="form-control input-sm" id="keywords" name="keywords" value="<?php echo ($keywords); ?>" placeholder="根据名称查询">
 	                    </div>
-						<a id="search" url="/WFGarden/manager.php?s=/Schedules/schedulesList" class="btn btn-sm btn-info">
+						<a id="search" url="/smartGarden/manager.php?s=/Schedules/schedulesList" class="btn btn-sm btn-info">
 			                查询
 			            </a>
 	                </div>
@@ -103,14 +109,14 @@
 	});
 
 	function schedulesAdd(){
-		DMS.ajaxShow("增加班组","/WFGarden/manager.php?s=/Schedules/schedulesAdd");
+		DMS.ajaxShow("增加班组","/smartGarden/manager.php?s=/Schedules/schedulesAdd");
 	}
 	function schedulesEdit(schedules_id){
-		DMS.ajaxShow("编辑班组","/WFGarden/manager.php?s=/Schedules/schedulesEdit/schedules_id/"+schedules_id);
+		DMS.ajaxShow("编辑班组","/smartGarden/manager.php?s=/Schedules/schedulesEdit/schedules_id/"+schedules_id);
 	}
 	function schedulesDelete(schedules_id){
 		DMS.dialog("确定要删除当前班组吗?",function(){
-			DMS.ajaxPost("/WFGarden/manager.php?s=/Schedules/schedulesDelete",{schedules_id:schedules_id},function(ret){
+			DMS.ajaxPost("/smartGarden/manager.php?s=/Schedules/schedulesDelete",{schedules_id:schedules_id},function(ret){
 				if(ret.status==1){
                 	DMS.success(ret.info,0,function(){
                 		window.location.href = window.location.href;

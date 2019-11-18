@@ -17,7 +17,13 @@
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin_template.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/layer/layer.js"></script>
-
+      <!-- Vue, element, 间距工具类 相关 -->
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/Css//util/flex.css">
+      <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
+      <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/element/index.css">
+      <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+      <!-- Vue, element, 间距工具类 相关 -->
     </head>
     <body class="overflow-hidden">
 
@@ -65,17 +71,17 @@
 <script type="text/javascript">
 	function menuAdd(pid){
 		if(pid){
-			DMS.ajaxShow("新增职位","/WFGarden/manager.php?s=/Member/menuAdd/pid/"+pid);
+			DMS.ajaxShow("新增职位","/smartGarden/manager.php?s=/Member/menuAdd/pid/"+pid);
 		}else{
-			DMS.ajaxShow("新增职位","/WFGarden/manager.php?s=/Member/menuAdd");
+			DMS.ajaxShow("新增职位","/smartGarden/manager.php?s=/Member/menuAdd");
 		}
 	}
 	function menuEdit(id){
-		DMS.ajaxShow("职位编辑","/WFGarden/manager.php?s=/Member/menuEdit/id/"+id);
+		DMS.ajaxShow("职位编辑","/smartGarden/manager.php?s=/Member/menuEdit/id/"+id);
 	}
 	function menuDelete(id){
 		DMS.dialog("确定要删除吗?",function(){
-			DMS.ajaxPost("/WFGarden/manager.php?s=/Member/menuDelete",{id:id},function(ret){
+			DMS.ajaxPost("/smartGarden/manager.php?s=/Member/menuDelete",{id:id},function(ret){
 				if(ret.status==1){
 					DMS.success(ret.info,0,function(){
 						$("#data-"+id).remove();

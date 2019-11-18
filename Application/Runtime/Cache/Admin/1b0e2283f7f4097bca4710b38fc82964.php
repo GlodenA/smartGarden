@@ -17,7 +17,13 @@
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin_template.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/layer/layer.js"></script>
-
+      <!-- Vue, element, 间距工具类 相关 -->
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/Css//util/flex.css">
+      <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
+      <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/element/index.css">
+      <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+      <!-- Vue, element, 间距工具类 相关 -->
     </head>
     <body class="overflow-hidden">
 
@@ -52,8 +58,8 @@
 							</td>
 							<td>
 								<a href="javascript:groupEdit(<?php echo ($v['id']); ?>,'<?php echo ($v['title']); ?>');"><i class="fa fa-pencil-square-o m-right-xs"></i>编辑</a>
-								<!--<a href="/WFGarden/manager.php?s=/Group/groupSettingRule/groupId/<?php echo ($v['id']); ?>" style="color: #32c5cd;"><i class="fa fa-cog gear"></i>权限设置</a>-->
-								<a href="/WFGarden/manager.php?s=/Group/groupSettingMenu/groupId/<?php echo ($v['id']); ?>" style="color:#00a65a;"><i class="fa fa-cog gear"></i>菜单设置</a>
+								<!--<a href="/smartGarden/manager.php?s=/Group/groupSettingRule/groupId/<?php echo ($v['id']); ?>" style="color: #32c5cd;"><i class="fa fa-cog gear"></i>权限设置</a>-->
+								<a href="/smartGarden/manager.php?s=/Group/groupSettingMenu/groupId/<?php echo ($v['id']); ?>" style="color:#00a65a;"><i class="fa fa-cog gear"></i>菜单设置</a>
 								<a href="javascript:groupDelete(<?php echo ($v['id']); ?>);"style="color: #f03939;"><i class="fa fa-trash-o m-right-xs"></i>删除</a>
 							</td>
 						</tr><?php endforeach; endif; ?>
@@ -71,17 +77,17 @@
 		DMS.openPage(url);
 	}
 	function showInfo(uid){
-		DMS.ajax("管理员详情","/WFGarden/manager.php?s=/Group/adminInfo/uid/"+uid);
+		DMS.ajax("管理员详情","/smartGarden/manager.php?s=/Group/adminInfo/uid/"+uid);
 	}
 	function groupAdd(){
-		DMS.ajaxShow("增加管理组","/WFGarden/manager.php?s=/Group/groupAdd");
+		DMS.ajaxShow("增加管理组","/smartGarden/manager.php?s=/Group/groupAdd");
 	}
 	function groupEdit(id,title){
-		DMS.ajaxShow("编辑管理组 - "+title,"/WFGarden/manager.php?s=/Group/groupEdit/id/"+id);
+		DMS.ajaxShow("编辑管理组 - "+title,"/smartGarden/manager.php?s=/Group/groupEdit/id/"+id);
 	}
 	function groupDelete(id){
 		DMS.dialog("确定要删除当前管理组吗?",function(){
-			DMS.ajaxPost("/WFGarden/manager.php?s=/Group/groupDelete",{id:id},function(ret){
+			DMS.ajaxPost("/smartGarden/manager.php?s=/Group/groupDelete",{id:id},function(ret){
 				if(ret.status==1){
                 	DMS.success(ret.info,0,function(){
                 		$("#data-"+id).remove();
