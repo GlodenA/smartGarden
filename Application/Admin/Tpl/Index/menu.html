@@ -1,57 +1,101 @@
-<aside class="sidebar-menu fixed">
-    <div class="sidebar-inner scrollable-sidebar">
-        <div class="main-menu">
-            <ul class="accordion">
-                <li class="bg-palette1 open">
-                    <a href="__MODULE__">
-                        <span class="menu-content block">
-                            <span class="menu-icon"><i class="block fa fa-dashboard fa-lg"></i></span>
-                            <span class="text m-left-sm">概览</span>
-                        </span>
-                        <span class="menu-content-hover block">首页</span>
+<style media="screen">
+  #SIDEMENU {
+    background-color: #03454b;
+  }
+
+  #SIDEMENU ul.yl-side-menu>li{
+    position: relative;
+    overflow: visible;
+  }
+
+  #SIDEMENU ul.yl-side-menu>li>a,
+  #SIDEMENU ul.yl-side-menu ul.yl-side-menu--sub-menu>li>a{
+    padding: 18px 24px;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  #SIDEMENU ul.yl-side-menu>li:hover>a {
+    color: #33D792;
+    background-color: #00383d;
+  }
+
+  #SIDEMENU ul.yl-side-menu li ul.yl-side-menu--sub-menu{
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #00383d;
+    width: 100%;
+    transition: all ease-in-out .2s;
+    transform: translateX(100%);
+    z-index: 2;
+    display: none;
+  }
+
+  #SIDEMENU ul.yl-side-menu li:hover ul.yl-side-menu--sub-menu{
+    display: block;
+  }
+
+  #SIDEMENU ul.yl-side-menu ul.yl-side-menu--sub-menu>li>a{
+    display: block;
+  }
+
+  #SIDEMENU ul.yl-side-menu ul.yl-side-menu--sub-menu>li>a:hover{
+    color: #33D792;
+  }
+</style>
+<aside class="sidebar-menu fixed" id="SIDEMENU">
+  <div>
+    <div>
+      <ul class="yl-side-menu">
+        <li>
+          <a href="__MODULE__" style="display: block;">
+            <i class="el-icon-s-home"></i>
+            首页
+          </a>
+        </li>
+        <php>$__MENU__ = session('ADMIN_MENU_LIST');</php>
+        <foreach name="__MENU__" item="v">
+          <li menu-id={$v['id']}>
+            <a
+              class="flex justify-between items-center"
+              <if condition="$v['children']">
+                <else />
+                href="__MODULE__/{$v['c']}/{$v['a']}/{$v['data']}"
+              </if>
+            >
+              <div class="flex items-center">
+                <i class="fa fa-{$v['icon_class']} fa-lg"></i>
+                <span class="ml2">{$v['name']}</span>
+              </div>
+              <if condition="$v['children']">
+                <i class="el-icon-caret-right"></i>
+              </if>
+            </a>
+            <if condition="$v['children']">
+              <ul class="yl-side-menu--sub-menu">
+                <foreach name="v['children']" item="r">
+                  <li>
+                    <a href="javascript:;" onclick="openItem({$r['id']},'__MODULE__/{$r['c']}/{$r['a']}/{$r['data']}')" id="menu-{$r['id']}">
+                      <span>{$r['name']}</span>
                     </a>
-                </li>
-                <php>$__MENU__ = session('ADMIN_MENU_LIST');</php>
-                <foreach name="__MENU__" item="v">
-                    <if condition="$v['children']">
-                        <li class="openable bg-palette1" menu-id={$v['id']}>
-                            <a href="__MODULE__/{$v['c']}/{$v['a']}/{$v['data']}">
-                                <span class="menu-content block">
-                                    <span class="menu-icon"><i class="block fa fa-{$v['icon_class']} fa-lg"></i></span>
-                                    <span class="text m-left-sm">{$v['name']}</span>
-                                    <span class="submenu-icon"></span>
-                                </span>
-                                <span class="menu-content-hover block">{$v['name']}</span>
-                            </a>
-                            <ul class="submenu">
-                                <foreach name="v['children']" item="r">
-                                <li><a href="javascript:;" onclick="openItem({$r['id']},'__MODULE__/{$r['c']}/{$r['a']}/{$r['data']}')" id="menu-{$r['id']}"><span class="submenu-label">{$r['name']}</span></a></li>
-                                </foreach>
-                            </ul>
-                        </li>
-                    <else />
-                        <li class="openable bg-palette1" menu-id={$v['id']}>
-                            <a href="javascript:;" onclick="openItem({$r['id']},'__MODULE__/{$r['c']}/{$r['a']}/{$r['data']}')" id="menu-{$r['id']}">
-                                <span class="menu-content block">
-                                    <span class="menu-icon"><i class="block fa fa-{$v['icon_class']} fa-lg"></i></span>
-                                    <span class="text m-left-sm">{$v['name']}</span>
-                                    <span class="submenu-icon"></span>
-                                </span>
-                                <span class="menu-content-hover block">{$v['name']}</span>
-                            </a>
-                        </li>
-                    </if>
+                  </li>
                 </foreach>
-                <li class="bg-palette1">
-                    <a href="__MODULE__/Map/mapFull" target="_blank">
-                        <span class="menu-content block">
-                            <span class="menu-icon"><i class="block fa fa-map fa-lg"></i></span>
-                            <span class="text m-left-sm">全屏展示</span>
-                        </span>
-                        <span class="menu-content-hover block">全屏</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
+              </ul>
+            </if>
+          </li>
+        </foreach>
+      </ul>
     </div>
+  </div>
 </aside>
+<script>
+  const sideMenu = new Vue({
+    el: '#SIDEMENU',
+    data() {
+      return {
+
+      }
+    }
+  })
+</script>

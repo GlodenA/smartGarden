@@ -1,419 +1,217 @@
-<div class="padding-md">
-	<!-- 面包屑导航 -->
-	<div>
-		<ul class="breadcrumb">
-			当前位置：
-			<li><a href="__MODULE__/Index/main"> 主页</a></li>
-			<li><a href="__ACTION__">设备管理</a></li>
-		</ul>
-	</div>
+<style media="screen">
+	.el-link+.el-link{
+		margin-left: 8px;
+	}
+</style>
+<div class="padding-md" id="MACHINELIST">
 	<div class="smart-widget" style="margin-bottom: 1px;">
 		<div class="smart-widget-inner">
 			<div class="smart-widget-body">
-				<div class="header-text">
-					设备管理
-				</div>
-				<div class="info-line">
-					<a href="javascript:machineAdd();" class="btn btn-sm btn-info">
-						<i class="fa fa-plus"></i>增加设备
-					</a>
-					<a href="javascript:areaBinds()" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="批量换绑或解除区域" data-original-title="批量换绑或解除区域">换绑或解除区域</a>
-					<a href="javascript:manager('changeSchedules')" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="批量切换班组" data-original-title="批量切换班组">部分切换班组</a>
-					<a href="javascript:changeSchedules()" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="一键切换班组" data-original-title="一键切换班组">全部切换班组</a>
-					<a href="javascript:manager('delMachine')" class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="bottom" title="批量删除设备" data-original-title="批量删除设备">删除设备</a>
-					<div class="searchTop-form form-inline pull-right">
-						<div class="form-group">
-							<input type="text" id="filename" class="form-control" readonly="">
-						</div>
-						<a class="btn btn-sm btn-info" id="selector">
-							选择文件
-						</a>
-						<button type="button" class="btn btn-warning btn-sm hide" id="media_upload">上传</button>
-						<a href="javascript:fnImport();" class="btn btn-sm btn-info">
-							导入
-						</a>
-						<a href="__ROOT__/Public/Admin/File/shebei.xlsx" class="btn btn-sm btn-info form-inline">
-							下载模板
-						</a>
-					</div>
-				</div>
-				<div class="info-line">
-					<form class="searchTop-form form-inline pull-right p-l-10" id="search-form" action="__ACTION__" method="post">
-						<div class="form-group">
-							<label for="machine_status">设备状态</label>
-							<select class="form-control searchbody input-sm" name="machine_status" id="machine_status">
-								<option value="0" <if condition="$machine_status eq 0">selected</if>>--全部--</option>
-								<option value="1" <if condition="$machine_status eq 1">selected</if>>在线</option>
-								<option value="2" <if condition="$machine_status eq 2">selected</if>>离线</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label for="position">职位</label>
-							<select class="form-control searchbody input-sm" name="position" id="position" onchange="changePosition(this)">
-								<option value="0">--全部--</option>
+				<el-breadcrumb separator="/">
+          <el-breadcrumb-item>
+            <a href="">首页</a>
+          </el-breadcrumb-item>
+          <el-breadcrumb-item>
+            设备管理
+          </el-breadcrumb-item>
+          <el-breadcrumb-item>
+            设备列表
+          </el-breadcrumb-item>
+        </el-breadcrumb>
+				<el-divider></el-divider>
+				<div class="flex px3 justify-between items-start">
+					<el-button icon="el-icon-plus" type="primary" >
+						添加设备
+					</el-button>
+					<el-form inline>
+						<el-form-item label="设备状态">
+							<el-select v-model="queryCondition.status" style="width:100px;">
+								<el-option v-for="(l, i) in ['全部', '在线', '离线']" :label="l" :key="i" :value="i">
+								</el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item label="职位">
+							<el-select v-model="queryCondition.position" style="width:100px;">
+								<el-option label="全部" :value="0">
+								</el-option>
 								<volist name="positionList" id="pl">
-									<option value="{$pl.id}"<if condition="$position eq $pl['id']">selected</if>>{$pl.name}</option>
+									<el-option label="{$pl.name}" value="{$pl.id}">
+									</el-option>
 								</volist>
-							</select>
-						</div>
-						<div class="form-group" id="member_manager">
-							<label for="parent_id">管理人员</label>
-							<select class="form-control searchbody input-sm" name="parent_id" id="parent_id">
-								<option value="0">--全部--</option>
-								<volist name="managerList" id="sl">
-									<option value="{$sl.userid}"<if condition="$parent_id eq $sl['userid']">selected</if>>{$sl.realname}</option>
+							</el-select>
+						</el-form-item>
+						<el-form-item label="管理人员">
+							<el-select v-model="queryCondition.manager" style="width:100px;">
+								<el-option label="全部" :value="0">
+								</el-option>
+								<volist name="managerList" id="pl">
+									<el-option label="{$pl.realname}" value="{$pl.userid}">
+									</el-option>
 								</volist>
-							</select>
-						</div>
-						<div class="form-group">
-							<label for="keywords">关键字：</label>
-							<input type="text" class="form-control input-sm" id="keywords" name="keywords" value="{$keywords}" placeholder="根据关键字查询">
-						</div>
-						<a id="search" url="__ACTION__" class="btn btn-sm btn-success">搜索</a>
-					</form>
+							</el-select>
+						</el-form-item>
+						<el-form-item label="关键字" prop="keyword">
+							<el-input v-model="queryCondition.keyword"/>
+						</el-form-item>
+						<el-form-item>
+							<el-button icon="el-icon-search" type="primary">
+								查询
+							</el-button>
+						</el-form-item>
+					</el-form>
 				</div>
-				<div class="smart-widget-inner">
-					<table class="table table-striped table-bordered" id="dataTable">
-						<thead>
-						<tr>
-							<th>
-								<div class="custom-checkbox">
-									<input type="checkbox" id="checkall" class="check-all" >
-									<label for="checkall"></label>
-								</div>
-							</th>
-							<th>#</th>
-							<th>设备号</th>
-							<th>设备名称</th>
-							<th>设备状态</th>
-							<th>电量</th>
-							<th>工号</th>
-							<th>负责人</th>
-							<th>职位</th>
-							<th>管理人员</th>
-							<th>所属区域名称</th>
-							<th>班组</th>
-							<!-- <th>添加时间</th> -->
-							<th>操作</th>
-						</tr>
-						</thead>
-						<tbody>
-						<foreach name="machineList" item="v" key="k">
-							<tr id="data-{$v['machine_id']}">
-								<td>
-									<div class="custom-checkbox">
-										<input type="checkbox" value="{$v['machine_id']}" name="machineids[]" id="machineid-{$v['machine_id']}" class="ids" >
-										<label for="machineid-{$v['machine_id']}"></label>
-									</div>
-								</td>
-								<td>{$k +1 + $number}</td>
-								<td>{$v['machine_imei']}</td>
-								<td>{$v['machine_name']}</td>
-								<td>{$v['machine_status']}</td>
-								<td>{$v['electricity']}</td>
-								<td>{$v['job_number']}</td>
-								<td>{$v['realname']}</td>
-								<td>
-									{$v['position_name']}
-								</td>
-								<td>
-									{$v['parent_name']}
-								</td>
-								<td>{$v['area_name']}</td>
-								<td>
-									{$v['schedulesInfo']['schedules_name']}
-									<!--&nbsp;&nbsp;-->
-									<!--<if condition="$v['schedulesInfo']['work_day']">-->
-										<!--【{$v['schedulesInfo']['work_day']}-->
-										<!--<if condition="$v['schedulesInfo']['timeList']">-->
-											<!--(<volist name="v.schedulesInfo.timeList" id="vv" key="kk">&nbsp;{$vv['start_time']}~{$vv['end_time']}&nbsp;</volist>)-->
-										<!--</if>-->
-										<!--】-->
-									<!--</if>-->
-								</td>
-								<!-- <td>{$v['add_time']|date="Y-m-d H:i:s",###}</td> -->
-								<td class="manager">
-									<a href="__CONTROLLER__/machineMap/machine_id/{$v['machine_id']}" class="text-success"><i class="fa fa-info-circle m-right-xs"></i>设备位置</a>&nbsp;|&nbsp;
-									<a href="__CONTROLLER__/machineOrbit/machine_id/{$v['machine_id']}" class="text-success"><i class="fa fa-info-circle m-right-xs"></i>设备轨迹</a>&nbsp;|&nbsp;
-									<a href="__CONTROLLER__/machineArea/machine_id/{$v['machine_id']}" class="text-success"><i class="fa fa-info-circle m-right-xs"></i>划分区域</a>&nbsp;|&nbsp;
-									<if condition="$v['area_id']">
-										<a href="__MODULE__/Map/areaInfo/id/{$v['area_id']}" class="text-success"><i class="fa fa-info-circle m-right-xs"></i>所属区域</a>&nbsp;|&nbsp;
-										<a href="javascript:areaUnbind('{$v.machine_id}');" class="text-danger"><i class="fa fa fa-trash-o m-right-xs"></i>解除区域</a>&nbsp;|&nbsp;
-										<else/>
-										<a href="javascript:areaBind('{$v.machine_id}');" style="cursor: pointer"><i class="fa fa-pencil-square-o m-right-xs"></i>绑定区域</a>&nbsp;|&nbsp;
-									</if>
-									<a href="javascript:schedulesBind({$v['machine_id']});" style="cursor: pointer"><i class="fa fa-pencil-square-o m-right-xs"></i>设置班组</a>&nbsp;|&nbsp;
-									<a href="javascript:memberBind({$v['machine_id']});" style="cursor: pointer"><i class="fa fa-pencil-square-o m-right-xs"></i>绑定员工</a>&nbsp;|&nbsp;
-									<!--<a href="__CONTROLLER__/machineInfo/machine_imei/{$v['machine_imei']}" class="text-success"><i class="fa fa-info-circle m-right-xs"></i>详情</a>&nbsp;|&nbsp;-->
-									<a href="javascript:machineEdit({$v['machine_id']});" style="cursor: pointer"><i class="fa fa-pencil-square-o m-right-xs"></i>编辑</a>&nbsp;|&nbsp;
-									<a style="cursor: pointer" onclick="machineDelete('{$v.machine_id}')" class="text-danger"><i class="fa fa-trash-o m-right-xs"></i>删除</a>
-								</td>
-							</tr>
-						</foreach>
-						</tbody>
-					</table>
-					<div class="content text-right">
-						<ul class="pagination">
-							{$page}
-						</ul>
-					</div>
+				<el-table :data="tableData" @selection-change="s => batchSelections = s">
+					<el-table-column
+					type="selection"
+					width="55">
+				</el-table-column>
+				<template v-for="([prop, label], i) in tableColumns">
+					<el-table-column :key="prop" :prop="prop" :label="label" v-if="prop === 'serialNumber'">
+						<template #default="{ $index }">
+							{{ $index + 1 }}
+						</template>
+					</el-table-column>
+					<el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'deviceStatus'">
+						<template #default="{ row }">
+							<el-tag v-if="row.deviceStatus === 1" type="primary">在线</el-tag>
+							<el-tag v-else type="danger">离线</el-tag>
+						</template>
+					</el-table-column>
+					<el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'rowOperations'" :width="320">
+						<template #default="{ row }">
+							<el-link :underline="false" type="primary">
+								设备位置
+							</el-link>
+							<el-link :underline="false" type="primary">
+								设备轨迹
+							</el-link>
+							<el-link :underline="false" type="primary">
+								划分区域
+							</el-link>
+							<el-link :underline="false" type="primary">
+								所属区域
+							</el-link>
+							<el-link :underline="false" type="danger">
+								解除区域
+							</el-link>
+							<el-link :underline="false" type="primary">
+								设置班组
+							</el-link>
+							<el-link :underline="false" type="primary">
+								绑定员工
+							</el-link>
+							<el-link :underline="false" type="primary">
+								编辑
+							</el-link>
+							<el-link :underline="false" type="danger">
+								删除
+							</el-link>
+						</template>
+					</el-table-column>
+					<el-table-column :key="prop" :prop="prop" :label="label" v-else></el-table-column>
+				</template>
+				</el-table>
+					<div class="flex justify-between items-center mt4">
+						<div class="">
+							<el-button icon="el-icon-sort" type="primary" :disabled="!hasSelection">
+								批量换绑或解除
+							</el-button>
+							<el-button type="warning" icon="el-icon-refresh-left" :disabled="!hasSelection">
+								批量切换班组
+							</el-button>
+							<el-button type="danger" icon="el-icon-delete" :disabled="!hasSelection">
+								批量删除设备
+							</el-button>
+						</div>
+						<el-pagination
+						background
+						layout="prev, pager, next"
+						:total="totalNumber"
+						:current-page="queryCondition.page"
+						@current-change="pageChange">
+					</el-pagination>
 				</div>
-			</div>
+      </div>
 		</div>
 	</div>
 </div>
-<script src="{:C('ADMIN_JS_PATH')}/ajaxupload.js" type="text/javascript"></script>
 <script type="text/javascript">
-	$(function(){
-		//搜索功能
-		$("#search").click(function () {
-			var url = $(this).attr('url');
-			var query = $('#search-form').find('.input-sm').serialize();
-
-			if (url.indexOf('?') > 0) {
-				url += '&' + query;
-			} else {
-				url += '?' + query;
+	const MACHINELIST = new Vue({
+		el: '#MACHINELIST',
+		data(){
+			return {
+				batchSelections: [],
+				tableData: [{
+					deviceNumber: '2983452-42930',
+					deviceName: '设备1',
+					deviceStatus: 1,
+					battery: 78,
+					workNumber: 290824,
+					principal: '张晓晨',
+					position: '维护工人',
+					manager: '王大拿',
+					area: '渭河西岸',
+					group: '保安常白'
+				}, {
+					deviceNumber: '489423948-290398',
+					deviceName: '设备2',
+					deviceStatus: 2,
+					battery: 90,
+					workNumber: 23432,
+					principal: '王安琪',
+					position: '工人组长',
+					manager: '刘璇',
+					area: '渭河东岸',
+					group: '保安常黑'
+				}],
+				queryCondition: {
+					keyword: '',
+					status: 0,
+					position: 0,
+					manager: 0,
+					page: 1
+				},
+				// 分页总数据条数
+				totalNumber: 1000,
+				tableColumns: [
+					['serialNumber', '序号'],
+					['deviceNumber', '设备号'],
+					['deviceName', '设备名称'],
+					['deviceStatus', '设备状态'],
+					['battery', '电量'],
+					['workNumber', '工号'],
+					['principal', '负责人'],
+					['position', '职位'],
+					['manager', '管理人员'],
+					['area', '所属区域名称'],
+					['group', '班组'],
+					['rowOperations', '操作']
+				]
 			}
-			window.location.href = url;
-		});
-		$(".check-all").click(function(){
-			$(".ids").prop("checked", this.checked);
-		});
-		$(".ids").click(function(){
-			var option = $(".ids");
-			option.each(function(i){
-				if(!this.checked){
-					$(".check-all").prop("checked", false);
-					return false;
-				}else{
-					$(".check-all").prop("checked", true);
-				}
-			});
-		});
-		// 创建一个上传参数
-		var uploadOption = {
-			// 提交目标
-			action: "/util.php?m=Attachment&c=Index&a=excelUpload",
-			// 服务端接收的名称
-			name: "file",
-			// 自动提交
-			autoSubmit: true,
-			// 选择文件之后…
-			onChange: function (file, extension) {
-				if (new RegExp(/(xls)|(xlsx)/i).test(extension)) {
-					$("#media_upload").removeClass("hide");
-					$("#filename").val(file);
-				} else {
-					DMS.alert("只限上传xls文件，请重新选择！");
-					return;
-				}
+		},
+		methods: {
+			/**
+			 * [pageChange 分页页数变化触发事件]
+			 * @param  {[type]} p [需要查询数据的那一页]
+			 * @return {[type]}   [无]
+			 */
+			pageChange(p){
+				// 在这里用 p 向后台ajax获取分页数据
+				console.log(`新的页码：${p}`)
 			},
-			// 开始上传文件
-			onSubmit: function (file, extension) {
-				$("#media_upload").text("正在上传");
-			},
-			// 上传完成之后
-			onComplete: function (file, response) {
-				var response = JSON.parse(jQuery(response).text());
-				console.log(response);
-				if(response.status == 'success'){
-					$("#media_upload").text("上传完成");
-					$("#filename").val(response.path);
-				}else{
-					$("#media_upload").addClass("hide");
-					DMS.alert("上传文件过大/上传失败！");
-					return false;
-				}
-			}
-		};
 
-		// 初始化图片上传框
-		var oAjaxUpload = new AjaxUpload('#selector', uploadOption);
-		// 给上传按钮增加上传动作
-		$("#media_upload").click(function (){
-			oAjaxUpload.submit();
-		})
+			/**
+			 * [doQuery 查询触发事件]
+			 * @return {[type]} [description]
+			 */
+			doQuery(){
+				// 在这里将查询条件传后台获取查询结果
+			}
+		},
+		computed: {
+			hasSelection(){
+				return this.batchSelections.length > 0
+			}
+		}
 	})
-	function manager(type){
-		var machineids='';
-		$("input[name='machineids[]']:checked").each(function(i, n){
-			machineids += $(n).val() + ',';
-		});
-		machineids = machineids.substring(0,machineids.length-1);
-
-		if(machineids=='') {
-			DMS.alert("请先选择设备")
-			return false;
-		}else{
-			switch (type) {
-				case 'unArea':
-					var url = "__CONTROLLER__/areaDels";
-					break;
-				case 'delMachine':
-					var url = "__CONTROLLER__/machineDels";
-					break;
-				case 'changeSchedules':
-					var url = "__CONTROLLER__/changeSchedules";
-					break;
-			}
-			if(url){
-				if(type == 'changeSchedules'){
-					DMS.ajaxShow("批量切换班组",url+"/machineids/"+machineids);
-					return;
-				}
-				DMS.dialog("确定要执行当前操作吗?",function(){
-					DMS.ajaxPost(url,{machineids:machineids},function(ret){
-						if(ret.status==1){
-							DMS.success(ret.info,0,function(){
-								window.location.href = window.location.href;
-							});
-						}else{
-							DMS.error(ret.info,0);
-						}
-					})
-				});
-			}
-		}
-	}
-	function fnImport(){
-		var excel = $('#filename').val();
-		if(!excel){
-			DMS.error('请先上传文件');
-			return;
-		}
-		DMS.ajaxPost("__CONTROLLER__/importFile",{"filename":excel},function(ret){
-			if(ret.status==1){
-				DMS.success(ret.info,1000,function(){
-					submitStatus = true;
-					if(ret.url){
-						window.location.href = ret.url;
-					}else{
-						window.location.href = window.location.href;
-					}
-				})
-			}else{
-				DMS.error(''+ret.info+'',0,function(){
-					submitStatus = true;
-				})
-			}
-		})
-	}
-	function machineAdd(){
-		DMS.ajaxShow("新增设备","__CONTROLLER__/machineAdd");
-	}
-	function machineEdit(id){
-		DMS.ajaxShow("设备编辑","__CONTROLLER__/machineEdit/machine_id/"+id);
-	}
-//	function fnEdit(id){
-//		DMS.ajaxShow("设备编辑","__CONTROLLER__/machineEdit/machine_id/"+id);
-//	}
-	function memberBind(id){
-		DMS.ajaxShow("员工绑定","__CONTROLLER__/memberBind/machine_id/"+id);
-	}
-
-	function changeSchedules(){
-		DMS.ajaxShow("一键切换班组","__CONTROLLER__/changeSchedules");
-	}
-
-	function areaBinds(){
-		var machineids='';
-		$("input[name='machineids[]']:checked").each(function(i, n){
-			machineids += $(n).val() + ',';
-		});
-		machineids = machineids.substring(0,machineids.length-1);
-		if(machineids=='') {
-			DMS.alert("请先选择设备");
-			return false;
-		}else{
-			DMS.ajaxShow("批量换绑或解除区域","__CONTROLLER__/areaBinds/machineids/"+machineids);
-		}
-
-	}
-
-	function schedulesBind(id){
-		DMS.ajaxShow("班组设置","__CONTROLLER__/schedulesBind/machine_id/"+id);
-	}
-	function machineDelete(id){
-		DMS.dialog("确定要删除吗?",function(){
-			DMS.ajaxPost("__CONTROLLER__/machineDelete",{machine_id:id},function(ret){
-				if(ret.status==1){
-					DMS.success(ret.info,0,function(){
-						$("#data-"+id).remove();
-					});
-				}else{
-					DMS.error(ret.info,0);
-				}
-			})
-		});
-	}
-	function areaUnbind(machine_id){
-		DMS.dialog("确定要解除区域吗?",function(){
-			DMS.ajaxPost("__CONTROLLER__/areaUnbind",{machine_id:machine_id},function(ret){
-				if(ret.status==1){
-					DMS.success(ret.info,0,function(){
-						window.location.href = window.location.href;
-					});
-				}else{
-					DMS.error(ret.info,0);
-				}
-			})
-		});
-	}
-	function machineLocation(machine_id){
-		DMS.dialog("确定要发送定位命令吗?",function(){
-			DMS.ajaxPost("__CONTROLLER__/machineLocation",{machine_id:machine_id},function(ret){
-				console.log(JSON.stringify(ret));
-				if(ret.status==1){
-					DMS.success(ret.info,0,function(){
-						window.location.href = window.location.href;
-					});
-				}else{
-					DMS.error(ret.info,0);
-				}
-			})
-		});
-	}
-	//绑定区域
-	function areaBind(machine_id){
-		DMS.ajaxShow("区域绑定","__CONTROLLER__/areaBind/machine_id/"+machine_id);
-	}
-	//切换班组
-	function changeTime(num){
-		DMS.dialog("确定要切换班组吗?",function(){
-			DMS.ajaxPost("__CONTROLLER__/changeTime",{num:num},function(ret){
-				if(ret.status==1){
-					DMS.success(ret.info,0,function(){
-						window.location.href = window.location.href;
-					});
-				}else{
-					DMS.error(ret.info,0);
-				}
-			})
-		});
-	}
-	function changePosition(obj){
-		var option = obj.value;
-		var item = document.getElementById("member_manager");
-		if(option>0){
-			var url = '__MODULE__/Member/getMemberManager';
-			$.post(url, {'parent_id':option}, function(ret){
-				if(ret.status == 1){
-//                    item.style.display = "inline-block";
-					item.querySelector("select").innerHTML = "";
-					item.querySelector("select").innerHTML= '<option value="0">--全部--</option>';
-					for(i in ret.data){
-						item.querySelector("select").innerHTML += '<option value='+ret.data[i].userid+'<if condition="$parent_id eq '+ret.data[i].userid+'">selected</if>>'+ret.data[i].realname+'</option>';
-					}
-				} else{
-//                    item.style.display = "none";
-					item.querySelector("select").innerHTML = "";
-					item.querySelector("select").innerHTML= '<option value="0">--全部--</option>';
-				}
-			});
-		}
-//        else{
-//            item.style.display = "none";
-//        }
-	}
 </script>

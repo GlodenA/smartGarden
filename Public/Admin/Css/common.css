@@ -239,7 +239,7 @@ ul {
 .pagination li.active a,
 .pagination li.active a:hover,
 .pagination li.active a:focus {
-  background: #2baab1;
+  background: #33D792;
   border-color: #26969c;
 }
 .pagination li a {
@@ -3922,7 +3922,7 @@ select,
 textarea.form-control {
   font-size: 13px;
 }
-input[type="text"],
+/* input[type="text"],
 input[type="password"],
 input[type="datetime"],
 input[type="datetime-local"],
@@ -3944,7 +3944,7 @@ input[type="color"],
   margin: 0;
   background: #fdfdfd;
   border-color: #e4e4e4;
-}
+} */
 input[type="text"].rounded,
 input[type="password"].rounded,
 input[type="datetime"].rounded,
