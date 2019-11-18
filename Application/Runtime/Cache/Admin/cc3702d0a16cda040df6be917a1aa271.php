@@ -295,8 +295,6 @@ const header = new Vue({
             }else{
                 Body.attr('scroll','no');
             }
-
-
             setInterval(function(){
                 getWarningMessage();
             },5000);
@@ -364,25 +362,16 @@ const header = new Vue({
                                         '<span class="notification-icon bg-warning">'+
                                         '<i class="fa fa-warning"></i>'+
                                         '</span>'+
-                                        '<span class="m-left-xs">'+data[i].realname+',工号:'+data[i].job_number+'静止报警</span>'+
+                                        '<span class="m-left-xs">'+data[i].realname+',工号:'+data[i].job_number+'怠工报警</span>'+
                                         '<span class="time text-muted">'+data[i].add_time+'</span>'+
                                         '</a>';
                             }
-
                         }
                         $('#message-list').html(html);
                         loadAudioFile('/smartGarden/Public/Admin/File/alarm.mp3');
                     }
-//                    else{
-//                        document.getElementById("reddot").style.display="none";
-//                    }
                 }
             });
         }
-
-
-        // loadAudioFile('/smartGarden/Public/Admin/File/alarm.mp3');
-
-
     </script>
 </html>

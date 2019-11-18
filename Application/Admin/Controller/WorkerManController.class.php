@@ -1,9 +1,101 @@
 <?php
 namespace Admin\Controller;
 use Think\Controller;
-use Think\Log;
-include './medoo.min.php';
+// use Think\Log;
 class WorkerManController extends Controller{
+    public function ceshi(){
+        $id = I("id");
+        var_dump($id);
+        $where["id"] = $id;
+        $where["is_show"] = 1;
+        $where["is_delete"] = 0;
+        var_dump($where);
+        $timeInfo = M("Schedules_time")->where($where)->find();
+        var_dump($timeInfo);
+        if(!$timeInfo){
+            var_dump("无视");
+            //对应时间段已删除，无需打卡
+            return;
+        }
+        
+        $year = date("Y-m-d",time());
+        //判断是否跨天
+        if($this->checkOneDay($timeInfo['start_time'],$timeInfo['end_time'])){
+            echo "111111";
+            $time = I("times") ? I("times") :time();
+            //跨天
+            if($time>(strtotime($year.' '.$timeInfo["end_time"])+2*60*60)){
+                $timeInfoAmStart = strtotime($year.' '.$timeInfo["start_time"]);
+                $timeInfoAmEnd = strtotime(date('Y-m-d',strtotime('+1 day')).' '.$timeInfo["end_time"]);
+            }else{
+                $timeInfoAmStart = strtotime(date('Y-m-d',strtotime('-1 day')).' '.$timeInfo["start_time"]);
+                $timeInfoAmEnd = strtotime($year.' '.$timeInfo["end_time"]);
+            }
+        }else{
+            echo "2222";
+            //不跨天拼接时间段
+            $timeInfoAmStart = strtotime($year.' '.$timeInfo["start_time"]);
+            $timeInfoAmEnd = strtotime($year.' '.$timeInfo["end_time"]);
+        }
+        //查询考勤设置
+        $attendanceSetInfo = M("Attendance_setting")->where(array("id"=>1))->find();
+        var_dump($timeInfoAmStart);
+        var_dump($timeInfoAmEnd);
+        var_dump(date("Y-m-d H:i:s",$timeInfoAmStart));
+        var_dump(date("Y-m-d H:i:s",$timeInfoAmEnd));
+
+        //拼接允许工作时间段
+        $timeStart1 = $timeInfoAmStart-$attendanceSetInfo["error_time"];
+        $timeEmd1 = $timeInfoAmEnd+$attendanceSetInfo["error_time"];
+        return;
+        // $beginToday = 1565904861;
+        // $whereTodayMgc["m.is_delete"] = 0;
+        // $whereTodayMgc["s.add_time"] = array("gt",$beginToday);
+        // $whereTodayMgc["_string"] = "m.machine_id = s.machine_id";
+        // $today_mount_guard_count = M("Site_log")->table("__SITE_LOG__ s,__MACHINE__ m")->where($whereTodayMgc)->count('distinct(s.machine_id)');
+        // // $this->assign("today_mount_guard_count",$today_mount_guard_count);
+        // // var_dump(111);
+        // // 今日在线设备数总计
+        // // $beginToday = 1565904861;
+        // // $whereTodayMgc["m.is_delete"] = 0;
+        // // $whereTodayMgc["s.add_time"] = array("gt",$beginToday);
+        // // $whereTodayMgc["_string"] = "m.machine_id = s.machine_id";
+        // // $subQuery = M("Site_log")->table("__SITE_LOG__ s,__MACHINE__ m")->field("s.machine_id")->group('s.machine_id')->where($whereTodayMgc)->select();
+        // // $today_mount_guard_count = count($subQuery);
+        // var_dump($today_mount_guard_count);
+    }
+    /**
+     * 判断是否跨天
+     * @return bool
+     */
+    function checkOneDay($startTime = '00:00:00',$endTime = '08:00:00'){
+        if(!$startTime || !$endTime){
+            return false;
+        }
+        $startHour = substr($startTime,0,2);
+        $endHour = substr($endTime,0,2);
+        return intval($endHour) < intval($startHour) ? true : false;
+    }
+    function app(){
+        header('Content-type:text/html;charset=utf-8');
+        libxml_disable_entity_loader(false);
+        $client = new \SoapClient("http://www.fangdao8.com:8082/openapiv3.asmx?wsdl");
+//        $param = '<v:Envelope xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:d="http://www.w3.org/2001/XMLSchema" xmlns:c="http://schemas.xmlsoap.org/soap/encoding/" xmlns:v="http://schemas.xmlsoap.org/soap/envelope/"><v:Header /><v:Body><GetDevicesHistory xmlns="http://tempuri.org/" id="o0" c:root="1"><StartTime i:type="d:string">2019/06/11 00:00:00</StartTime><SelectCount i:type="d:int">10000</SelectCount><TimeZones i:type="d:string">8:00</TimeZones><MapType i:type="d:string">BaiDu</MapType><EndTime i:type="d:string">2019/06/11 08:51:59</EndTime><Key i:type="d:string">7DU2DJFDR8321</Key><DeviceID i:type="d:int">251437</DeviceID><ShowLBS i:type="d:string">1</ShowLBS></GetDevicesHistory></v:Body></v:Envelope>';
+//        $aa = $client->__getFunctions();
+//        var_dump($aa);
+        $param["DeviceID"] = 251437;
+        $param["StartTime"] ="2019/06/11 00:00:00";
+        $param["EndTime"] = "2019/06/11 21:00:00";
+        $param["TimeZones"] = "8:00";
+        $param["ShowLBS"] = 1;
+        $param["SelectCount"] = 10000;
+        $param["Key"] = "7DU2DJFDR8321";
+        $param["MapType"] = "Baidu";
+        $result = $client->GetDevicesHistory($param);
+        var_dump($result);
+        exit;
+    }
+
     //json中的Key增加上引号.
     function json_replace_key($str)
     {
@@ -25,23 +117,160 @@ class WorkerManController extends Controller{
         }
         return implode( '"', $a );
     }
+    //获取单个设备的轨迹
+    public function getGuiJi(){
+
+        libxml_disable_entity_loader(false);
+        $client = new \SoapClient("http://123.57.45.188:8081/Ajax/DevicesAjax.asmx?wsdl");
+        $paramOne["TimeZone"] = "8:00";
+        $paramOne["ShowLBS"] = 0;
+        $paramOne["DeviceID"] = 235068;
+        $paramOne["Start"] = "2019-08-05T09:09:00";
+        $paramOne["End"] = "2019-08-05T16:00:00";
+        $result1 = $client->GetDevicesHistory($paramOne);
+        if ($result1) {
+            $result2 = object_to_array($result1);
+            $jsonstr1 = $result2["GetDevicesHistoryResult"];
+            $jsonstr2 = json_replace_key($jsonstr1);
+            $jsonArr1 = json_decode("[" . $jsonstr2 . "]", true);
+            $listOne = $jsonArr1[0]["devices"];
+            var_dump($listOne);
+        }
+    }
+    public function guiji(){
+        libxml_disable_entity_loader(false);
+        $client = new \SoapClient("http://123.57.45.188:8081/Ajax/DevicesAjax.asmx?wsdl");
+        $paramOne["TimeZone"] = "8:00";
+        $paramOne["ShowLBS"] = 0;
+        $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y'));
+        $endToday=mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
+        $whereAttendance["is_delete"] = 0;
+        $whereAttendance["first_result"] = 5;
+        $whereAttendance["add_time"] = array('between',array($beginToday,$endToday));
+        $attendanceList = M("Attendance")->where($whereAttendance)->select();
+        if($attendanceList){
+            foreach($attendanceList as $k=>$v){
+                $machineInfo = M("Machine")->where(array("machine_id"=>$v["machine_id"]))->find();
+                //8.1获取设备绑定区域信息
+                $areaInfo = M("Area_map")->where(array("id"=>$machineInfo["area_id"],"is_show"=>1,"is_delete"=>0))->find();
+                if(!$areaInfo){
+                    continue;
+                }
+                //8.3判断设备是否在区域内
+                $areaInfoStr = $areaInfo["coordinate"];
+                $areaListStr = "[".$areaInfoStr."]";
+                $areaListArr = json_decode($areaListStr,true);
+
+                $paramOne["DeviceID"] =$machineInfo["mid"];
+                $paramOne["Start"] = "2019-08-06T06:09:00";
+                $paramOne["End"] = "2019-08-06T06:41:00";
+                $result1 = $client->GetDevicesHistory($paramOne);
+                if ($result1) {
+                    $result2 = object_to_array($result1);
+                    $jsonstr1 = $result2["GetDevicesHistoryResult"];
+                    $jsonstr2 = json_replace_key($jsonstr1);
+                    $jsonArr1 = json_decode("[" . $jsonstr2 . "]", true);
+                    $listOne = $jsonArr1[0]["devices"];
+                    if($listOne){
+                        foreach($listOne as $kk => $vv){
+                            var_dump(11);
+                            //判断设备是否在围栏内并上传其位置
+                            $point=array(
+                                'lon'=>$vv["baiduLng"],
+
+                                'lat'=>$vv["baiduLat"]
+                            );
+                            $isInPoint = is_point_in_polygon($point, $areaListArr);
+                            if($isInPoint){
+                                //在区域内,修改考勤
+                                $data["first_time"] = strtotime($vv["deviceUtcDate"]);
+                                $data["first_result"] = 1;
+                                M("Attendance")->where(array("id"=>$v["id"]))->data($data)->save();
+                                var_dump("success");
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+//        http://lumei.1yxz.com/manager.php/workerMan/guiji
+
+    }
+    public function chidao(){
+        $still_time = 1800/60;
+        var_dump($still_time);exit;
+        libxml_disable_entity_loader(false);
+        $client = new \SoapClient("http://123.57.45.188:8081/Ajax/DevicesAjax.asmx?wsdl");
+        $paramOne["TimeZone"] = "8:00";
+        $paramOne["ShowLBS"] = 0;
+        $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y'));
+        $endToday=mktime(0,0,0,date('m'),date('d')+1,date('Y'))-1;
+        $whereAttendance["is_delete"] = 0;
+        $whereAttendance["first_result"] = 5;
+        $whereAttendance["add_time"] = array('between',array($beginToday,$endToday));
+        $attendanceList = M("Attendance")->where($whereAttendance)->select();
+        if($attendanceList){
+            foreach($attendanceList as $k=>$v){
+                $machineInfo = M("Machine")->where(array("machine_id"=>$v["machine_id"]))->find();
+                //8.1获取设备绑定区域信息
+                $areaInfo = M("Area_map")->where(array("id"=>$machineInfo["area_id"],"is_show"=>1,"is_delete"=>0))->find();
+                if(!$areaInfo){
+                    continue;
+                }
+                //8.3判断设备是否在区域内
+                $areaInfoStr = $areaInfo["coordinate"];
+                $areaListStr = "[".$areaInfoStr."]";
+                $areaListArr = json_decode($areaListStr,true);
+
+                $paramOne["DeviceID"] =$machineInfo["mid"];
+                $paramOne["Start"] = "2019-08-06T06:41:00";
+                $paramOne["End"] = "2019-08-06T07:31:00";
+                $result1 = $client->GetDevicesHistory($paramOne);
+                if ($result1) {
+                    $result2 = object_to_array($result1);
+                    $jsonstr1 = $result2["GetDevicesHistoryResult"];
+                    $jsonstr2 = json_replace_key($jsonstr1);
+                    $jsonArr1 = json_decode("[" . $jsonstr2 . "]", true);
+                    $listOne = $jsonArr1[0]["devices"];
+                    if($listOne){
+                        foreach($listOne as $kk => $vv){
+                            var_dump(11);
+                            //判断设备是否在围栏内并上传其位置
+                            $point=array(
+                                'lon'=>$vv["baiduLng"],
+
+                                'lat'=>$vv["baiduLat"]
+                            );
+                            $isInPoint = is_point_in_polygon($point, $areaListArr);
+                            if($isInPoint){
+                                //在区域内,修改考勤
+                                $data["first_time"] = strtotime($vv["deviceUtcDate"]);
+                                $data["first_result"] = 3;
+                                M("Attendance")->where(array("id"=>$v["id"]))->data($data)->save();
+                                var_dump("success");
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+//        http://lumei.1yxz.com/manager.php/workerMan/guiji
+
+    }
     public function crons() {
         \Think\Log::write('执行任务定时任务！');
         header('Content-type:text/html;charset=utf-8');
         libxml_disable_entity_loader(false);
         $client = new \SoapClient("http://123.57.45.188:8081/Ajax/DevicesAjax.asmx?wsdl");
-//        var_dump($client);
-//        $param["txtUserName"] ="天泰顺通" ;
-//        $param["txtUserPassword"] ="123456";
-//        $param["chkUserPass"] ="0";
-//        $param["loginType"] ="0";
-//        $param["hidGMT"] ="0";
+//        $client = new \SoapClient("http://123.57.45.188:8081/Ajax/ExceptionMessageAjax.asmx?wsdl");
+
         $param["UserID"] ="3222";
         $param["isFirst"] ="True";
         $param["TimeZones"] ="8:00";
         $param["DeviceID"] ="0";
         $result = $client->GetDevicesByUserID($param);
-//        var_dump($result);
         if($result) {
 //            $this->ajaxReturn($result);
             $result = $this->object_to_array($result);
@@ -54,33 +283,47 @@ class WorkerManController extends Controller{
 //            var_dump($jsonArr);
 //            var_dump($jsonArr[0]["devices"]);
             $list = $jsonArr[0]["devices"];
-//            var_dump($list);
+//            var_dump($list);exit;
+            $count = 0;
+            if($list){
+                foreach($list as $k=>$v){
+//                    var_dump($v["groupID"]);
+//                    var_dump($v["sn"]);
+                    if($v["groupID"] != 153){
+                        var_dump($v);
+                        if($v["status"] != "Offline"){
+                            $count++;
+                        }
+                    }
+                }
+            }
+            exit();
             foreach($list as $k => $v){
                 if($v["groupID"] == 153){
-//                    var_dump($v);
-                    $where[$k]["mid"] = $v["id"];
-                    $where[$k]["machine_imei"] = $v["sn"];
-                    $where[$k]["is_delete"] = 0;
-                    $isIn[$k] =M("Machine")->where($where[$k])->find();
-                    $electricityArr = explode("-",$v["dataContext"]);
-                    $data["electricity"] =$electricityArr[0];
-                    $data["machine_status"] = $v["status"];
-                    if(!$isIn[$k]){
-                        $data["machine_name"] = $v["name"];
-                        $data["machine_imei"] = $v["sn"];
-                        $data["mid"] = $v["id"];
-                        $data["add_time"] = $data["update_time"] = time();
-                        M("Machine")->data($data)->add();
-                    }else{
-                        $data["update_time"] = time();
-                        M("Machine")->data($data)->save();
-                    }
-                    $siteData["machine_imei"] = $v["sn"];
-                    $siteData["lat"] = $v["baiduLat"];
-                    $siteData["lon"] = $v["baiduLng"];
-                    $siteData["add_time"] = time();
-                    M("Site_log")->data($siteData)->add();
-                    \Think\Log::write('上传完成！');
+                    var_dump($v);
+//                    $where[$k]["mid"] = $v["id"];
+//                    $where[$k]["machine_imei"] = $v["sn"];
+//                    $where[$k]["is_delete"] = 0;
+//                    $isIn[$k] =M("Machine")->where($where[$k])->find();
+//                    $electricityArr = explode("-",$v["dataContext"]);
+//                    $data["electricity"] =$electricityArr[0];
+//                    $data["machine_status"] = $v["status"];
+//                    if(!$isIn[$k]){
+//                        $data["machine_name"] = $v["name"];
+//                        $data["machine_imei"] = $v["sn"];
+//                        $data["mid"] = $v["id"];
+//                        $data["add_time"] = $data["update_time"] = time();
+//                        M("Machine")->data($data)->add();
+//                    }else{
+//                        $data["update_time"] = time();
+//                        M("Machine")->data($data)->save();
+//                    }
+//                    $siteData["machine_imei"] = $v["sn"];
+//                    $siteData["lat"] = $v["baiduLat"];
+//                    $siteData["lon"] = $v["baiduLng"];
+//                    $siteData["add_time"] = time();
+//                    M("Site_log")->data($siteData)->add();
+//                    \Think\Log::write('上传完成！');
                 }
             }
 //            $this->httpResponse(200,'请求成功',$result);

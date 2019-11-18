@@ -21,7 +21,7 @@ define('APP_DEBUG',True);
 define('APP_PATH','./Application/');
 
 // 绑定模块
-define('BIND_MODULE','Home');
+define('BIND_MODULE','Admin');
 
 // 引入ThinkPHP入口文件
 require './ThinkPHP/ThinkPHP.php';

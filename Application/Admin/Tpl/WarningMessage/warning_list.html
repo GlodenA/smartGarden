@@ -54,12 +54,13 @@
                                 <option value="4"<if condition="$type eq 4">selected</if>>迟到报警</option>
                                 <option value="5"<if condition="$type eq 5">selected</if>>旷工报警</option>
                                 <option value="6"<if condition="$type eq 6">selected</if>>早退报警</option>
-                                <option value="7"<if condition="$type eq 7">selected</if>>静止报警</option>
+                                <option value="7"<if condition="$type eq 7">selected</if>>怠工超过设定时间告警</option>
                             </select>
                         </div>
                         <a id="search" url="__ACTION__" class="btn btn-sm btn-info">
                             查询
                         </a>
+                        <a id="excel" url="__CONTROLLER__/warningExcel" class="btn btn-sm btn-success">导出</a>
                     </form>
                 </div>
                 <div class="smart-widget-inner">
@@ -69,7 +70,7 @@
                             <th>#</th>
                             <th>设备名称</th>
                             <th>设备号</th>
-                            <th>绑定员工姓名</th>
+                            <th>绑定员工</th>
                             <th>工号</th>
                             <th>职位</th>
                             <th>管理人员</th>
@@ -104,7 +105,7 @@
                                         <elseif condition="$v['type'] eq 6" />
                                         <a href="__MODULE__/Machine/machineOrbit/machine_id/{$v['machine_id']}/searchTime/{$v['add_time']|date='Y-m-d',###}">早退报警</a>
                                         <elseif condition="$v['type'] eq 7" />
-                                        <a href="__MODULE__/Machine/machineOrbit/machine_id/{$v['machine_id']}/searchTime/{$v['add_time']|date='Y-m-d',###}">静止报警</a>
+                                        <a href="__MODULE__/Machine/machineOrbit/machine_id/{$v['machine_id']}/searchTime/{$v['add_time']|date='Y-m-d',###}">怠工超过设定时间告警</a>
                                     </if>
                                 </td>
                             </tr>
@@ -131,6 +132,17 @@
             var url = $(this).attr('url');
             var query = $('#search-form').find('.time-input').serialize();
 
+            if (url.indexOf('?') > 0) {
+                url += '&' + query;
+            } else {
+                url += '?' + query;
+            }
+            window.location.href = url;
+        });
+        //导出功能
+        $("#excel").click(function () {
+            var url = $(this).attr('url');
+            var query = $('#search-form').find('.time-input').serialize();
             if (url.indexOf('?') > 0) {
                 url += '&' + query;
             } else {

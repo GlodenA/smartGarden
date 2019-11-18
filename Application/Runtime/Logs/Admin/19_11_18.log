@@ -10964,3 +10964,1004 @@ SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER
 SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0179s ]
 SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961842 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0199s ]
 
+[ 2019-11-18T11:37:27+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:37:27+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000255s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000266s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000337s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0077s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0070s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0075s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0066s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0073s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0128s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0257s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0364s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0387s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961847 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0322s ]
+
+[ 2019-11-18T11:37:32+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:37:32+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000347s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000268s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000339s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0067s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0059s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0073s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0074s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0190s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0072s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0083s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0097s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0102s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961852 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0087s ]
+
+[ 2019-11-18T11:37:37+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:37:37+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000023s ]
+INFO: [ app_init ] --END-- [ RunTime:0.006347s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000279s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000352s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0066s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0052s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0064s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0075s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0069s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0083s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0074s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0094s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0078s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961857 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0079s ]
+
+[ 2019-11-18T11:37:42+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:37:42+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000254s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000264s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000334s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0092s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0100s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0065s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0072s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0075s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0089s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0052s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0089s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0092s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961862 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0113s ]
+
+[ 2019-11-18T11:37:47+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:37:47+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000016s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000255s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000265s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000336s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0138s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0113s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0105s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0103s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0128s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0087s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0110s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0129s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0067s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961867 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0114s ]
+
+[ 2019-11-18T11:37:52+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:37:53+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000016s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000254s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000267s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000337s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0225s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0250s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0351s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0303s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.9138s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0237s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0105s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0084s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0115s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961873 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0118s ]
+
+[ 2019-11-18T11:37:57+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:37:57+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000314s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000267s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000337s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0292s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0344s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0426s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0277s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0137s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0216s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0227s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0148s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0200s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961877 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0232s ]
+
+[ 2019-11-18T11:38:02+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:38:02+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000016s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000254s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000264s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000335s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0083s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0150s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0095s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0119s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0134s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0190s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0210s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0081s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0071s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961882 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0084s ]
+
+[ 2019-11-18T11:38:07+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:38:07+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000275s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000275s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000347s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0342s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0503s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0531s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0313s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0321s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0229s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0235s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0258s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0313s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961887 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0288s ]
+
+[ 2019-11-18T11:38:12+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:38:13+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000296s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000307s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000378s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0606s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0522s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0897s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0750s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0695s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0539s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0648s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0799s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0818s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961893 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0716s ]
+
+[ 2019-11-18T11:38:17+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:38:17+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000016s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000255s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000264s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000334s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0106s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0061s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0097s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0074s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0092s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0098s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0095s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0188s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0124s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961897 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0111s ]
+
+[ 2019-11-18T11:38:22+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:38:22+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000260s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000269s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000342s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0101s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0075s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0111s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0066s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0065s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0073s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0078s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0083s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0062s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961902 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0097s ]
+
+[ 2019-11-18T11:38:27+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:38:27+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000297s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000269s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000340s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0130s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0179s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0176s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0177s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0116s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0103s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0147s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0104s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0078s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961907 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0129s ]
+
+[ 2019-11-18T11:38:32+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:38:33+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000016s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000253s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000268s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000338s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0571s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0331s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0417s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0265s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0251s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0466s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0714s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0776s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0623s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961913 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0346s ]
+
+[ 2019-11-18T11:38:37+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:38:37+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000016s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000254s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000270s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000341s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0172s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0252s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0141s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0281s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0180s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0154s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0194s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0130s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0207s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961917 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0193s ]
+
+[ 2019-11-18T11:38:42+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:38:42+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000258s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000289s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000361s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0281s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0092s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0209s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0124s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0094s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0135s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0103s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0119s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0086s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961922 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0078s ]
+
+[ 2019-11-18T11:38:47+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:38:47+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000019s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000274s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000288s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000369s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0225s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0296s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0535s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0139s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0121s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0059s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0091s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0065s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0071s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961927 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0240s ]
+
+[ 2019-11-18T11:38:52+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:38:52+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000262s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000274s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000346s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0131s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0101s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0100s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0079s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0098s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0090s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0084s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0147s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0187s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961932 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0252s ]
+
+[ 2019-11-18T11:38:57+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:38:57+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000257s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000269s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000341s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0136s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0065s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0071s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0108s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0102s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0098s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0112s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0114s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0086s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961937 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0161s ]
+
+[ 2019-11-18T11:39:02+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:39:02+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000254s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000265s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000336s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0082s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0089s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0194s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0072s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0117s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0180s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0162s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0137s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0106s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961942 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0134s ]
+
+[ 2019-11-18T11:39:07+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:39:07+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000262s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000272s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000345s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0084s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0069s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0073s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0110s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0081s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0120s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0083s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0144s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0117s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961947 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0088s ]
+
+[ 2019-11-18T11:39:12+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:39:12+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000016s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000257s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000267s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000338s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0074s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0072s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0119s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0068s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0071s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0058s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0100s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0077s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0065s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961952 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0085s ]
+
+[ 2019-11-18T11:39:17+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:39:17+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000016s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000276s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000336s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000408s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0073s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0069s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0114s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0188s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0083s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0091s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0092s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0236s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0143s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961957 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0385s ]
+
+[ 2019-11-18T11:39:22+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:39:22+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000268s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000281s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000355s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0075s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0070s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0084s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0097s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0072s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0098s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0148s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0090s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0074s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961962 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0101s ]
+
+[ 2019-11-18T11:39:27+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:39:27+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000263s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000282s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000355s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0165s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0132s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0117s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0189s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0273s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0067s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0069s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0075s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0068s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961967 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0144s ]
+
+[ 2019-11-18T11:39:32+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:39:32+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000263s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000278s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000362s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0370s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0115s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0182s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0137s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0203s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0145s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0276s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0276s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0065s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961972 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0090s ]
+
+[ 2019-11-18T11:39:37+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:39:38+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000260s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000274s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000347s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0456s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0396s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0154s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0101s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0099s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0061s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0071s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0095s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0183s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961977 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0135s ]
+
+[ 2019-11-18T11:39:42+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:39:42+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000267s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000275s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000349s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0357s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0586s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0475s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0126s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0084s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0055s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0061s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0081s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0140s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961982 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0075s ]
+
+[ 2019-11-18T11:39:47+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:39:47+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000260s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000281s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000354s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0209s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0082s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0087s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0130s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0211s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0395s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0154s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0064s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0154s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961987 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0231s ]
+
+[ 2019-11-18T11:39:52+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:39:52+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000258s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000266s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000337s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0189s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0612s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0368s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0527s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0117s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0256s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0296s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0164s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0102s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961992 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0179s ]
+
+[ 2019-11-18T11:39:57+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:39:57+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000268s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000274s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000346s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0217s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0313s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0290s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0112s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0226s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0130s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0106s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0414s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0210s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573961997 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0129s ]
+
+[ 2019-11-18T11:40:00+08:00 ] ::1 /smartGarden/manager.php?s=
+ERR: 123456
+[ 2019-11-18T11:40:01+08:00 ] ::1 /smartGarden/manager.php?s=
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000265s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000280s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000365s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0140s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Index/index' LIMIT 1   [ RunTime:0.0116s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0384s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0115s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0133s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0050s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0053s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0171s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000102s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000192s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.037596s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.037690s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000259s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000338s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000380s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000471s ]
+
+[ 2019-11-18T11:40:01+08:00 ] ::1 /smartGarden/manager.php?s=/Index/main
+ERR: 123456
+[ 2019-11-18T11:40:02+08:00 ] ::1 /smartGarden/manager.php?s=/Index/main
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000270s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000312s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000417s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0153s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Index/main' LIMIT 1   [ RunTime:0.0216s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0191s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0283s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0153s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0088s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0083s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0073s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0142s ]
+SQL: SELECT w.type,w.uid,w.add_time,a.realname,a.job_number,m.machine_id,m.machine_name,m.machine_imei,a.position,a.parent_id FROM yl_warning_message w,yl_member a,yl_machine m WHERE w.add_time > 1574006400 AND ( w.uid=m.userid and a.userid=m.userid and w.type > 1 ) ORDER BY w.add_time desc LIMIT 10   [ RunTime:0.0255s ]
+SQL: SHOW COLUMNS FROM `yl_member` [ RunTime:0.0112s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_member` WHERE `is_delete` = 0 LIMIT 1   [ RunTime:0.0052s ]
+SQL: SHOW COLUMNS FROM `yl_machine` [ RunTime:0.0126s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_machine` WHERE `is_delete` = 0 LIMIT 1   [ RunTime:0.0119s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_machine` WHERE ( `machine_status` = 'Stop' OR `machine_status` = 'Move' ) AND `is_delete` = 0 LIMIT 1   [ RunTime:0.0074s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_machine` WHERE `is_delete` = 0 AND `login_time` > 1574006400 LIMIT 1   [ RunTime:0.0059s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_member` WHERE `is_delete` = 0 AND `job_status` = 1 LIMIT 1   [ RunTime:0.0077s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_member` WHERE `is_delete` = 0 AND `job_status` = 0 LIMIT 1   [ RunTime:0.0068s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_member` WHERE `is_delete` = 0 AND `job_status` = 2 LIMIT 1   [ RunTime:0.0118s ]
+SQL: SHOW COLUMNS FROM `yl_attendance` [ RunTime:0.0070s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( first_result=1 ) LIMIT 1   [ RunTime:0.0201s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( first_result=3 ) LIMIT 1   [ RunTime:0.0212s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( first_result=5 ) LIMIT 1   [ RunTime:0.0171s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( second_result=2 ) LIMIT 1   [ RunTime:0.0173s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( second_result=4 ) LIMIT 1   [ RunTime:0.0170s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND (  `first_result` <> 1 OR `second_result` <> 2 ) LIMIT 1   [ RunTime:0.0196s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( third_result=1 ) LIMIT 1   [ RunTime:0.0212s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( third_result=3 ) LIMIT 1   [ RunTime:0.0197s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( third_result=5 ) LIMIT 1   [ RunTime:0.0181s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( fourth_result=2 ) LIMIT 1   [ RunTime:0.0271s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( fourth_result=4 ) LIMIT 1   [ RunTime:0.0472s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND (  `third_result` <> 1 OR `fourth_result` <> 2 ) LIMIT 1   [ RunTime:0.0582s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000067s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000154s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.015304s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.015402s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000270s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000348s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000450s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000554s ]
+
+[ 2019-11-18T11:40:06+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:40:07+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000265s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000335s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000425s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0083s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0341s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0161s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0082s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0070s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0085s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0072s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0080s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0170s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573962007 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0131s ]
+
+[ 2019-11-18T11:40:07+08:00 ] ::1 /smartGarden/manager.php?s=
+ERR: 123456
+[ 2019-11-18T11:40:07+08:00 ] ::1 /smartGarden/manager.php?s=
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000020s ]
+INFO: [ app_init ] --END-- [ RunTime:0.004190s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000348s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000433s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0189s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Index/index' LIMIT 1   [ RunTime:0.0164s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0323s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0189s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0249s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0233s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0304s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0385s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000099s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000191s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.056217s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.056373s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000299s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000412s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000441s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000556s ]
+
+[ 2019-11-18T11:40:07+08:00 ] ::1 /smartGarden/manager.php?s=/Index/main
+ERR: 123456
+[ 2019-11-18T11:40:08+08:00 ] ::1 /smartGarden/manager.php?s=/Index/main
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000021s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000302s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000292s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000383s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0079s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Index/main' LIMIT 1   [ RunTime:0.0071s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0199s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0429s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0231s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0102s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0079s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0077s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0126s ]
+SQL: SELECT w.type,w.uid,w.add_time,a.realname,a.job_number,m.machine_id,m.machine_name,m.machine_imei,a.position,a.parent_id FROM yl_warning_message w,yl_member a,yl_machine m WHERE w.add_time > 1574006400 AND ( w.uid=m.userid and a.userid=m.userid and w.type > 1 ) ORDER BY w.add_time desc LIMIT 10   [ RunTime:0.0183s ]
+SQL: SHOW COLUMNS FROM `yl_member` [ RunTime:0.0070s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_member` WHERE `is_delete` = 0 LIMIT 1   [ RunTime:0.0079s ]
+SQL: SHOW COLUMNS FROM `yl_machine` [ RunTime:0.0122s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_machine` WHERE `is_delete` = 0 LIMIT 1   [ RunTime:0.0116s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_machine` WHERE ( `machine_status` = 'Stop' OR `machine_status` = 'Move' ) AND `is_delete` = 0 LIMIT 1   [ RunTime:0.0104s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_machine` WHERE `is_delete` = 0 AND `login_time` > 1574006400 LIMIT 1   [ RunTime:0.0091s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_member` WHERE `is_delete` = 0 AND `job_status` = 1 LIMIT 1   [ RunTime:0.0064s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_member` WHERE `is_delete` = 0 AND `job_status` = 0 LIMIT 1   [ RunTime:0.0082s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_member` WHERE `is_delete` = 0 AND `job_status` = 2 LIMIT 1   [ RunTime:0.0098s ]
+SQL: SHOW COLUMNS FROM `yl_attendance` [ RunTime:0.0079s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( first_result=1 ) LIMIT 1   [ RunTime:0.0690s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( first_result=3 ) LIMIT 1   [ RunTime:0.0818s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( first_result=5 ) LIMIT 1   [ RunTime:0.0260s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( second_result=2 ) LIMIT 1   [ RunTime:0.0294s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( second_result=4 ) LIMIT 1   [ RunTime:0.0283s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND (  `first_result` <> 1 OR `second_result` <> 2 ) LIMIT 1   [ RunTime:0.0173s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( third_result=1 ) LIMIT 1   [ RunTime:0.0227s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( third_result=3 ) LIMIT 1   [ RunTime:0.0211s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( third_result=5 ) LIMIT 1   [ RunTime:0.0151s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( fourth_result=2 ) LIMIT 1   [ RunTime:0.0165s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND ( fourth_result=4 ) LIMIT 1   [ RunTime:0.0293s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1574006400 AND `add_time` < 1574092799  ) AND (  `third_result` <> 1 OR `fourth_result` <> 2 ) LIMIT 1   [ RunTime:0.0194s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000073s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000161s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.014990s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.015089s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000261s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000341s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000435s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000522s ]
+
+[ 2019-11-18T11:40:12+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:40:13+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000263s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000272s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000344s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0150s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0943s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0938s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0597s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0355s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0201s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0194s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0194s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0180s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573962013 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0191s ]
+
+[ 2019-11-18T11:40:17+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:40:17+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000264s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000269s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000342s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0101s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0077s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0108s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0071s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0087s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0053s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0123s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0106s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0172s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573962017 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0101s ]
+
+[ 2019-11-18T11:40:22+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:40:22+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000258s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000304s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000376s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0078s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0070s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0068s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0080s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0160s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0226s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0192s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0087s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0073s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573962022 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0090s ]
+
+[ 2019-11-18T11:40:26+08:00 ] ::1 /smartGarden/manager.php?m=Admin&c=index&a=getCurrentPos&menuId=27
+ERR: 123456
+[ 2019-11-18T11:40:26+08:00 ] ::1 /smartGarden/manager.php?m=Admin&c=index&a=getCurrentPos&menuId=27
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000326s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000391s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000463s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0580s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Index/getCurrentPos' LIMIT 1   [ RunTime:0.0721s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.2084s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.1202s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0298s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0265s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0626s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0581s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `id` = 27 LIMIT 1   [ RunTime:0.0602s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `id` = 26 LIMIT 1   [ RunTime:0.0253s ]
+
+[ 2019-11-18T11:40:26+08:00 ] ::1 /smartGarden/manager.php?s=/Schedules/schedulesList/
+ERR: 123456
+[ 2019-11-18T11:40:27+08:00 ] ::1 /smartGarden/manager.php?s=/Schedules/schedulesList/
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000037s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000416s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000282s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000371s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0255s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Schedules/schedulesList' LIMIT 1   [ RunTime:0.0176s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0199s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0259s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0291s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0251s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0213s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0109s ]
+SQL: SHOW COLUMNS FROM `yl_schedules_setting` [ RunTime:0.0203s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_schedules_setting` WHERE `is_delete` = 0 LIMIT 1   [ RunTime:0.0250s ]
+SQL: SELECT * FROM `yl_schedules_setting` WHERE `is_delete` = 0 ORDER BY schedules_id desc LIMIT 0,20   [ RunTime:0.0299s ]
+SQL: SHOW COLUMNS FROM `yl_schedules_time` [ RunTime:0.0345s ]
+SQL: SELECT * FROM `yl_schedules_time` WHERE `is_delete` = 0 AND `id` = '26' LIMIT 1   [ RunTime:0.0344s ]
+SQL: SELECT * FROM `yl_schedules_time` WHERE `is_delete` = 0 AND `id` = '25' LIMIT 1   [ RunTime:0.0339s ]
+SQL: SELECT * FROM `yl_schedules_time` WHERE `is_delete` = 0 AND `id` = '24' LIMIT 1   [ RunTime:0.0171s ]
+SQL: SELECT * FROM `yl_schedules_time` WHERE `is_delete` = 0 AND `id` = '23' LIMIT 1   [ RunTime:0.0246s ]
+SQL: SELECT * FROM `yl_schedules_time` WHERE `is_delete` = 0 AND `id` = '22' LIMIT 1   [ RunTime:0.0256s ]
+SQL: SELECT * FROM `yl_schedules_time` WHERE `is_delete` = 0 AND `id` = '21' LIMIT 1   [ RunTime:0.0246s ]
+SQL: SELECT * FROM `yl_schedules_time` WHERE `is_delete` = 0 AND `id` = '20' LIMIT 1   [ RunTime:0.0252s ]
+SQL: SELECT * FROM `yl_schedules_time` WHERE `is_delete` = 0 AND `id` = '19' LIMIT 1   [ RunTime:0.0160s ]
+SQL: SELECT * FROM `yl_schedules_time` WHERE `is_delete` = 0 AND `id` = '18' LIMIT 1   [ RunTime:0.0214s ]
+SQL: SELECT * FROM `yl_schedules_time` WHERE `is_delete` = 0 AND `id` = '16' LIMIT 1   [ RunTime:0.0169s ]
+SQL: SELECT * FROM `yl_schedules_time` WHERE `is_delete` = 0 AND `id` = '17' LIMIT 1   [ RunTime:0.0177s ]
+SQL: SELECT * FROM `yl_schedules_time` WHERE `is_delete` = 0 AND `id` = '3' LIMIT 1   [ RunTime:0.0064s ]
+SQL: SELECT * FROM `yl_schedules_time` WHERE `is_delete` = 0 AND `id` = '4' LIMIT 1   [ RunTime:0.0075s ]
+SQL: SELECT * FROM `yl_schedules_time` WHERE `is_delete` = 0 AND `id` = '11' LIMIT 1   [ RunTime:0.0065s ]
+SQL: SELECT * FROM `yl_schedules_time` WHERE `is_delete` = 0 AND `id` = '12' LIMIT 1   [ RunTime:0.0083s ]
+SQL: SELECT * FROM `yl_schedules_time` WHERE `is_delete` = 0 AND `id` = '3' LIMIT 1   [ RunTime:0.0073s ]
+SQL: SELECT * FROM `yl_schedules_time` WHERE `is_delete` = 0 AND `id` = '4' LIMIT 1   [ RunTime:0.0084s ]
+SQL: SELECT * FROM `yl_schedules_time` WHERE `is_delete` = 0 AND `id` = '1' LIMIT 1   [ RunTime:0.0068s ]
+SQL: SELECT * FROM `yl_schedules_time` WHERE `is_delete` = 0 AND `id` = '2' LIMIT 1   [ RunTime:0.0084s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000062s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000150s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.005899s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.005985s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000240s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000317s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000353s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000430s ]
+
+[ 2019-11-18T11:40:27+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:40:27+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000274s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000287s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000364s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0073s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0073s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0058s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0073s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0066s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0070s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0058s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0092s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0067s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573962027 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0091s ]
+
+[ 2019-11-18T11:40:32+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:40:32+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000264s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000270s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000341s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0069s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0072s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0122s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0139s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0143s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0088s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0113s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0072s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0099s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573962032 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0108s ]
+
+[ 2019-11-18T11:40:37+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-18T11:40:38+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000035s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000543s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000458s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000597s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0083s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0096s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0068s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0087s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0248s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0110s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0084s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0066s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0062s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573962038 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0098s ]
+

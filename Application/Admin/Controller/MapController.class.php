@@ -127,18 +127,18 @@ class MapController extends BaseController {
             $where["m.realname"] = array('like', "%" . $keywords . "%");
             $this->assign('keywords',$keywords);
         }
-        $add_time = date("Y-m-d",time());
-        $startTime = strtotime($add_time);
-        $endTime = strtotime($add_time) + 24*3600;
-        $whereSql['s.add_time'] = array('between',array($startTime,$endTime));
-        $whereSql["c.is_delete"] = 0;
-        $whereSql["_string"] = "s.machine_imei = c.machine_imei and s.machine_id = c.machine_id";
-        $subQuery = M("Site_log")->table("__SITE_LOG__ s,__MACHINE__ c")->where($whereSql)->field("s.*,c.machine_name,c.userid")->order('s.add_time desc')->buildSql();
-        $list = M("Site_log")->table($subQuery . ' ss')->join("left join __MEMBER__ m on ss.userid = m.userid")->field("ss.*,m.realname,m.job_number,m.mobile,m.position,m.parent_id")->where($where)->group("ss.machine_id")->select();
-        $list = json_encode($list);
-        $newTime = date("Y-m-d",time());
-        $this->assign('newTime',$newTime);
-        $this->assign('list',$list);
+        // $add_time = date("Y-m-d",time());
+        // $startTime = strtotime($add_time);
+        // $endTime = strtotime($add_time) + 24*3600;
+        // $whereSql['s.add_time'] = array('between',array($startTime,$endTime));
+        // $whereSql["c.is_delete"] = 0;
+        // $whereSql["_string"] = "s.machine_imei = c.machine_imei and s.machine_id = c.machine_id";
+        // $subQuery = M("Site_log")->table("__SITE_LOG__ s,__MACHINE__ c")->where($whereSql)->field("s.*,c.machine_name,c.userid")->order('s.add_time desc')->buildSql();
+        // $list = M("Site_log")->table($subQuery . ' ss')->join("left join __MEMBER__ m on ss.userid = m.userid")->field("ss.*,m.realname,m.job_number,m.mobile,m.position,m.parent_id")->where($where)->group("ss.machine_id")->select();
+        // $list = json_encode($list);
+        // $newTime = date("Y-m-d",time());
+        // $this->assign('newTime',$newTime);
+        // $this->assign('list',$list);
         $this->display("map_machine");
     }
 
@@ -156,10 +156,9 @@ class MapController extends BaseController {
         $wheremgc["is_delete"] = 0;
         $data["mount_guard_count"] = M("Machine")->where($wheremgc)->count();
         //今日在线设备数总计
-        $whereTodayMgc["m.is_delete"] = 0;
-        $whereTodayMgc["s.add_time"] = array("gt",$beginToday);
-        $whereTodayMgc["_string"] = "m.machine_id = s.machine_id";
-        $data["today_mount_guard_count"]= M("Site_log")->table("__SITE_LOG__ s,__MACHINE__ m")->where($whereTodayMgc)->count('distinct(s.machine_id)');
+        $whereTodayMgc["is_delete"] = 0;
+        $whereTodayMgc["login_time"] = array("gt",$beginToday);
+        $data["today_mount_guard_count"] = M("Machine")->where($whereTodayMgc)->count();
         //在岗人数
 //        $whereGuard["m.is_delete"] = $where["c.is_delete"] = 0;
 //        $whereGuard["c.machine_status"] = array(array("eq","Stop"),array("eq","Move"),"or");
@@ -241,20 +240,16 @@ class MapController extends BaseController {
         }
         $parent_id = I("parent_id");
         if($parent_id){
-            $this->assign("parent_id",$parent_id);
             $whereParent["m.parent_id"] = $parent_id;
             $wherePositon["m.userid"] = $parent_id;
             $whereMember["_complex"] = array($whereParent,$wherePositon,'_logic'=>'or');
             $where["_complex"] = $whereMember;
         }
-        $add_time = date("Y-m-d",time());
-        $startTime = strtotime($add_time);
-        $endTime = strtotime($add_time) + 24*3600;
-        $whereSql['s.add_time'] = array('between',array($startTime,$endTime));
-        $whereSql["c.is_delete"] = 0;
-        $whereSql["_string"] = "s.machine_imei = c.machine_imei and s.machine_id = c.machine_id";
-        $subQuery = M("Site_log")->table("__SITE_LOG__ s,__MACHINE__ c")->where($whereSql)->field("s.*,c.machine_name,c.userid")->order('s.add_time desc')->buildSql();
-        $list = M("Site_log")->table($subQuery . ' ss')->join("left join __MEMBER__ m on ss.userid = m.userid")->field("ss.*,m.realname,m.job_number,m.mobile,m.position,m.parent_id")->where($where)->group("ss.machine_imei")->select();
+        $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y'));
+        $where["c.login_time"] = array("gt",$beginToday);
+        $where["c.is_delete"] = 0;
+        $where["m.is_delete"] = 0;
+        $list = M("Machine")->alias("c")->join("left join __MEMBER__ m on c.userid = m.userid")->field("c.*,m.realname,m.job_number,m.mobile,m.position,m.parent_id")->where($where)->select();
         if($list){
             foreach($list as $k=>$v){
                 if($v["parent_id"]>0){
@@ -267,7 +262,9 @@ class MapController extends BaseController {
                 }else{
                     $list[$k]["position_name"] ="null";
                 }
-                $list[$k]["add_time"] = date("Y-m-d H:i:s",$v["add_time"]);
+                $list[$k]["lat"] = $v["b_lat"];
+                $list[$k]["lon"] = $v["b_lon"];
+                $list[$k]["add_time"] = $v["server_utc_time"];
             }
             $ret["status"] = 1;
             $ret["info"] = "获取坐标数据成功";
@@ -523,44 +520,47 @@ class MapController extends BaseController {
         $keywords = I('keywords');
         if($position){
             $this->assign("position",$position);
-            $where["m.position"] = $position;
         }
         if($parent_id){
             $this->assign("parent_id",$parent_id);
-            $whereParent["m.parent_id"] = $parent_id;
-            if($position != 1){
-                $wherePositon["m.userid"] = $parent_id;
-                $whereMember["_complex"] = array($whereParent,$wherePositon,'_logic'=>'or');
-                $where["_complex"] = $whereMember;
-            }else{
-                $where["_complex"] = $whereParent;
-            }
         }
         if($keywords){
-            $where["m.realname"] = array('like', "%" . $keywords . "%");
             $this->assign('keywords',$keywords);
         }
-        $add_time = date("Y-m-d",time());
-        $startTime = strtotime($add_time);
-        $endTime = strtotime($add_time) + 24*3600;
-        $where['s.add_time'] = array('between',array($startTime,$endTime));
-        $where["c.is_delete"] = 0;
-        $where["m.is_delete"] = 0;
-        $where["_string"] = "s.machine_imei = c.machine_imei and c.userid = m.userid";
-//        var_dump($where);die;
-        $subQuery = M("Site_log")->order('add_time desc')->buildSql();
-        $list = M("Site_log")->table($subQuery.' s,__MACHINE__ c,__MEMBER__ m')->where($where)->field("s.*,c.machine_id,c.machine_imei,c.machine_name,c.userid,m.realname,m.job_number,m.mobile")->group("s.machine_imei")->select();
-//        echo M("Site_log")->_sql();
-        if($list){
-            foreach($list as $k => $v){
-                $list[$k]["add_time"] = date("Y-m-d H:i:s",$v["add_time"]);
-            }
-            $list = json_encode($list);
-        }
-
-        $newTime = date("Y-m-d",time());
-        $this->assign('newTime',$newTime);
-        $this->assign('list',$list);
         $this->display("map");
+    }
+    // 地图全屏展示
+    public function mapFull(){
+        $keywords = I('keywords');
+        //查询职位列表
+        $positionList = M("Member_position")->where(array("is_delete"=>0))->select();
+        $this->assign("positionList",$positionList);
+        $position = I("position");
+        if($position){
+            //根据当前所选职位，查询出相应直属领导列表
+            $positionInfo = M("Member_position")->where(array("id"=>$position,"is_delete"=>0))->find();
+            if($positionInfo["parent_id"]>0){
+                //说明当前职位有其直属领导
+                $managerList = M("Member")->where(array("position"=>$positionInfo["parent_id"],"is_delete"=>0))->field("userid,realname,job_number")->select();
+                $this->assign("managerList",$managerList);
+            }
+            $this->assign("position",$position);
+        }else{
+            //获取负责人列表
+            $wherePosition["mm.parent_id"] = 0;
+            $wherePosition["mm.is_delete"] = 0;
+            $wherePosition["mp.is_delete"] = 0;
+            $wherePosition["_string"] = "mp.position = mm.id";
+            $managerList = M("Member")->table("__MEMBER__ mp,__MEMBER_POSITION__ mm")->where($wherePosition)->field("userid,realname,job_number")->select();
+            $this->assign("managerList",$managerList);
+        }
+        $parent_id = I("parent_id");
+        if($parent_id){
+            $this->assign("parent_id",$parent_id);
+        }
+        if($keywords){
+            $this->assign('keywords',$keywords);
+        }
+        $this->display("map_full");
     }
 }

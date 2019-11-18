@@ -7,6 +7,13 @@ return array(
     'DEFAULT_FILTER' => 'htmlspecialchars',
 
     /* 数据库配置 */
+//    'DB_TYPE'   => 'mysql',
+//    'DB_HOST'   => 'localhost',
+//    'DB_NAME'   => 'testdwdb',
+//    'DB_USER'   => 'root',
+//    'DB_PWD'    => '',
+//    'DB_PORT'   => '3306',
+//    'DB_PREFIX' => 'yl_',
     'DB_TYPE'   => 'mysql',
     'DB_HOST'   => '10.19.9.55',
     'DB_NAME'   => 'smartGarden',

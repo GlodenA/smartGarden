@@ -146,7 +146,7 @@ class MachineController extends BaseController{
         $endToday = $beginToday + 24*60*60-1;
         //当前设备数
         if(I("keywords")){
-            $where['s.machine_imei|m.realname'] = array('like', '%'.I('keywords').'%');
+            $where['c.machine_imei|m.realname'] = array('like', '%'.I('keywords').'%');
             $this->assign("keywords", I("keywords"));
         }
         $machine_status = I("machine_status");
@@ -161,10 +161,10 @@ class MachineController extends BaseController{
             }
             $this->assign("machine_status", $machine_status);
         }
-        $where["s.add_time"] = array("gt",$beginToday);
+        $where["c.login_time"] = array("gt",$beginToday);
         $where["c.is_delete"] = 0;
 //        $count = M("Site_log")->table("__SITE_LOG__ s,__MACHINE__ c")->join("LEFT JOIN __MEMBER__ m ON c.userid = m.userid")->join("LEFT JOIN __MEMBER__ m ON c.userid = m.userid")->where($where)->count('distinct(machine_imei)');
-        $where["_string"] = "s.machine_imei = c.machine_imei";
+        // $where["_string"] = "s.machine_imei = c.machine_imei";
         //查询职位列表
         $positionList = M("Member_position")->where(array("is_delete"=>0))->select();
         $this->assign("positionList",$positionList);
@@ -196,16 +196,15 @@ class MachineController extends BaseController{
             $whereMember["_complex"] = array($whereParent,$wherePositon,'_logic'=>'or');
             $where["_complex"] = $whereMember;
         }
-        $count = M("Site_log")->table("__SITE_LOG__ s,__MACHINE__ c")->join("LEFT JOIN __MEMBER__ m ON c.userid = m.userid")->where($where)->count('distinct(s.machine_imei)');
+        $count = M("Machine")->alias("c")->join("LEFT JOIN __MEMBER__ m ON c.userid = m.userid")->where($where)->count();
         $Page = new \Think\Page($count,30);
-        $machineList = M("Site_log")
-            ->table("__SITE_LOG__ s,__MACHINE__ c")
+        $machineList = M("Machine")
+            ->alias("c")
             ->join("LEFT JOIN __MEMBER__ m ON c.userid = m.userid")
             ->where($where)
             ->limit($Page->firstRow.','.$Page->listRows)
             ->field("c.*,m.realname,m.job_number,m.mobile,m.position,m.parent_id")
             ->order("c.update_time desc,c.add_time desc")
-            ->group("s.machine_imei")
             ->select();
         if($machineList){
 //            $work_day = '';
@@ -510,14 +509,12 @@ class MachineController extends BaseController{
     }
     // 设备地图展示
     public function machineMap(){
-        $add_time = date("Y-m-d",time());
-        $startTime = strtotime($add_time);
-        $endTime = strtotime($add_time) + 24*3600;
-        $where['s.add_time'] = array('between',array($startTime,$endTime));
-        $where["s.machine_id"] = I("machine_id");
+        $where["c.machine_id"] = I("machine_id");
+        // $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y'));
+        // $where["c.login_time"] = array("gt",$beginToday);
         $where["c.is_delete"] = 0;
-        $where["_string"] = "s.machine_imei = c.machine_imei and s.machine_id = c.machine_id";
-        $info = M("Site_log")->table("__SITE_LOG__ s,__MACHINE__ c")->join("LEFT JOIN __MEMBER__ m ON c.userid = m.userid")->where($where)->field("s.*,c.machine_name,c.userid,m.job_number,m.mobile,m.realname,m.position,m.parent_id")->order("s.add_time desc")->find();
+        $where["m.is_delete"] = 0;
+        $info = M("Machine")->alias("c")->join("left join __MEMBER__ m on c.userid = m.userid")->field("c.*,m.realname,m.job_number,m.mobile,m.position,m.parent_id")->where($where)->find();
         if($info){
             if($info["parent_id"]>0){
                 $info["parent_name"] = M("Member")->where(array("userid"=>$info["parent_id"],"is_delete"=>0))->getField("realname");
@@ -529,7 +526,9 @@ class MachineController extends BaseController{
             }else{
                 $info["position_name"] ="";
             }
-            $info["add_time"] = date("Y-m-d H:i:s",$info["add_time"]);
+            $info["lat"] = $info["b_lat"];
+            $info["lon"] = $info["b_lon"];
+            $info["add_time"] = $info["server_utc_time"];
         }
         $this->assign($info);
         $this->display("machine_map");
@@ -577,102 +576,102 @@ class MachineController extends BaseController{
     public function getMachineOrbit(){
         //获取设备信息
         header("Content-Type:text/html;charset=utf-8");
+//        $type = I("type");
         $machineId = I("machine_id");
         $machineInfo = M('Machine')->where(array("machine_id"=>$machineId,"is_delete"=>0))->find();
-        $searchTime = I("searchTime");
-        if($searchTime){
-            $year = $searchTime;
-        }else{
-            $year = date("Y-m-d",time());
+        if(I('start_time')){
+            $start_time = strtotime(I('start_time'));
+            $this->assign('start_time',I('start_time'));
+        }
+        if(I('end_time')){
+            if($start_time == I('end_time')){
+                $end_time = strtotime(I('end_time'))+24*3600;
+            }else{
+                $end_time = strtotime(I('end_time'));
+            }
+            $this->assign('end_time',I('end_time'));
+        }
+        //请求轨迹
+        $client = new \SoapClient("http://123.57.45.188:8081/Ajax/DevicesAjax.asmx?wsdl");
+        $paramOne["DeviceID"] = $machineInfo["mid"];
+        $paramOne["Start"] =$start_time;
+        $paramOne["End"] = $end_time;
+        $paramOne["TimeZone"] = "8:00";
+        $paramOne["ShowLBS"] = 0;
+        $result1 = $client->GetDevicesHistory($paramOne);
+        if ($result1) {
+            $result2 = object_to_array($result1);
+            $jsonstr1 = $result2["GetDevicesHistoryResult"];
+            $jsonstr2 = json_replace_key($jsonstr1);
+            $jsonArr1 = json_decode("[" . $jsonstr2 . "]", true);
+            $listOne = $jsonArr1[0]["devices"];
         }
         //3.根据设备信息中的绑定班组获取班组信息
-        $whereSchedules["schedules_id"] = $machineInfo["schedules_id"];
-        $whereSchedules["is_show"] = 1;
-        $whereSchedules["is_delete"] = 0;
-        $schedulesInfo = M("Schedules_setting")->where($whereSchedules)->find();
-        if($schedulesInfo) {
-            if ($schedulesInfo["time_id"]) {
-                //获取时间段信息
-                $timeIdArr = explode(",", $schedulesInfo["time_id"]);
-                //两个时间段
-                $timeInfoAm = M("Schedules_time")->where(array("id" => $timeIdArr[0], "is_show" => 1, "is_delete" => 0))->find();
-                $timeInfoPm = M("Schedules_time")->where(array("id" => $timeIdArr[1], "is_show" => 1, "is_delete" => 0))->find();
-                if ($timeInfoAm && $timeInfoPm) {
-                    //5.查询考勤设置
-                    $attendanceSetInfo = M("Attendance_setting")->where(array("id" => 1))->find();
-                    //拼接时间段
-                    $timeInfoAmStart = strtotime($year.' '.$timeInfoAm["start_time"])-$attendanceSetInfo["error_time"];
-                    $timeInfoAmEnd = strtotime($year.' '.$timeInfoAm["end_time"])+$attendanceSetInfo["error_time"];
-                    $timeInfoPmStart = strtotime($year.' '.$timeInfoPm["start_time"])-$attendanceSetInfo["error_time"];
-                    $timeInfoPmEnd = strtotime($year.' '.$timeInfoPm["end_time"])+$attendanceSetInfo["error_time"];
-                    $timeStart1 = date("Y-m-d",$timeInfoAmStart)."T".date("H:i:s",$timeInfoAmStart);
-                    $timeStart2 = date("Y-m-d",$timeInfoPmStart)."T".date("H:i:s",$timeInfoPmStart);
-                    //查询考勤信息
-                    // $beginToday = strtotime($year);
-                    // $endToday = $beginToday+24*60*60;
-                    // $whereAttendance["a.userid"] = $machineInfo["userid"];
-                    // $whereAttendance["a.is_delete"] = 0;
-                    // $whereAttendance["a.machine_id"] = $machineInfo["machine_id"];
-                    // $whereAttendance["m.is_delete"] = 0;
-                    // $whereAttendance["a.add_time"] = array('between',array($beginToday,$endToday));
-                    // $whereAttendance["_string"] = "m.userid = a.userid";
-                    // $attendanceInfo = M("Attendance")->table("__ATTENDANCE__ a,__MEMBER__ m")->where($whereAttendance)->find();
-                    // if($attendanceInfo){
-                    //     if($attendanceInfo["second_time"]>0){
-                    //         $timeEmd1 = date("Y-m-d",$attendanceInfo["second_time"])."T".date("H:i:s",$attendanceInfo["second_time"]);
-                    //     }else{
-                    //         $timeEmd1 = date("Y-m-d",$timeInfoAmEnd)."T".date("H:i:s",$timeInfoAmEnd);
-                    //     }
-                    //     if($attendanceInfo["fourth_time"]>0){
-                    //         $timeEmd2 = date("Y-m-d",$attendanceInfo["fourth_time"])."T".date("H:i:s",$attendanceInfo["fourth_time"]);
-                    //     }else{
-                    //         $timeEmd2 = date("Y-m-d",$timeInfoPmEnd)."T".date("H:i:s",$timeInfoPmEnd);
-                    //     }
-                    // }else{
-                    //     $timeEmd1 = date("Y-m-d",$timeInfoAmEnd)."T".date("H:i:s",$timeInfoAmEnd);
-                    //     $timeEmd2 = date("Y-m-d",$timeInfoPmEnd)."T".date("H:i:s",$timeInfoPmEnd);
-                    // }
-                    $timeEmd1 = date("Y-m-d",$timeInfoAmEnd)."T".date("H:i:s",$timeInfoAmEnd);
-                    $timeEmd2 = date("Y-m-d",$timeInfoPmEnd)."T".date("H:i:s",$timeInfoPmEnd);
-                    //请求轨迹
-                    $client = new \SoapClient("http://123.57.45.188:8081/Ajax/DevicesAjax.asmx?wsdl");
-                    $paramOne["DeviceID"] = $machineInfo["mid"];
-                    $paramOne["Start"] =$timeStart1;
-                    $paramOne["End"] = $timeEmd1;
-                    $paramOne["TimeZone"] = "8:00";
-                    $paramOne["ShowLBS"] = 1;
-                    $result1 = $client->GetDevicesHistory($paramOne);
-                    if ($result1) {
-                        $result2 = object_to_array($result1);
-                        $jsonstr1 = $result2["GetDevicesHistoryResult"];
-                        $jsonstr2 = json_replace_key($jsonstr1);
-                        $jsonArr1 = json_decode("[" . $jsonstr2 . "]", true);
-                        $listOne = $jsonArr1[0]["devices"];
-                    }
-                    $paramTwo["DeviceID"] = $machineInfo["mid"];
-                    $paramTwo["Start"] =$timeStart2;
-                    $paramTwo["End"] = $timeEmd2;
-                    $paramTwo["TimeZone"] = "8:00";
-                    $paramTwo["ShowLBS"] = 1;
-                    var_dump($paramOne);
-                    var_dump($paramTwo);
-                    $result3 = $client->GetDevicesHistory($paramTwo);
-                    var_dump($result3);
-                    if ($result3) {
-                        $result4 = object_to_array($result3);
-                        $jsonstr3 = $result4["GetDevicesHistoryResult"];
-                        $jsonstr4 = json_replace_key($jsonstr3);
-                        $jsonArr2 = json_decode("[" . $jsonstr4 . "]", true);
-                        $listTwo = $jsonArr2[0]["devices"];
-                    }
-                }
-            }
-        }
-        if($listOne || $listTwo){
+//        $whereSchedules["schedules_id"] = $machineInfo["schedules_id"];
+//        $whereSchedules["is_show"] = 1;
+//        $whereSchedules["is_delete"] = 0;
+//        $schedulesInfo = M("Schedules_setting")->where($whereSchedules)->find();
+//        if($schedulesInfo) {
+//            if ($schedulesInfo["time_id"]) {
+//                //获取时间段信息
+////                if(strpos($schedulesInfo["time_id"],',')!==false){
+//                    //存在多个时间段,进行打卡操作
+//                    $timeIdArr = explode(",", $schedulesInfo["time_id"]);
+//                    //两个时间段
+//                    $timeInfoAm = M("Schedules_time")->where(array("id" => $timeIdArr[0], "is_show" => 1, "is_delete" => 0))->find();
+//                    $timeInfoPm = M("Schedules_time")->where(array("id" => $timeIdArr[1], "is_show" => 1, "is_delete" => 0))->find();
+//                    if ($timeInfoAm && $timeInfoPm) {
+//                        //5.查询考勤设置
+//                        $attendanceSetInfo = M("Attendance_setting")->where(array("id" => 1))->find();
+//                        //拼接时间段
+//                        $timeInfoAmStart = strtotime($year.' '.$timeInfoAm["start_time"])-$attendanceSetInfo["error_time"];
+//                        $timeInfoAmEnd = strtotime($year.' '.$timeInfoAm["end_time"])+$attendanceSetInfo["error_time"];
+//                        $timeInfoPmStart = strtotime($year.' '.$timeInfoPm["start_time"])-$attendanceSetInfo["error_time"];
+//                        $timeInfoPmEnd = strtotime($year.' '.$timeInfoPm["end_time"])+$attendanceSetInfo["error_time"];
+//                        $timeStart1 = date("Y-m-d",$timeInfoAmStart)."T".date("H:i:s",$timeInfoAmStart);
+//                        $timeStart2 = date("Y-m-d",$timeInfoPmStart)."T".date("H:i:s",$timeInfoPmStart);
+//                        $timeEmd1 = date("Y-m-d",$timeInfoAmEnd)."T".date("H:i:s",$timeInfoAmEnd);
+//                        $timeEmd2 = date("Y-m-d",$timeInfoPmEnd)."T".date("H:i:s",$timeInfoPmEnd);
+//                        //请求轨迹
+//                        $client = new \SoapClient("http://123.57.45.188:8081/Ajax/DevicesAjax.asmx?wsdl");
+//                        if($type == 0 || $type == 1){
+//                            $paramOne["DeviceID"] = $machineInfo["mid"];
+//                            $paramOne["Start"] =$timeStart1;
+//                            $paramOne["End"] = $timeEmd1;
+//                            $paramOne["TimeZone"] = "8:00";
+//                            $paramOne["ShowLBS"] = 0;
+//                            $result1 = $client->GetDevicesHistory($paramOne);
+//                            if ($result1) {
+//                                $result2 = object_to_array($result1);
+//                                $jsonstr1 = $result2["GetDevicesHistoryResult"];
+//                                $jsonstr2 = json_replace_key($jsonstr1);
+//                                $jsonArr1 = json_decode("[" . $jsonstr2 . "]", true);
+//                                $listOne = $jsonArr1[0]["devices"];
+//                            }
+//                        }
+//                        if($type ==2 || $type == 0){
+//                            $paramTwo["DeviceID"] = $machineInfo["mid"];
+//                            $paramTwo["Start"] =$timeStart2;
+//                            $paramTwo["End"] = $timeEmd2;
+//                            $paramTwo["TimeZone"] = "8:00";
+//                            $paramTwo["ShowLBS"] = 0;
+//                            $result3 = $client->GetDevicesHistory($paramTwo);
+//                            if ($result3) {
+//                                $result4 = object_to_array($result3);
+//                                $jsonstr3 = $result4["GetDevicesHistoryResult"];
+//                                $jsonstr4 = json_replace_key($jsonstr3);
+//                                $jsonArr2 = json_decode("[" . $jsonstr4 . "]", true);
+//                                $listTwo = $jsonArr2[0]["devices"];
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+        if($listOne){
             $ret["status"] = 1;
             $ret["info"] = "获取坐标数据成功";
             $ret["listOne"] = $listOne;
-            $ret["listTwo"] = $listTwo;
         }else{
             $ret["status"] = 0;
             $ret["info"] = "暂无坐标数据";

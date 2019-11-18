@@ -298,7 +298,7 @@
     function _fnInitMap(data) {
         map.clearOverlays();
         for(var j = 0; j < data.length;j++){
-            data[j].add_time = getLocalTime(data[j].add_time);
+            // data[j].add_time = getLocalTime(data[j].add_time);
             var point = new BMap.Point(data[j].lon,data[j].lat);
 //            map.centerAndZoom(point, 18);
             // 创建标注
