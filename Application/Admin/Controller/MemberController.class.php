@@ -23,14 +23,20 @@ class MemberController extends BaseController
             if($status == 1){
                 //在岗
                 $where["job_status"] = 1;
+                $where["is_delete"] = 0;
+
             }
             if($status == 2){
                 //未上岗
                 $where["job_status"] = 2;
+                $where["is_delete"] = 0;
+
             }
             if($status == 3){
                 //离岗
                 $where["job_status"] = 0;
+                $where["is_delete"] = 0;
+
             }
             if($status == 4){
                 //未上岗但有考勤
@@ -49,6 +55,8 @@ class MemberController extends BaseController
                 }
                 $where["userid"] = array('in',$useridArr);
                 $where["job_status"] = 2;
+                $where["is_delete"] = 0;
+
             }
             if($status == 5){
                 //未上岗且无考勤
@@ -67,9 +75,14 @@ class MemberController extends BaseController
                 }
                 $where["userid"] = array('not in',$useridArr);
                 $where["job_status"] = 2;
+                $where["is_delete"] = 0;
+
+            }
+            if($status == 6){
+                //离职
+                $where["is_delete"] = 1;
             }
         }
-        $where["is_delete"] = 0;
         //查询职位列表
         $positionList = M("Member_position")->where(array("is_delete"=>0))->select();
         $this->assign("positionList",$positionList);
