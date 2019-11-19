@@ -37,21 +37,21 @@
           }">
             <el-form-item prop="date" label="请假日期">
               <el-date-picker
-                :editable="false"
+                style="width:100%;"
                 v-model="applyInfo.date"
-                type="date"
-                style="width:100%;">
+                type="datetimerange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                align="right">
               </el-date-picker>
             </el-form-item>
             <el-form-item prop="applicant" label="申请人">
               <el-input v-model="applyInfo.applicant"/>
             </el-form-item>
             <el-form-item prop="targetEmployee" label="申请类型">
-              <el-input v-model="applyInfo.type"/>
-            </el-form-item>
-            <el-form-item prop="time" label="时间">
-              <el-time-picker v-model="applyInfo.time" style="width:100%;">
-              </el-time-picker>
+              <el-radio v-model="applyInfo.type" :label="1">请假</el-radio>
+              <el-radio v-model="applyInfo.type" :label="2">调休</el-radio>
             </el-form-item>
             <el-form-item prop="remark" label="备注">
               <el-input
@@ -78,7 +78,7 @@
         applyInfo: {
           date: '',
           applicant: '',
-          type: '',
+          type: 1,
           time: '',
           remark: ''
         }
