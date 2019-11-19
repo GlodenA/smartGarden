@@ -85,18 +85,18 @@
   	常用菜单
   </div>
 	<el-row :gutter="20" >
-		<el-col :span="6" v-for="([icon, title, subtitle], i) in [
-			['date', '考勤记录', '今日考勤记录'],
-			['s-custom', '员工管理', '员工列表'],
-			['map-location', '设备位置', '电子栅栏'],
-			['mobile-phone', '设备管理', '设备列表']
+		<el-col :span="6" v-for="([icon, title, subtitle, menu, address], i) in [
+			['date', '考勤记录', '今日考勤记录', '__MODULE__/Attendance/attendanceList', '__MODULE__/Attendance/attendanceList/start_time/{$newTime}/end_time/{$newTime}'],
+			['s-custom', '员工管理', '员工列表', '__MODULE__/Member/memberList', '__MODULE__/Member/memberList'],
+			['map-location', '设备位置', '电子栅栏', '__MODULE__/Map/mapMachine', '__MODULE__/Map/mapAllFence'],
+			['mobile-phone', '设备管理', '设备列表', '__MODULE__/Machine/machineList', '__MODULE__/Machine/machineList']
 		]" :key="i">
 			<el-card class="panel-card" shadow="hover">
 				<div class="row items-center justify-center">
 					<i :class="[`el-icon-${icon}`, 'card-icon']"></i>
 					<div class="ml3">
-						<h4>{{ title }}</h4>
-						<p>{{ subtitle }}</p>
+						<a :href=menu><h4>{{ title }}</h4></a>
+						<a :href=address><p>{{ subtitle }}</p></a>
 					</div>
 				</div>
 			</el-card>
@@ -122,11 +122,13 @@
 		<div class="p2 bold h2">
 			异常警告
 		</div>
+		<a href="__MODULE__/WarningMessage/warningMessageList">
 		<el-button icon="el-icon-right" plain type="primary">
 			查看更多
 		</el-button>
+		</a>
 	</div>
-	<el-table :data="tableData" style="width: 100%">
+	<el-table style="width: 100%" id="tableData"  v-bind:data="tableData">
 		<template  v-for="({ prop, label }, i) in tableColumns">
 			<el-table-column :key="i" :prop="prop" :label="label" v-if="prop !== 'warningType'"></el-table-column>
 			<el-table-column :key="i" v-else :prop="prop" :label="label">
@@ -158,8 +160,8 @@
   </span>
 </el-dialog>
 </div>
-
 <script type="text/javascript">
+
 	const main = new Vue({
 		el: '#MAIN',
 		data() {
@@ -187,25 +189,16 @@
 					'异常情况'
 				],
 				realTimeDialog: false,
-				tableData: Array(10).fill({
-					deviceName: 'cyyl_05007',
-					deviceNumber: '2783492374893278',
-					bindEmployee: '王建国',
-					workNumber: '1197',
-					position: '养护工人',
-					manager: '李香社（金晶大道）',
-					warningTime: '2019-11-04 13:53:42',
-					warningType: '怠工超过设定时间警告',
-				}),
+				tableData: null,
 				tableColumns: [
-					['设备名称', 'deviceName'],
-					['设备号', 'deviceNumber'],
-					['绑定员工', 'bindEmployee'],
-					['工号', 'workNumber'],
+					['设备名称', 'machine_name'],
+					['设备号', 'machine_imei'],
+					['绑定员工', 'realname'],
+					['工号', 'job_number'],
 					['职位', 'position'],
-					['管理人员', 'manager'],
-					['告警时间', 'warningTime'],
-					['告警类型', 'warningType'],
+					['管理人员', 'parent_id'],
+					['告警时间', 'add_time'],
+					['告警类型', 'type'],
 				].map(([ label, prop ]) => ({
 					label,
 					prop
@@ -224,6 +217,68 @@
 			}
 		},
 		methods: {
+			getData(){
+				DMS.ajaxPost('__MODULE__/Index/main' , {
+					page: null,
+				}, res => {
+					var option=[];
+					this.tableData=res['list_today'];
+
+					for (var a=0;a<res['options'].length;a++){
+						option.push(res['options'][a].showname);
+					}
+					this.realTimeMenus=option;
+					//遍历一次useroption，给各种东西进行赋值
+					var userOption=[];
+					var userOptionValue=[];
+					for (var a=0;a<res['userOptions'].length;a++){
+						switch (res['userOptions'][a]) {
+							case '1':
+								userOption.push('总设备数');
+								userOptionValue.push(res['mahcine_count']);
+								break;
+							case '2':
+								userOption.push('今日上线设备总数');
+								userOptionValue.push(res['today_mount_guard_count']);
+								break;
+							case '3':
+								userOption.push('当前在线设备数');
+								userOptionValue.push(res['mount_guard_count']);
+								break;
+							case '4':
+								userOption.push('员工总数');
+								userOptionValue.push(res['count_member']);
+								break;
+							case '5':
+								userOption.push('在岗人数');
+								userOptionValue.push(res['on_guard_count']);
+								break;
+							case '6':
+								userOption.push('离岗人数');
+								userOptionValue.push(res['out_guard_count']);
+								break;
+							case '7':
+								userOption.push('未上岗人数');
+								userOptionValue.push(res['no_guard_count']);
+								break;
+							case '8':
+								userOption.push('上午考勤统计');
+								userOptionValue.push(res['morning']);
+								break;
+							case '9':
+								userOption.push('下午考勤统计');
+								userOptionValue.push(res['afternoon']);
+								break;
+						}
+					}
+					console.log('sdsdsdsdsd'+userOption);
+
+					this.selectedRealTimeMenus=userOption;
+					this.realTimeMonitorDataLabelArr=userOption;
+					this.realTimeMonitorData=userOptionValue;
+
+				})
+			},
 			toggleRealTimeMenuSelectedState(label, state){
 				if(state){
 					this.selectedRealTimeMenus.splice(this.selectedRealTimeMenus.findIndex(v => v === label), 1)
@@ -233,4 +288,5 @@
 			}
 		}
 	})
+	main.getData();
 </script>

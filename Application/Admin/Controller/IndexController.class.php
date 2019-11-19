@@ -4,6 +4,8 @@ namespace Admin\Controller;
 class IndexController extends BaseController {
     public function __construct(){
         parent::__construct();
+        $this->showOptionDb = M('Show_option');
+        $this->userOptionDb = M('User_option');
     }
     //后台入口
     public function index(){
@@ -26,53 +28,67 @@ class IndexController extends BaseController {
             ->limit(10)
             ->order("w.add_time desc")
             ->select();
-        $this->assign('list_today',$list_today);
+        //$this->assign('list_today',$list_today);
+        $datas['list_today']=$list_today;
         $newTime = date("Y-m-d",time());
-        $this->assign('newTime',$newTime);
+        //$this->assign('newTime',$newTime);
+        $datas['newTime']=$newTime;
         //总员工数
         $where["is_delete"] = 0;
         $count_member = M('Member')->where($where)->count();
-        $this->assign('count_member',$count_member);
+        //$this->assign('count_member',$count_member);
+        $datas['count_member']=$count_member;
         //设备总数
         $mahcineCount = M("Machine")->where(array("is_delete"=>0))->count();
-        $this->assign("mahcine_count",$mahcineCount);
+        //$this->assign("mahcine_count",$mahcineCount);
+        $datas['mahcine_count']=$mahcineCount;
         //当前在线设备数
         $wheremgc["machine_status"] = array(array("eq","Stop"),array("eq","Move"),"or");
         $wheremgc["is_delete"] = 0;
         $mount_guard_count = M("Machine")->where($wheremgc)->count();
-        $this->assign("mount_guard_count",$mount_guard_count);
+        //$this->assign("mount_guard_count",$mount_guard_count);
+        $datas['mount_guard_count']=$mount_guard_count;
         //今日在线设备数总计
         $whereTodayMgc["is_delete"] = 0;
         $whereTodayMgc["login_time"] = array("gt",$beginToday);
         $today_mount_guard_count = M("Machine")->where($whereTodayMgc)->count();
-        $this->assign("today_mount_guard_count",$today_mount_guard_count);
+        //$this->assign("today_mount_guard_count",$today_mount_guard_count);
+        $datas['today_mount_guard_count']=$today_mount_guard_count;
         //在岗人数
-        $out_guard_count = M("Member")->where(array("is_delete"=>0,"job_status"=>1))->count();
-        $this->assign("on_guard_count",$out_guard_count);
+        $on_guard_count = M("Member")->where(array("is_delete"=>0,"job_status"=>1))->count();
+        //$this->assign("on_guard_count",$out_guard_count);
+        $datas['on_guard_count']=$on_guard_count;
         //离岗人数
         $out_guard_count = M("Member")->where(array("is_delete"=>0,"job_status"=>0))->count();
-        $this->assign("out_guard_count",$out_guard_count);
+        //$this->assign("out_guard_count",$out_guard_count);
+        $datas['out_guard_count']=$out_guard_count;
         //未上岗人数
         $no_guard_count = M("Member")->where(array("is_delete"=>0,"job_status"=>2))->count();
-        $this->assign("no_guard_count",$no_guard_count);
+        //$this->assign("no_guard_count",$no_guard_count);
+        $datas['no_guard_count']=$no_guard_count;
         $whereAttention["is_delete"] = 0;
         $whereAttention["add_time"] = array(array("gt",$beginToday),array("lt",$endToday));
         //上午
         //正常
         $am_t_normal_count = M('Attendance')->where($whereAttention)->where("first_result=1")->count();
-        $this->assign("am_t_normal_count",$am_t_normal_count);
+        //$this->assign("am_t_normal_count",$am_t_normal_count);
+        $datas['am_t_normal_count']=$am_t_normal_count;
         //迟到
         $am_late_count = M('Attendance')->where($whereAttention)->where("first_result=3")->count();
-        $this->assign("am_late_count",$am_late_count);
+        //$this->assign("am_late_count",$am_late_count);
+        $datas['am_late_count']=$am_late_count;
         //旷工
         $am_absenteeism_count = M('Attendance')->where($whereAttention)->where("first_result=5")->count();
-        $this->assign("am_absenteeism_count",$am_absenteeism_count);
+        //$this->assign("am_absenteeism_count",$am_absenteeism_count);
+        $datas['am_absenteeism_count']=$am_absenteeism_count;
         //正常
         $am_d_normal_count = M('Attendance')->where($whereAttention)->where("second_result=2")->count();
-        $this->assign("am_d_normal_count",$am_d_normal_count);
+        //$this->assign("am_d_normal_count",$am_d_normal_count);
+        $datas['am_d_normal_count']=$am_d_normal_count;
         //早退
         $am_leave_count = M('Attendance')->where($whereAttention)->where("second_result=4")->count();
-        $this->assign("am_leave_count",$am_leave_count);
+        //$this->assign("am_leave_count",$am_leave_count);
+        $datas['am_leave_count']=$am_leave_count;
         //异常
         //上午异常
         $whereAmAttention["is_delete"] = 0;
@@ -82,23 +98,29 @@ class IndexController extends BaseController {
         $whereAmAbnormal['_logic'] = 'or';
         $whereAmAttention['_complex'] = $whereAmAbnormal;
         $am_abnormal_count = M('Attendance')->where($whereAmAttention)->count();
-        $this->assign("am_abnormal_count",$am_abnormal_count);
+        //$this->assign("am_abnormal_count",$am_abnormal_count);
+        $datas['am_abnormal_count']=$am_abnormal_count;
         //下午
         //正常
         $pm_t_normal_count = M('Attendance')->where($whereAttention)->where("third_result=1")->count();
-        $this->assign("pm_t_normal_count",$pm_t_normal_count);
+        //$this->assign("pm_t_normal_count",$pm_t_normal_count);
+        $datas['pm_t_normal_count']=$pm_t_normal_count;
         //迟到
         $pm_late_count = M('Attendance')->where($whereAttention)->where("third_result=3")->count();
-        $this->assign("pm_late_count",$pm_late_count);
+        //$this->assign("pm_late_count",$pm_late_count);
+        $datas['pm_late_count']=$pm_late_count;
         //旷工
         $pm_absenteeism_count = M('Attendance')->where($whereAttention)->where("third_result=5")->count();
-        $this->assign("pm_absenteeism_count",$pm_absenteeism_count);
+        //$this->assign("pm_absenteeism_count",$pm_absenteeism_count);
+        $datas['pm_absenteeism_count']=$pm_absenteeism_count;
         //正常
         $pm_d_normal_count = M('Attendance')->where($whereAttention)->where("fourth_result=2")->count();
-        $this->assign("pm_d_normal_count",$pm_d_normal_count);
+        //$this->assign("pm_d_normal_count",$pm_d_normal_count);
+        $datas['pm_d_normal_count']=$pm_d_normal_count;
         //早退
         $pm_leave_count = M('Attendance')->where($whereAttention)->where("fourth_result=4")->count();
-        $this->assign("pm_leave_count",$pm_leave_count);
+        //$this->assign("pm_leave_count",$pm_leave_count);
+        $datas['pm_leave_count']=$pm_leave_count;
         //下午异常
         $wherePmAttention["is_delete"] = 0;
         $wherePmAttention["add_time"] = array(array("gt",$beginToday),array("lt",$endToday));
@@ -107,8 +129,22 @@ class IndexController extends BaseController {
         $wherePmAbnormal['_logic'] = 'or';
         $wherePmAttention['_complex'] = $wherePmAbnormal;
         $pm_abnormal_count = M('Attendance')->where($wherePmAttention)->count();
-        $this->assign("pm_abnormal_count",$pm_abnormal_count);
-        $this->display('main');
+        //$this->assign("pm_abnormal_count",$pm_abnormal_count);
+        $datas['pm_abnormal_count']=$pm_abnormal_count;
+
+        // lukai add
+        $whereStatus['status']='1';//有效数值
+        $options=$this->showOptionDb->where($whereStatus)->select();
+        $datas['options']=$options;
+        $whereUserId['uid']='1';
+        $userOption=$this->userOptionDb->where($whereUserId)->find();
+        $userOptions = explode(",", $userOption['option_ids']);
+        $datas['userOptions']=$userOptions;
+        if(IS_POST){
+            $this->ajaxReturn($datas,'JSON');
+        }else{
+            $this->display('main');
+        }
     }
     //登录
     public function login(){
