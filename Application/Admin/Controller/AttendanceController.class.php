@@ -1139,7 +1139,7 @@ class AttendanceController extends BaseController {
         }
         $count =M("Attendance")->table('__ATTENDANCE__ a,__MEMBER__ m')->where($where)->count();
 
-        $listRows=20;
+        $listRows=10;
         $firstRow = $listRows*(I("page")-1);
 
         $list = M("Attendance")
