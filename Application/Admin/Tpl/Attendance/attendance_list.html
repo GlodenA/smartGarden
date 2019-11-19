@@ -181,7 +181,8 @@
       pageChange(p){
         // 在这里用 p 向后台ajax获取分页数据
         // console.log(`新的页码：${p}`)
-        this.queryCondition.page=p
+        this.queryCondition.page=p;
+        this.doQuery();
       },
 
       /**
