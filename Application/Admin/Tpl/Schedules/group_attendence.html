@@ -16,9 +16,6 @@
         <el-divider></el-divider>
         <div class="flex justify-end">
           <el-form inline>
-            <el-form-item label="关键字">
-              <el-input v-model="queryCondition.keyword" style="width:120px;"></el-input>
-            </el-form-item>
             <el-form-item label="时间">
               <el-date-picker
                 v-model="queryCondition.time"
@@ -44,19 +41,19 @@
                 </volist>
               </el-select>
             </el-form-item>
-            <el-form-item label="报警类型">
-              <el-select v-model="queryCondition.warningType" style="width:120px;">
-                <el-option :value="0" label="全部"></el-option>
-                <el-option v-for="(l, i) in [
-                  '远离区域报警',
-                  '低电量报警',
-                  '迟到报警',
-                  '旷工报警',
-                  '早退报警',
-                  '怠工超过设定时间告警'
-                ]" :value="i + 2" :label="l"></el-option>
-              </el-select>
-            </el-form-item>
+            <!--<el-form-item label="报警类型">-->
+              <!--<el-select v-model="queryCondition.warningType" style="width:120px;">-->
+                <!--<el-option :value="0" label="全部"></el-option>-->
+                <!--<el-option v-for="(l, i) in [-->
+                  <!--'远离区域报警',-->
+                  <!--'低电量报警',-->
+                  <!--'迟到报警',-->
+                  <!--'旷工报警',-->
+                  <!--'早退报警',-->
+                  <!--'怠工超过设定时间告警'-->
+                <!--]" :value="i + 2" :label="l"></el-option>-->
+              <!--</el-select>-->
+            <!--</el-form-item>-->
             <el-form-item>
               <el-button type="primary">查询</el-button>
             </el-form-item>
@@ -137,14 +134,12 @@
         }],
         tableColumns: [
           ['serialNumber', '序号'],
-          ['deviceName', '设备名称'],
-          ['deviceNumber', '设备号'],
-          ['bindEmployee', '绑定员工'],
-          ['workNumber', '工号'],
           ['position', '职位'],
           ['manager', '管理人员'],
-          ['warningTime', '告警时间'],
-          ['warningType', '告警类型']
+          ['bindEmployee', '满勤'],
+          ['workNumber', '迟到'],
+          ['position', '离岗'],
+          ['manager', '日期']
         ]
       }
     },
