@@ -107,7 +107,7 @@
                 }">
                   编辑
                 </el-button>
-                <el-button v-if="row.leaveTimeCount * 1 === 0" type="text">
+                <el-button v-if="row.leaveTimeCount * 1 === 0" type="text" @click="showLeaveDialog">
                   离岗详情
                 </el-button>
               </template>
@@ -167,6 +167,21 @@
       </el-button>
     </div>
   </el-dialog>
+  <el-dialog :visible.sync="edit.leaveDialog" title="离岗详情" width="30%">
+    <el-form>
+      <el-form-item label="离岗时间">
+        <el-input disabled v-model="edit.leaveFormData.time1" />
+      </el-form-item>
+      <el-form-item label="返岗时间">
+        <el-input disabled v-model="edit.leaveFormData.time2" />
+      </el-form-item>
+    </el-form>
+    <div class="flex justify-end">
+      <el-button type="primary">
+        确定
+      </el-button>
+    </div>
+  </el-dialog>
 </div>
 <script>
   const attendenceList = new Vue({
@@ -175,6 +190,11 @@
       return {
         edit: {
           dialog: false,
+          leaveDialog: false,
+          leaveFormData: {
+            time1: '',
+            time2: ''
+          },
           formData: {
             realname: '',
             job_number: '',
@@ -230,6 +250,10 @@
 
     methods: {
 
+      showLeaveDialog(){
+        // 从接口查询离岗详情并赋值给this.edit.leaveFormData
+        this.edit.leaveDialog = true
+      },
 
       /**
        * [pageChange 分页页数变化触发事件]
