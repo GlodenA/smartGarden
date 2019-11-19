@@ -133,10 +133,12 @@ class IndexController extends BaseController {
         $datas['pm_abnormal_count']=$pm_abnormal_count;
 
         // lukai add
+        //所有选项
         $whereStatus['status']='1';//有效数值
         $options=$this->showOptionDb->where($whereStatus)->select();
         $datas['options']=$options;
-        $whereUserId['uid']='1';
+        //当前用户已选的选项
+        $whereUserId['uid']=session("admin_uid");
         $userOption=$this->userOptionDb->where($whereUserId)->find();
         $userOptions = explode(",", $userOption['option_ids']);
         $datas['userOptions']=$userOptions;

@@ -18,10 +18,10 @@ class ShowOptionController extends BaseController
     // 管理组设置菜单
     public function optionSelect(){
         if(IS_POST){
-            $whereGroup['uid'] = I('uid');
-            $ids = I('ids');
-            if($ids){
-                $this->userOptionDb->where($whereGroup)->setField("menu_ids",$ids);
+            $whereGroup['uid'] = session("admin_uid");
+            $option_ids = I('option_ids');
+            if($option_ids){
+                $this->userOptionDb->where($whereGroup)->setField("option_ids",$option_ids);
                 $this->success("操作成功");
             }else{
                 $this->error("操作失败");

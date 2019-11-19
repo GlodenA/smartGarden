@@ -117,6 +117,7 @@
 			<i class="el-icon-plus"></i>
 		</el-col>
 	</el-row>
+
 	<el-divider></el-divider>
 	<div class="flex justify-between items-center">
 		<div class="p2 bold h2">
@@ -147,7 +148,7 @@
 	<el-row :gutter="20">
 		<el-col :span="6" v-for="({ label, selected }, i) in realTimeMenusWithSelectedStates" class="mb2">
 			<div :class="['real-time-selector', { 'selected': selected}]" @click="() => toggleRealTimeMenuSelectedState(label, selected)">
-				{{ label }}
+				<span :class="['real-time-selector1', { 'selected': selected}]">{{ label }}</span>
 				<div class="checked" v-show="selected">
 					<i class="el-icon-check"></i>
 				</div>
@@ -155,7 +156,7 @@
 		</el-col>
 	</el-row>
   <span slot="footer" class="flex justify-center">
-		<el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+		<el-button type="primary" @click="changeOption()">确 定</el-button>
     <el-button @click="realTimeDialog = false">重置</el-button>
   </span>
 </el-dialog>
@@ -166,28 +167,8 @@
 		el: '#MAIN',
 		data() {
 			return {
-				selectedRealTimeMenus: [
-					'当前在线设备数',
-					'迟到',
-					'旷工'
-				],
-				realTimeMenus: [
-					'总设备数',
-					'今日上线设备总数',
-					'当前在线设备数',
-					'员工总数',
-					'在岗人数',
-					'离岗人数',
-					'未上岗人数',
-					'迟到',
-					'上午考勤统计',
-					'下午考勤统计',
-					'正常上班打卡',
-					'正常下班打卡',
-					'旷工',
-					'早退',
-					'异常情况'
-				],
+				selectedRealTimeMenus: [],
+				realTimeMenus: [],
 				realTimeDialog: false,
 				tableData: null,
 				tableColumns: [
@@ -203,9 +184,9 @@
 					label,
 					prop
 				})),
-				realTimeMonitorData: [259, 13, 31],
+				realTimeMonitorData: [],
 				realTimeMonitorColor: ['primary', 'warning', 'danger'],
-				realTimeMonitorDataLabelArr: ['当前设备在线数', '迟到', '旷工']
+				realTimeMonitorDataLabelArr: []
 			}
 		},
 		computed: {
@@ -217,6 +198,55 @@
 			}
 		},
 		methods: {
+			changeOption(){
+				var userOptions=[];
+				var list=document.getElementsByClassName("real-time-selector1 selected");
+				for(var i=0;i<list.length;i++){
+					switch (list[i].innerHTML) {
+						case "总设备数":
+							userOptions.push(1);
+							break;
+						case "今日上线设备总数":
+							userOptions.push(2);
+							break;
+						case "当前在线设备数":
+							userOptions.push(3);
+							break;
+						case "员工总数":
+							userOptions.push(4);
+							break;
+						case "在岗人数":
+							userOptions.push(5);
+							break;
+						case "离岗人数":
+							userOptions.push(6);
+							break;
+						case "未上岗人数":
+							userOptions.push(7);
+							break;
+						case "上午考勤统计":
+							userOptions.push(8);
+							break;
+						case "下午考勤统计":
+							userOptions.push(9);
+							break;
+					}
+				}
+				console.log("选中的选项"+userOptions.toString())
+
+				DMS.ajaxPost('__MODULE__/ShowOption/optionSelect' , {
+                    option_ids: userOptions.toString(),
+                }, res => {
+					if(res.status==1){
+						layer.msg(res.info,{icon: 1, time: 2000},function(){
+							window.location.reload();
+						});
+					}else{
+						layer.msg(''+res.info+'',{icon: 2, time: 2000});
+					}
+                })
+			}
+			,
 			getData(){
 				DMS.ajaxPost('__MODULE__/Index/main' , {
 					page: null,
@@ -227,7 +257,7 @@
 					for (var a=0;a<res['options'].length;a++){
 						option.push(res['options'][a].showname);
 					}
-					this.realTimeMenus=option;
+					this.realTimeMenus=option;//所有的option
 					//遍历一次useroption，给各种东西进行赋值
 					var userOption=[];
 					var userOptionValue=[];
@@ -271,12 +301,9 @@
 								break;
 						}
 					}
-					console.log('sdsdsdsdsd'+userOption);
-
-					this.selectedRealTimeMenus=userOption;
-					this.realTimeMonitorDataLabelArr=userOption;
-					this.realTimeMonitorData=userOptionValue;
-
+					this.selectedRealTimeMenus=userOption;//用户拥有的option的值   编辑打开的页面里面选中的选项
+					this.realTimeMonitorDataLabelArr=userOption;//用户拥有的option的值    在首页展示的选项
+					this.realTimeMonitorData=userOptionValue;//option 的值
 				})
 			},
 			toggleRealTimeMenuSelectedState(label, state){
