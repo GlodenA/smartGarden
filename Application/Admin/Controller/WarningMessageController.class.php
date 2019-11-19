@@ -103,6 +103,85 @@ class WarningMessageController extends BaseController
         $this->assign("warningMessageList",$warningMessageList);
         $this->display("warning_list");
     }
+    //告警列表
+    public function getWarningMessageList(){
+        $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y'));
+        $endToday = $beginToday + 24*60*60-1;
+
+        if(I('time')[0]){
+            $start_time = strtotime(I('time')[0]);
+        }else{
+            $start_time = $beginToday;
+        }
+
+        if(I('time')[1]){
+            $end_time = strtotime(I('time')[1])+24*3600-1;
+        }else{
+            $end_time = $endToday;
+        }
+        $keywords = I('keywords');
+        if($keywords){
+            $where['a.job_number|a.realname'] = array('like', "%".$keywords."%");
+        }
+        $type = I("type");
+        if($type){
+            $where["w.type"] = array(array("gt",1),array("eq",$type),"and");
+        }else{
+            $where["w.type"] = array("gt",1);
+        }
+        if($start_time && $end_time){
+            $where['w.add_time'] = array('between',array($start_time,$end_time));
+        }elseif($start_time && !$end_time){
+            $end_time = $start_time+24*3600-1;
+            $where['w.add_time'] = array('between',array($start_time,$end_time));
+        }elseif(!$start_time && $end_time){
+            $start_time = $end_time-24*3600+1;
+            $where['w.add_time'] = array('between',array($start_time,$end_time));
+        }
+        $where['_string']='w.uid=m.userid and a.userid=m.userid';
+
+        $position = I("position");
+        if($position){
+            $where["a.position"] = $position;
+        }
+        $parent_id = I("parent_id");
+        if($parent_id){
+            $this->assign("parent_id",$parent_id);
+            $whereParent["a.parent_id"] = $parent_id;
+            $wherePositon["a.userid"] = $parent_id;
+            $whereMember["_complex"] = array($whereParent,$wherePositon,'_logic'=>'or');
+            $where["_complex"] = $whereMember;
+        }
+        $count =M("Warning_message")->table('__WARNING_MESSAGE__ w,__MEMBER__ a,__MACHINE__ m')->where($where)->count();
+//        $Page = new \Think\Page($count,20);
+        $listRows=10;
+        $firstRow = $listRows*(I("page")-1);
+        $warningMessageList = M()
+            ->table('__WARNING_MESSAGE__ w,__MEMBER__ a,__MACHINE__ m')
+            ->where($where)
+            ->field('w.type,w.uid,w.add_time,a.realname,a.job_number,m.machine_id,m.machine_imei,m.machine_name,a.position,a.parent_id')
+            ->limit($firstRow.','.$listRows)
+            ->order("w.add_time desc")
+            ->select();
+        foreach($warningMessageList as $k=>$v)
+        {
+            if($v["parent_id"]>0){
+                $warningMessageList[$k]["parent_name"] = M("Member")->where(array("userid"=>$v["parent_id"],"is_delete"=>0))->getField("realname");
+            }else{
+                $warningMessageList[$k]["parent_name"] ="";
+            }
+            if($v["position"]>0){
+                $warningMessageList[$k]["position_name"] = M("Member_position")->where(array("id"=>$v["position"],"is_delete"=>0))->getField("name");
+            }else{
+                $warningMessageList[$k]["position_name"] ="";
+            }
+
+        }
+
+        $ret["totalNumber"]= $count;
+        $ret["WARNINGLIST"]= $warningMessageList;
+        $this->ajaxReturn($ret);
+    }
     //统计表导出
     function warningExcel(){
         $keywords = I('keywords');
@@ -116,10 +195,10 @@ class WarningMessageController extends BaseController
             $where["w.type"] = array("gt",1);
         }
         if(I('start_time')){
-            $start_time = strtotime(I('start_time'));
+            $start_time = strtotime(I('time')[0]);
         }
         if(I('end_time')){
-            $end_time = strtotime(I('end_time'))+24*3600-1;
+            $end_time = strtotime(I('time')[1])+24*3600-1;
         }
         if($start_time && $end_time){
             $where['w.add_time'] = array('between',array($start_time,$end_time));
@@ -149,7 +228,7 @@ class WarningMessageController extends BaseController
             ->field('w.type,w.uid,w.add_time,a.realname,a.job_number,m.machine_id,m.machine_imei,m.machine_name,a.position,a.parent_id')
             ->order("w.add_time desc")
             ->select();
-        if($list){
+//        if($list){
             $headArr = array("员工号","姓名","养护经理","告警时间","告警详情","备注");
             // 单元格宽度(必须使用"A"=>30的形式)
             $widthExcel = array('A'=>11,'B'=>15,'C'=>15,'D'=>20,'E'=>16,'F'=>25);
@@ -183,14 +262,14 @@ class WarningMessageController extends BaseController
                 }
                 $data[$k]["remark"] = "";;
             }
-            if($data){
+//            if($data){
                 $sheetName = "告警统计";
                 $this->getExcel($start_time,$end_time,$sheetName,$headArr,$data,$widthExcel);
-            }
-            echo "success";
-        }else{
-            $this->error("暂无数据导出");
-        }
+//            }
+//            echo "success";
+//        }else{
+//            $this->error("暂无数据导出");
+//        }
     }
     /**
      * excel导出 chen
