@@ -18,10 +18,10 @@
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/layer/layer.js"></script>
       <!-- Vue, element, 间距工具类 相关 -->
-      <link rel="stylesheet" href="/smartGarden/Public/Admin/Css//util/flex.css">
+      <link rel="stylesheet" href="/Public/Admin/Css//util/flex.css">
       <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
       <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
-      <link rel="stylesheet" href="/smartGarden/Public/Admin/element/index.css">
+      <link rel="stylesheet" href="/Public/Admin/element/index.css">
       <script src="https://unpkg.com/element-ui/lib/index.js"></script>
       <!-- Vue, element, 间距工具类 相关 -->
     </head>
@@ -87,7 +87,7 @@
             </el-form-item>
             <el-form-item prop="targetEmployee" label="申请类型">
               <el-radio v-model="applyInfo.type" :label="1">请假</el-radio>
-              <el-radio v-model="applyInfo.type" :label="2">调休</el-radio>
+              <el-radio v-model="applyInfo.type" :label="2">休假</el-radio>
             </el-form-item>
             <el-form-item prop="remark" label="备注">
               <el-input
