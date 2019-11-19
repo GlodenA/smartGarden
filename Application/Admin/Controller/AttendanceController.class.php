@@ -741,38 +741,39 @@ class AttendanceController extends BaseController {
     public function leaveApply()
     {
         if (IS_POST) {
-            $info = I("info");
-            var_dump($info);
             $data["add_time"] = time();
-            $data["leave_start_time"] = strtotime($info["start_time"]);
-            $data["leave_end_time"] = strtotime($info["end_time"]);
-            $data["leave_type"] = $info["leave_type"];
-            $where["userid"] = $data["userid"] = $info["userid"];
+            $data["leave_start_time"] = strtotime(I("date")[0]);
+            $data["leave_end_time"] = strtotime(I("date")[1]);
+            $where["userid"] = $data["userid"] = I("user_id");
             $where["is_delete"] = 0;
-            $time = substr($info["start_time"], 0, 10) . " 00:00:00";
+            $time = substr(I("date")[0], 0, 10) . " 00:00:00";
             $timeStr = strtotime($time);
             $where["leave_start_time"] = array("gt", $timeStr);
+            $data["remark"] = I("remark");
             if (M("Leave")->where($where)->find()) {
-                $this->error("当前员工已请假");
+//                $this->error("当前员工已请假");
             } else {
+                if (I("type") == 2)
+                    $data["leave_type"] = "休假";
+                else
+                    $data["leave_type"] = "请假";
                 $result = M("Leave")->add($data);
                 if ($result) {
-                    $attendanceData["machine_id"] = $info["machine_id"];
-                    $attendanceData["userid"] = $info["userid"];
+                    $attendanceData["machine_id"] = I("machine_id");
+                    $attendanceData["userid"] = I("user_id");
                     $attendanceData["leave_id"] = $result;
                     $attendanceData["add_time"] = $attendanceData["update_time"] = $data["leave_start_time"];
-                    if ($info["leave_type"] = "休假")
+                    if (I("type") == 2)
                         $attendanceData["remark"] = "休假";
                     else
                         $attendanceData["remark"] = "请假";
                     M("Attendance")->add($attendanceData);
-                    $this->success("提交成功");
+//                    $this->success("提交成功");
                 } else {
-                    $this->error("提交失败");
+//                    $this->error("提交失败");
                 }
             }
         } else {
-
             $this->display('leave_apply');
         }
     }
