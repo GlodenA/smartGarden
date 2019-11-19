@@ -112,6 +112,7 @@ class IndexController extends BaseController {
     }
     //登录
     public function login(){
+
         if(IS_POST){
             $where['username'] = $where['mobile'] = $username = $_POST['form-username'];
             if(!$username || !$_POST['form-password']){
