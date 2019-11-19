@@ -18,10 +18,10 @@
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/layer/layer.js"></script>
       <!-- Vue, element, 间距工具类 相关 -->
-      <link rel="stylesheet" href="/Public/Admin/Css//util/flex.css">
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/Css//util/flex.css">
       <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
       <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
-      <link rel="stylesheet" href="/Public/Admin/element/index.css">
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/element/index.css">
       <script src="https://unpkg.com/element-ui/lib/index.js"></script>
       <!-- Vue, element, 间距工具类 相关 -->
     </head>
@@ -50,11 +50,11 @@
             </el-form-item>
             <el-form-item label="时间">
               <el-date-picker
-                v-model="queryCondition.time"
-                type="daterange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期">
+                      v-model="queryCondition.time"
+                      type="daterange"
+                      range-separator="至"
+                      start-placeholder="开始日期"
+                      end-placeholder="结束日期">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="职位">
@@ -103,15 +103,15 @@
           </template>
         </el-table>
         <div class="flex justify-between mt3">
-          <el-button icon="el-icon-download" @click="window.open('/manager.php?s=/WarningMessage/warningExcel', '_self')">
+          <el-button icon="el-icon-download">
             导出Excel
           </el-button>
           <el-pagination
-            background
-            layout="prev, pager, next"
-            :total="totalNumber"
-            :current-page="queryCondition.page"
-            @current-change="pageChange">
+                  background
+                  layout="prev, pager, next"
+                  :total="totalNumber"
+                  :current-page="queryCondition.page"
+                  @current-change="pageChange">
           </el-pagination>
         </div>
       </div>
@@ -133,32 +133,43 @@
           page: 1
         },
         tableData: [{
-          manager: '孙继红',
-          fullAttendence: 4,
-          late: 3,
-          leavePosition: 0,
-          warningTime: '2019-11-18'
+          deviceName: 'cjl_0239429',
+          deviceNumber: '092348023409809',
+          bindEmployee: '孙继红',
+          workNumber: '9239',
+          position: '养护工人',
+          manager: '王红艳',
+          warningTime: '2019-11-05',
+          warningType: '迟到报警'
         }, {
-          manager: '孙继红',
-          fullAttendence: 4,
-          late: 3,
-          leavePosition: 0,
-          warningTime: '2019-11-18'
+          deviceName: 'cjl_0239429',
+          deviceNumber: '092348023409809',
+          bindEmployee: '孙继红',
+          workNumber: '9239',
+          position: '养护工人',
+          manager: '王红艳',
+          warningTime: '2019-11-05',
+          warningType: '怠工超过设定时间报警'
         }, {
-          manager: '孙继红',
-          fullAttendence: 4,
-          late: 3,
-          leavePosition: 0,
-          warningTime: '2019-11-18'
+          deviceName: 'cjl_0239429',
+          deviceNumber: '092348023409809',
+          bindEmployee: '孙继红',
+          workNumber: '9239',
+          position: '养护工人',
+          manager: '王红艳',
+          warningTime: '2019-11-05',
+          warningType: '迟到报警'
         }],
         tableColumns: [
           ['serialNumber', '序号'],
-          ['manager', '管理员姓名'],
-          ['fullAttendence', '满勤'],
-          ['late', '迟到'],
-          ['leavePosition', '离岗'],
+          ['deviceName', '设备名称'],
+          ['deviceNumber', '设备号'],
+          ['bindEmployee', '绑定员工'],
+          ['workNumber', '工号'],
+          ['position', '职位'],
           ['manager', '管理人员'],
-          ['warningTime', '告警时间']
+          ['warningTime', '告警时间'],
+          ['warningType', '告警类型']
         ]
       }
     },

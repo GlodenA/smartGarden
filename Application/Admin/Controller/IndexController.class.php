@@ -179,4 +179,8 @@ class IndexController extends BaseController {
         echo self::currentPos($menuId);
         exit;
     }
+
+    public function bigScreen(){
+      $this->display('big-screen');
+    }
 }
