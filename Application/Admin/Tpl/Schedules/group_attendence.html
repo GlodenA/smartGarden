@@ -1,0 +1,148 @@
+<div class="padding-md" id="WARNINGLIST">
+  <div class="smart-widget" style="margin-bottom: 1px;">
+    <div class="smart-widget-inner">
+      <div class="smart-widget-body">
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item>
+            <a href="">首页</a>
+          </el-breadcrumb-item>
+          <el-breadcrumb-item>
+            考勤管理
+          </el-breadcrumb-item>
+          <el-breadcrumb-item>
+            分组考勤
+          </el-breadcrumb-item>
+        </el-breadcrumb>
+        <el-divider></el-divider>
+        <div class="flex justify-end">
+          <el-form inline>
+            <el-form-item label="关键字">
+              <el-input v-model="queryCondition.keyword" style="width:120px;"></el-input>
+            </el-form-item>
+            <el-form-item label="时间">
+              <el-date-picker
+                      v-model="queryCondition.time"
+                      type="daterange"
+                      range-separator="至"
+                      start-placeholder="开始日期"
+                      end-placeholder="结束日期">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="职位">
+              <el-select v-model="queryCondition.position" style="width:120px;">
+                <el-option :value="0" label="全部"></el-option>
+                <volist name="positionList" id="sl">
+                  <el-option value="{$sl.id}" label="{$sl.name}"></el-option>
+                </volist>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="管理人员">
+              <el-select v-model="queryCondition.manager" style="width:120px;">
+                <el-option :value="0" label="全部"></el-option>
+                <volist name="managerList" id="sl">
+                  <el-option value="{$sl.userid}" label="{$sl.realname}"></el-option>
+                </volist>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="报警类型">
+              <el-select v-model="queryCondition.warningType" style="width:120px;">
+                <el-option :value="0" label="全部"></el-option>
+                <el-option v-for="(l, i) in [
+                  '远离区域报警',
+                  '低电量报警',
+                  '迟到报警',
+                  '旷工报警',
+                  '早退报警',
+                  '怠工超过设定时间告警'
+                ]" :value="i + 2" :label="l"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary">查询</el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+        <el-table :data="tableData">
+          <template v-for="([prop, label], i) in tableColumns">
+            <el-table-column :key="prop" :prop="prop" :label="label" v-if="prop === 'warningType'">
+              <template #default="{ row }">
+                <el-link :underline="false" type="danger">{{ row[prop] }}</el-link>
+              </template>
+            </el-table-column>
+            <el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'serialNumber'">
+              <template #default="{ $index }">
+                {{ $index + 1 }}
+              </template>
+            </el-table-column>
+            <el-table-column :key="prop" :prop="prop" :label="label" v-else></el-table-column>
+          </template>
+        </el-table>
+        <div class="flex justify-between mt3">
+          <el-button icon="el-icon-download" @click="window.open('__CONTROLLER__/warningExcel', '_self')">
+            导出Excel
+          </el-button>
+          <el-pagination
+                  background
+                  layout="prev, pager, next"
+                  :page-size="10"
+                  :total="totalNumber"
+                  :current-page="queryCondition.page"
+                  @current-change="pageChange">
+          </el-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  const WARNINGLIST = new Vue({
+    el: '#WARNINGLIST',
+    data(){
+      return {
+        totalNumber: 1000,
+        queryCondition: {
+          keyword: '',
+          time: '',
+          position: 0,
+          manager: 0,
+          warningType: 0,
+          page: 1
+        },
+        tableData: [{
+          manager: '孙继红',
+          fullAttendence: 4,
+          late: 3,
+          leavePosition: 0,
+          warningTime: '2019-11-18'
+        }, {
+          manager: '孙继红',
+          fullAttendence: 4,
+          late: 3,
+          leavePosition: 0,
+          warningTime: '2019-11-18'
+        }, {
+          manager: '孙继红',
+          fullAttendence: 4,
+          late: 3,
+          leavePosition: 0,
+          warningTime: '2019-11-18'
+        }],
+        tableColumns: [
+          ['serialNumber', '序号'],
+          ['manager', '管理员姓名'],
+          ['fullAttendence', '满勤'],
+          ['late', '迟到'],
+          ['leavePosition', '离岗'],
+          ['manager', '管理人员'],
+          ['warningTime', '告警时间']
+        ]
+      }
+    },
+    methods: {
+      pageChange(p){
+        this.queryCondition.page = p;
+        this.doQuery();
+      }
+    }
+  })
+</script>

@@ -1,442 +1,236 @@
-	<style type="text/css">
-	/* info信息条 */
-	.info{
-   	    display: table;
-	    width: 100%;
-	}
-	.info-line-index{
-		padding: 10px 16px;
-		display: table;
-		width: 100%;
-	}
-	.info-tx{
-		width: 70px;
-	    height: 70px;
-        display: table-cell;
-	    vertical-align: middle;
-	    line-height: 36px;
-	}
-	.info-img{
-		width: 60px;
-		height: 60px;
-		border-radius: 50px;
-		padding:5px;
-	}
-	.home-nav-title{
-		/* display: block;
-	    margin: 6px 0 4px;
-	    font-size: 16px;
-	    color: #000;
-	    overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap; */
-		margin: 6px 0 4px;
-	    font-size: 16px;
-	    color: #000;
-	    display: -webkit-box;
-	    overflow: hidden;
-	    text-overflow: ellipsis;
-	    word-wrap: break-word;
-	    word-break: break-all;
-	    white-space: normal !important;
-	    -webkit-line-clamp: 1;
-	    -webkit-box-orient: vertical;
-	}
-	.p-r-15{
-		padding-right: 15px;
-	}
-	.home-sub-title{
-		font-size: 14px;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-	.box-home-nav{
-		/*padding-left: 10px;*/
-	}
-	.home-nav-item{
-		padding: 20px 16px;
-		border-right: 1px solid #f0f0f0;
-	}
-	.home-nav-item:hover{
-	    -webkit-box-shadow: 0 8px 10px 0 rgba(0, 0, 0, .16);
-	    box-shadow: 0 8px 10px 0 rgba(0, 0, 0, .16);
-	}
-	.panel-box{
-		padding: 10px;
-		border-bottom:1px solid #f0f0f0;
-		line-height: 30px;
-	}
-	.panel-img{
-		width: 30px;
-		height: 30px;
-		border-radius: 50px;
-	}
-	.panel-tit{
-		font-size: 16px;
-		line-height: 28px;
+<style type="text/css">
+	#MAIN {
 		color: #000;
 	}
 
-	.hearder-account{
-		font-size: 20px;
-		padding-left: 7px;
-		display: table-cell;
-       	vertical-align: middle;
+	#MAIN .panel-card {
+		cursor: pointer;
+		border-radius: 20px;
+		background-color: #efefef;
 	}
-	.hearder-account-sub{
-		font-size: 14px;
-		padding-top:5px;
+
+	#MAIN .panel-card:hover {
+		background-color: #33D792;
+		color: white;
+	}
+
+	#MAIN .panel-card .card-icon{
+		color: #33D792;
+		font-size: 32px;
+	}
+
+	#MAIN .panel-card:hover .card-icon{
+		color: white;
+	}
+
+	#MAIN .panel-card p{
 		color: #999;
 	}
-	.main-today-part{
-		width:14.2%;
-		height: 100px;
-		padding: 20px;
-		list-style-type:none;
+
+	#MAIN .panel-card:hover p{
+		color: inherit;
 	}
-	.main-today-part:hover{
-		background: #f5f5f5;
-	}
-	.part-tit{
-		font-size: 10px;
+
+	#MAIN .real-time-monitor p{
 		color: #999;
 	}
-	.part-num{
-		font-size:20px;
-		color: #000;
-		padding-top: 15px;
+
+	#MAIN .real-time-monitor h1{
+		font-size: 56px;
 	}
-	.ture-btn{
-	    color: #fff;
-	    font-size: 14px;
-	    background-color: #019c8a;
-	    padding: 5px 10px;
-	    margin-left: 10px;
-	    border-radius: 5px;
+
+	#MAIN .real-time-monitor .add-btn{
+		border: 1px dashed #ccc;
+		border-radius: 3px;
+		cursor: pointer;
 	}
-	.ture-btn:hover{
-	    color: #fff;
+
+	#MAIN .real-time-monitor .add-btn:hover{
+		border-color: #33D792;
 	}
-	.smart-widget {
-	    background-color: #f5f5f5;
+
+	#MAIN .real-time-monitor .add-btn i{
+		font-size: 32px;
+		color: #33D792;
 	}
-	.smart-widget-inner{
-		background-color: #fff;
+
+	#MAIN .real-time-selector{
+		border: 1px solid #ddd;
+		color: #999;
+		padding: 12px 0;
+		text-align: center;
+		cursor: pointer;
+		transition: all ease-in-out .2s;
+		position: relative;
 	}
-	.p-b-15{
-		padding-bottom: 15px;
+
+	#MAIN .real-time-selector:hover:not(.selected),
+	#MAIN .real-time-selector.selected{
+		border-color: #33D792;
 	}
-	</style>
-<div class="padding-md">
-	<div class="row m-0">
-		<div>
-			<ul class="breadcrumb">
-				当前位置：
-				<li><a href="#"> 主页</a></li>
-			</ul>
+
+	#MAIN .real-time-selector .checked{
+		width: 20px;
+		height: 18px;
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		background-color: #33D792;
+		color: white;
+	}
+</style>
+
+<div id="MAIN" class="p3 bg-white">
+	<div class="p2 bold h2 mt0">
+  	常用菜单
+  </div>
+	<el-row :gutter="20" >
+		<el-col :span="6" v-for="([icon, title, subtitle], i) in [
+			['date', '考勤记录', '今日考勤记录'],
+			['s-custom', '员工管理', '员工列表'],
+			['map-location', '设备位置', '电子栅栏'],
+			['mobile-phone', '设备管理', '设备列表']
+		]" :key="i">
+			<el-card class="panel-card" shadow="hover">
+				<div class="row items-center justify-center">
+					<i :class="[`el-icon-${icon}`, 'card-icon']"></i>
+					<div class="ml3">
+						<h4>{{ title }}</h4>
+						<p>{{ subtitle }}</p>
+					</div>
+				</div>
+			</el-card>
+		</el-col>
+	</el-row>
+	<el-divider></el-divider>
+	<div class="p2 bold h2">
+  	实时监控
+  </div>
+	<el-row :gutter="20" class="px4 real-time-monitor flex items-stretch py2">
+		<el-col :span="6" v-for="(n, i) in realTimeMonitorData" :key="i" :class="['column', 'items-center', realTimeMonitorColor[i]]">
+			<p>{{ realTimeMonitorDataLabelArr[i] }}</p>
+			<h1 class="m0">
+				{{ n }}
+			</h1>
+		</el-col>
+		<el-col :span="6" class="add-btn flex justify-center items-center" @click.native="realTimeDialog = true">
+			<i class="el-icon-plus"></i>
+		</el-col>
+	</el-row>
+	<el-divider></el-divider>
+	<div class="flex justify-between items-center">
+		<div class="p2 bold h2">
+			异常警告
 		</div>
-		<div class="col-md-12 p-0 overflow-hidden">
-			<div class="smart-widget p-b-15 overflow-hidden">
-		        <div class="smart-widget-inner overflow-hidden">
-		            <div class="overflow-hidden">
-						<div class="col-lg-3 col-md-3 home-nav-item clearfix">
-							<div class="pull-left">
-								<img src="{:C('ADMIN_IMAGE_PATH')}/icon/kaoqin.png" class="info-img">
-							</div>
-							<div class="box-home-nav pull-left">
-								<a class="home-nav-title" href="__MODULE__/Attendance/attendanceList">考勤记录</a>
-								<a class="home-sub-title" href="__MODULE__/Attendance/attendanceList/start_time/{$newTime}/end_time/{$newTime}">今日考勤记录</a>
-							</div>
-						</div>
-						<div class="col-lg-3 col-md-3 home-nav-item clearfix">
-							<div class="pull-left">
-								<img src="{:C('ADMIN_IMAGE_PATH')}/icon/yuangong.png" class="info-img">
-							</div>
-							<div class="box-home-nav pull-left">
-								<a class="home-nav-title" href="__MODULE__/Member/memberList">员工管理</a>
-								<a class="home-sub-title" href="__MODULE__/Member/memberList">员工列表</a>
-							</div>
-						</div>
-						<div class="col-lg-3 col-md-3 home-nav-item clearfix">
-							<div class="pull-left">
-								<img src="{:C('ADMIN_IMAGE_PATH')}/icon/map.png" class="info-img">
-							</div>
-							<div class="box-home-nav pull-left">
-								<a href="__MODULE__/Map/mapMachine" class="home-nav-title">设备位置</a>
-								<a href="__MODULE__/Map/mapAllFence" class="home-sub-title">电子栅栏</a>
-							</div>
-						</div>
-						<div class="col-lg-3 col-md-3 clearfix home-nav-item">
-							<div class="pull-left">
-								<img src="{:C('ADMIN_IMAGE_PATH')}/icon/shebei.png" class="info-img">
-							</div>
-							<div class="box-home-nav pull-left">
-								<a class="home-nav-title" href="__MODULE__/Machine/machineList">设备管理</a>
-								<a class="home-sub-title" href="__MODULE__/Machine/machineList">设备列表</a>
-							</div>
-						</div>
-			        </div>
-		        </div>
-		    </div>
-			<div class="smart-widget p-b-15 overflow-hidden">
-		        <div class="smart-widget-inner overflow-hidden">
-		            <div class="overflow-hidden">
-				        <div class="smart-widget-body">
-				        	<div class="header-text">
-								今日统计
-							</div>
-							<div class="smart-widget-body row">
-								<a href="__MODULE__/Machine/machineList">
-									<div class="main-today-part col-sm-2">
-										<div class="part-tit">
-											总设备数
-										</div>
-										<div class="part-num">{$mahcine_count|default=0}</div>
-									</div>
-								</a>
-								<a href="__MODULE__/Machine/machineOnLineList">
-									<div class="main-today-part col-sm-2">
-										<div class="part-tit">
-											今日上线设备总数
-										</div>
-										<div class="part-num">{$today_mount_guard_count|default=0}</div>
-									</div>
-								</a>
-								<a href="__MODULE__/Machine/machineList/machine_status/1">
-									<div class="main-today-part col-sm-2">
-										<div class="part-tit">
-											当前在线设备数
-										</div>
-										<div class="part-num">{$mount_guard_count|default=0}</div>
-									</div>
-								</a>
-								<a href="__MODULE__/Member/memberList">
-								<div class="main-today-part col-sm-2">
-									<div class="part-tit">
-										总员工数
-									</div>
-									<div class="part-num">{$count_member|default=0}</div>
-								</div>
-								</a>
-								<a href="__MODULE__/Member/memberList/status/1">
-									<div class="main-today-part col-sm-2">
-										<div class="part-tit">
-											在岗人数
-										</div>
-										<div class="part-num">{$on_guard_count|default=0}</div>
-									</div>
-								</a>
-								<a href="__MODULE__/Member/memberList/status/3">
-									<div class="main-today-part col-sm-2">
-										<div class="part-tit">
-											离岗人数
-										</div>
-										<div class="part-num">{$out_guard_count|default=0}</div>
-									</div>
-								</a>
-								<a href="__MODULE__/Member/memberList/status/2">
-									<div class="main-today-part col-sm-2">
-										<div class="part-tit">
-											未上岗人数
-										</div>
-										<div class="part-num">{$no_guard_count|default=0}</div>
-									</div>
-								</a>
-							</div>
-							<div class="smart-widget-body row">
-								<div class="main-today-part col-sm-2">
-									<div class="part-tit">
-										上午考勤统计
-									</div>
-								</div>
-								<a href="__MODULE__/Attendance/attendanceList/status/1">
-								<div class="main-today-part col-sm-2">
-									<div class="part-tit">
-										正常上班打卡
-									</div>
-									<div class="part-num">{$am_t_normal_count|default=0}</div>
-								</div>
-									</a>
-								<a href="__MODULE__/Attendance/attendanceList/status/2">
-									<div class="main-today-part col-sm-2">
-										<div class="part-tit">
-											迟到
-										</div>
-										<div class="part-num">{$am_late_count|default=0}</div>
-									</div>
-								</a>
-								<a href="__MODULE__/Attendance/attendanceList/status/3">
-									<div class="main-today-part col-sm-2">
-										<div class="part-tit">
-											旷工
-										</div>
-										<div class="part-num">{$am_absenteeism_count|default=0}</div>
-									</div>
-								</a>
-								<a href="__MODULE__/Attendance/attendanceList/status/4">
-									<div class="main-today-part col-sm-2">
-										<div class="part-tit">
-											早退
-										</div>
-										<div class="part-num">{$am_leave_count|default=0}</div>
-									</div>
-								</a>
-								<a href="__MODULE__/Attendance/attendanceList/status/5">
-									<div class="main-today-part col-sm-2">
-										<div class="part-tit">
-											正常下班打卡
-										</div>
-										<div class="part-num">{$am_d_normal_count|default=0}</div>
-									</div>
-								</a>
-								<a href="__MODULE__/Attendance/attendanceList/status/12">
-									<div class="main-today-part col-sm-2">
-										<div class="part-tit">
-											异常情况
-										</div>
-										<div class="part-num">{$am_abnormal_count|default=0}</div>
-									</div>
-								</a>
-							</div>
-							<div class="smart-widget-body row">
-								<div class="main-today-part col-sm-2">
-									<div class="part-tit">
-										下午考勤统计
-									</div>
-								</div>
-								<a href="__MODULE__/Attendance/attendanceList/status/6">
-									<div class="main-today-part col-sm-2">
-										<div class="part-tit">
-											正常上班打卡
-										</div>
-										<div class="part-num">{$pm_t_normal_count|default=0}</div>
-									</div>
-								</a>
-								<a href="__MODULE__/Attendance/attendanceList/status/7">
-									<div class="main-today-part col-sm-2">
-										<div class="part-tit">
-											迟到
-										</div>
-										<div class="part-num">{$pm_late_count|default=0}</div>
-									</div>
-								</a>
-								<a href="__MODULE__/Attendance/attendanceList/status/8">
-									<div class="main-today-part col-sm-2">
-										<div class="part-tit">
-											旷工
-										</div>
-										<div class="part-num">{$pm_absenteeism_count|default=0}</div>
-									</div>
-								</a>
-								<a href="__MODULE__/Attendance/attendanceList/status/9">
-									<div class="main-today-part col-sm-2">
-										<div class="part-tit">
-											早退
-										</div>
-										<div class="part-num">{$pm_leave_count|default=0}</div>
-									</div>
-								</a>
-								<a href="__MODULE__/Attendance/attendanceList/status/10">
-									<div class="main-today-part col-sm-2">
-										<div class="part-tit">
-											正常下班打卡
-										</div>
-										<div class="part-num">{$pm_d_normal_count|default=0}</div>
-									</div>
-								</a>
-								<a href="__MODULE__/Attendance/attendanceList/status/13">
-									<div class="main-today-part col-sm-2">
-										<div class="part-tit">
-											异常情况
-										</div>
-										<div class="part-num">{$pm_abnormal_count|default=0}</div>
-									</div>
-								</a>
-							</div>
-						</div>
-					</div>
-		        </div>
-		    </div>
-	    </div>
-	<div class="col-md-12 p-0 overflow-hidden">
-		<div class="smart-widget p-b-15">
-	        <div class="smart-widget-inner">
-	            <div class="smart-widget-body">
-	            	<div class="header-text">
-						<a href="__MODULE__/WarningMessage/warningMessageList">异常报警</a>
-						<a class="pull-right" href="__MODULE__/WarningMessage/warningMessageList">查看更多</a>
-					</div>
-					<div class="smart-widget-inner">
-						<div class="smart-widget-inner  m-t-15">
-							<table class="table table-striped table-bordered" id="dataTable1">
-								<thead>
-									<tr>
-										<th>设备名称</th>
-										<th>设备号</th>
-										<th>绑定员工</th>
-										<th>工号</th>
-										<th>职位</th>
-										<th>管理人员</th>
-										<th>告警时间</th>
-										<th>告警类型</th>
-									</tr>
-								</thead>
-								<tbody>
-									<if condition="$list_today">
-                						<foreach name="list_today" item="v">
-											<tr >
-												<td>{$v['machine_name']}</td>
-												<td>{$v['machine_imei']}</td>
-												<td><a href="javascript:userInfo('{$v.uid}');">{$v['realname']}</a></td>
-												<td>{$v['job_number']}</td>
-												<td>{$v['position']|getPositionName}</td>
-												<td>{$v['parent_id']|getMemberManager}</td>
-												<td>
-													{$v['add_time']|date="Y-m-d H:i:s",###}
-												</td>
-												<td>
-													<if condition="$v['type'] eq 1 ">
-														远离工作区域
-														<elseif condition="$v['type'] eq 2" />
-														<a href="__MODULE__/Machine/machineOrbit/machine_id/{$v['machine_id']}/searchTime/{$v['add_time']|date='Y-m-d',###}">远离区域报警</a>
-														<elseif condition="$v['type'] eq 3" />
-														低电量报警
-														<elseif condition="$v['type'] eq 4" />
-														<a href="__MODULE__/Machine/machineOrbit/machine_id/{$v['machine_id']}/searchTime/{$v['add_time']|date='Y-m-d',###}">迟到报警</a>
-														<elseif condition="$v['type'] eq 5" />
-														<a href="__MODULE__/Machine/machineOrbit/machine_id/{$v['machine_id']}/searchTime/{$v['add_time']|date='Y-m-d',###}">旷工报警</a>
-														<elseif condition="$v['type'] eq 6" />
-														<a href="__MODULE__/Machine/machineOrbit/machine_id/{$v['machine_id']}/searchTime/{$v['add_time']|date='Y-m-d',###}">早退报警</a>
-														<elseif condition="$v['type'] eq 7" />
-														<a href="__MODULE__/Machine/machineOrbit/machine_id/{$v['machine_id']}/searchTime/{$v['add_time']|date='Y-m-d',###}">怠工超过设定时间告警</a>
-													</if>
-												</td>
-											</tr>	
-										</foreach>
-										 <else />
-					                    <tr>
-					                    	<td colspan="8" style="text-align: center;">暂无告警信息</td>
-					                    </tr>
-				                    </if>		
-								</tbody>
-						</div>
-					</div>
-	            </div>
-	        </div>
-	    </div>
-   	</div>
+		<el-button icon="el-icon-right" plain type="primary">
+			查看更多
+		</el-button>
+	</div>
+	<el-table :data="tableData" style="width: 100%">
+		<template  v-for="({ prop, label }, i) in tableColumns">
+			<el-table-column :key="i" :prop="prop" :label="label" v-if="prop !== 'warningType'"></el-table-column>
+			<el-table-column :key="i" v-else :prop="prop" :label="label">
+				<template #default="{ row}">
+					<el-tag type="danger">
+						{{ row.warningType }}
+					</el-tag>
+				</template>
+			</el-table-column>
+		</template>
+ </el-table>
+ <el-dialog
+	title="实时监控"
+	:visible.sync="realTimeDialog"
+	width="50%">
+	<el-row :gutter="20">
+		<el-col :span="6" v-for="({ label, selected }, i) in realTimeMenusWithSelectedStates" class="mb2">
+			<div :class="['real-time-selector', { 'selected': selected}]" @click="() => toggleRealTimeMenuSelectedState(label, selected)">
+				{{ label }}
+				<div class="checked" v-show="selected">
+					<i class="el-icon-check"></i>
+				</div>
+			</div>
+		</el-col>
+	</el-row>
+  <span slot="footer" class="flex justify-center">
+		<el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+    <el-button @click="realTimeDialog = false">重置</el-button>
+  </span>
+</el-dialog>
 </div>
+
 <script type="text/javascript">
-	function userInfo(userid){
-        layer.open({
-            type: 2,
-            title:"员工详情",
-            shadeClose: true,
-            shade: 0.2,
-            scrollbar: false,
-            area: ['800px', '400px'],
-            content: "__MODULE__/Member/memberInfo/userid/"+userid
-        });
-    }
+	const main = new Vue({
+		el: '#MAIN',
+		data() {
+			return {
+				selectedRealTimeMenus: [
+					'当前在线设备数',
+					'迟到',
+					'旷工'
+				],
+				realTimeMenus: [
+					'总设备数',
+					'今日上线设备总数',
+					'当前在线设备数',
+					'员工总数',
+					'在岗人数',
+					'离岗人数',
+					'未上岗人数',
+					'迟到',
+					'上午考勤统计',
+					'下午考勤统计',
+					'正常上班打卡',
+					'正常下班打卡',
+					'旷工',
+					'早退',
+					'异常情况'
+				],
+				realTimeDialog: false,
+				tableData: Array(10).fill({
+					deviceName: 'cyyl_05007',
+					deviceNumber: '2783492374893278',
+					bindEmployee: '王建国',
+					workNumber: '1197',
+					position: '养护工人',
+					manager: '李香社（金晶大道）',
+					warningTime: '2019-11-04 13:53:42',
+					warningType: '怠工超过设定时间警告',
+				}),
+				tableColumns: [
+					['设备名称', 'deviceName'],
+					['设备号', 'deviceNumber'],
+					['绑定员工', 'bindEmployee'],
+					['工号', 'workNumber'],
+					['职位', 'position'],
+					['管理人员', 'manager'],
+					['告警时间', 'warningTime'],
+					['告警类型', 'warningType'],
+				].map(([ label, prop ]) => ({
+					label,
+					prop
+				})),
+				realTimeMonitorData: [259, 13, 31],
+				realTimeMonitorColor: ['primary', 'warning', 'danger'],
+				realTimeMonitorDataLabelArr: ['当前设备在线数', '迟到', '旷工']
+			}
+		},
+		computed: {
+			realTimeMenusWithSelectedStates(){
+				return this.realTimeMenus.map(label => ({
+					label,
+					selected: this.selectedRealTimeMenus.some(v => v === label)
+				}))
+			}
+		},
+		methods: {
+			toggleRealTimeMenuSelectedState(label, state){
+				if(state){
+					this.selectedRealTimeMenus.splice(this.selectedRealTimeMenus.findIndex(v => v === label), 1)
+					return
+				}
+				this.selectedRealTimeMenus.push(label)
+			}
+		}
+	})
 </script>

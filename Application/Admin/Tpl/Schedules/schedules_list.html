@@ -1,109 +1,246 @@
-<div class="padding-md">
-	<!-- 面包屑导航 -->
-	<div>
-	   <ul class="breadcrumb">
-	      当前位置：
-		   <li><a href="__MODULE__/Index/main">主页</a></li>
-		   <li>班组管理</li>
-	      <!-- <li><a href="javascript:void(0);" onclick="openItem(0,'/manager.php?s=')"> 排班管理</a></li>
-	      <li><a href="javascript:void(0);" onclick="openItem(26,27,'/manager.php?s=/Schedules/schedulesList')">排班设置</a></li> -->
-	   </ul>
-	</div>
+<div class="padding-md" id="GROUPMANAGE">
 	<div class="smart-widget" style="margin-bottom: 1px;">
-        <div class="smart-widget-inner">
-            <div class="smart-widget-body">
-            	<div class="header-text">
-					班组管理
-				</div>
-				<div class="info-line padding-md">
-					<a href="javascript:schedulesAdd();" class="btn btn-sm btn-info">
-		                <i class="fa fa-plus"></i>增加班组
-		            </a>
-		            <div class="searchTop-form form-inline pull-right p-l-10" id="search-form">
-	                    <div class="form-group">
-	                    	<input type="text" class="form-control input-sm" id="keywords" name="keywords" value="{$keywords}" placeholder="根据名称查询">
-	                    </div>
-						<a id="search" url="__ACTION__" class="btn btn-sm btn-info">
-			                查询
-			            </a>
-	                </div>
-	            </div>
-	            <div class="smart-widget-inner">
-					<table class="table table-striped table-bordered" id="dataTable">
-						<thead>
-							<tr>
-								<th>班组名称</th>
-								<th>考勤时间</th>
-								<th>状态</th>
-								<th>操作</th>
-							</tr>
-						</thead>
-						<tbody>
-							<volist name="list" id="v" key="k">
-								<tr id="data-{$v['schedules_id']}">
-									<td>{$v['schedules_name']}</td>
-									<td>{$v['work_day']}&nbsp;&nbsp;|&nbsp;&nbsp;
-										<volist name="v['timeList']" id="vv" key="kk">
-											<if condition="$vv">
-											{$vv['start_time']}-{$vv['end_time']}&nbsp;&nbsp;
-											</if>
-										</volist>
-									</td>
-									<td>
-										<if condition="$v['is_show'] eq 1">
-											<span class="label label-success">显示</span>
-										<else />
-											<span class="label label-danger">隐藏</span>
-										</if>
-									</td>
-									<td>
-										<a href="javascript:schedulesEdit({$v['schedules_id']});"><i class="fa fa-pencil-square-o m-right-xs"></i>编辑</a> &nbsp;|&nbsp;
-										<a href="javascript:schedulesDelete({$v['schedules_id']});" style="color: #f03939;"><i class="fa fa-trash-o m-right-xs"></i>删除</a>
-									</td>
-								</tr>
-							</volist>
-						</tbody>
-					</table>
-					<div class="content text-right">
-						<ul class="pagination">
-	 					</ul>
+		<div class="smart-widget-inner">
+			<div class="smart-widget-body">
+				<el-breadcrumb separator="/">
+					<el-breadcrumb-item>
+						<a href="">首页</a>
+					</el-breadcrumb-item>
+					<el-breadcrumb-item>
+						班组管理
+					</el-breadcrumb-item>
+					<el-breadcrumb-item>
+						班组设置
+					</el-breadcrumb-item>
+				</el-breadcrumb>
+				<el-divider></el-divider>
+				<div class="flex justify-between items-center px2 mb2">
+					<el-button icon="el-icon-plus" type="primary" @click="create.dialog = true">
+						增加班组
+					</el-button>
+					<div class="row items-center">
+						<el-input placeholder="请输入区域名称" class="mr2"></el-input>
+						<el-button type="primary">
+							查询
+						</el-button>
 					</div>
 				</div>
-            </div>
-        </div>
-    </div>
+				<el-table :data="tableData">
+					<el-table-column prop="areaName" label="区域名称"></el-table-column>
+					<el-table-column prop="addTime" label="添加时间">
+						<template #default="{ row }">
+							{{ row.addTime.weekArr.join(' ') }} | {{ row.addTime.timeDuration.map(({ start, end }) => `${start}-${end}`).join(' ') }}
+						</template>
+					</el-table-column>
+					<el-table-column prop="status" label="状态">
+						<template #default="{ row }">
+							<el-tag :type="row.status === 1 ? 'primary' : 'danger'">
+								{{ row.status === 1 ? '显示' : '隐藏' }}
+							</el-tag>
+						</template>
+					</el-table-column>
+					<el-table-column prop="rowOperations" label="操作">
+						<template #default="{ row }">
+							<el-button type="primary" plain size="mini" @click="() => {
+								edit.formData = {
+									name: row.areaName,
+									weeks: row.addTime.weekArr,
+									timeFields: [],
+									status: row.status
+								}
+								edit.dialog = true
+							}">
+								编辑
+							</el-button>
+							<el-button type="danger" plain size="mini" @click="showDelDialog(row)">
+								删除
+							</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+				<div class="flex justify-end mt4">
+					<el-pagination background layout="prev, pager, next" :total="totalNumber" :current-page="queryCondition.page" @current-change="pageChange">
+					</el-pagination>
+				</div>
+			</div>
+		</div>
+	</div>
+	<el-dialog :visible.sync="create.dialog" title="添加班组" width="660px">
+		<el-form label-width="120px" :model="create.formData" :rules="create.formDataRules" ref="createForm">
+			<el-form-item label="班组名称" prop="name">
+				<el-input v-model="create.formData.name"></el-input>
+			</el-form-item>
+			<el-form-item prop="weeks" label="工作日设置">
+				<el-checkbox-group v-model="create.formData.weeks" size="small">
+					<el-checkbox-button v-for="w in create.weeks" :label="w + 1" :key="">
+						{{ w }}
+					</el-checkbox-button>
+				</el-checkbox-group>
+			</el-form-item>
+			<el-form-item label="时间段设置" prop="timeFields">
+				<el-checkbox-group v-model="create.formData.timeFields">
+					<el-checkbox v-for="(t, i) in create.times" :label="i" :key="t">
+						{{ t }}
+					</el-checkbox>
+				</el-checkbox-group>
+			</el-form-item>
+			<el-form-item label="状态" prop="status">
+				<el-radio v-model="create.formData.status" :label="1">显示</el-radio>
+				<el-radio v-model="create.formData.status" :label="2">隐藏</el-radio>
+			</el-form-item>
+		</el-form>
+		<div slot="footer" class=" flex justify-center">
+			<el-button @click="() => {
+				let f = $refs.createForm
+				if(f){
+					f.resetFields()
+				}
+			}">
+				重置
+			</el-button>
+			<el-button type="primary" class="ml2" @click="submitCreate">
+				提交
+			</el-button>
+		</div>
+	</el-dialog>
+	<el-dialog :visible.sync="edit.dialog" title="编辑班组信息" width="660px">
+		<el-form label-width="120px" :model="create.formData" :rules="edit.formDataRules" ref="editForm">
+			<el-form-item label="班组名称" prop="name">
+				<el-input v-model="edit.formData.name"></el-input>
+			</el-form-item>
+			<el-form-item prop="weeks" label="工作日设置">
+				<el-checkbox-group v-model="edit.formData.weeks" size="small">
+					<el-checkbox-button v-for="w in create.weeks" :label="w" :key="">
+						{{ w }}
+					</el-checkbox-button>
+				</el-checkbox-group>
+			</el-form-item>
+			<el-form-item label="时间段设置" prop="timeFields">
+				<el-checkbox-group v-model="edit.formData.timeFields">
+					<el-checkbox v-for="(t, i) in create.times" :label="i" :key="t">
+						{{ t }}
+					</el-checkbox>
+				</el-checkbox-group>
+			</el-form-item>
+			<el-form-item label="状态" prop="status">
+				<el-radio v-model="edit.formData.status" :label="1">显示</el-radio>
+				<el-radio v-model="edit.formData.status" :label="2">隐藏</el-radio>
+			</el-form-item>
+		</el-form>
+		<div slot="footer" class=" flex justify-center">
+			<el-button @click="() => {
+				let f = $refs.editForm
+				if(f){
+					f.resetFields()
+				}
+			}">
+				重置
+			</el-button>
+			<el-button type="primary" class="ml2" @click="submitCreate">
+				提交
+			</el-button>
+		</div>
+	</el-dialog>
 </div>
-<script type="text/javascript">
-	//搜索功能
-	$("#search").click(function(){
-		var url = $(this).attr('url');
-        var query  = $('#search-form').find('.input-sm').serialize();
-        
-        if( url.indexOf('?')>0 ){
-            url += '&' + query;
-        }else{
-            url += '?' + query;
-        }
-		window.location.href = url;
-	});
+<script>
+	const GROUPMANAGE = new Vue({
+		el: '#GROUPMANAGE',
+		data() {
+			return {
+				edit: {
+					dialog: false,
+					formData: {
+						name: '',
+						weeks: [],
+						timeFields: [],
+						status: 1
+					},
+				},
+				create: {
+					weeks: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+					times: [
+						'冬季上午班(07:00:00-11:00:00)',
+						'冬季下午班(13:00:00-17:00:00)'
+					],
+					dialog: false,
+					formDataRules: {
 
-	function schedulesAdd(){
-		DMS.ajaxShow("增加班组","__CONTROLLER__/schedulesAdd");
-	}
-	function schedulesEdit(schedules_id){
-		DMS.ajaxShow("编辑班组","__CONTROLLER__/schedulesEdit/schedules_id/"+schedules_id);
-	}
-	function schedulesDelete(schedules_id){
-		DMS.dialog("确定要删除当前班组吗?",function(){
-			DMS.ajaxPost("__CONTROLLER__/schedulesDelete",{schedules_id:schedules_id},function(ret){
-				if(ret.status==1){
-                	DMS.success(ret.info,0,function(){
-                		window.location.href = window.location.href;
-					});
-                }else{
-                	DMS.error(ret.info,0);
-                }
-			})
-		});
-	}
+					},
+					formData: {
+						name: '',
+						weeks: [],
+						timeFields: [],
+						status: 1
+					}
+				},
+				totalNumber: 1000,
+				queryCondition: {
+					keyword: '',
+					page: 1
+				},
+				tableData: [{
+					areaName: '北海长夜',
+					addTime: {
+						weekArr: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+						timeDuration: [{
+							start: '22:00:00',
+							end: '07:00:00'
+						}]
+					},
+					status: 1
+				}, {
+					areaName: '保安中班',
+					addTime: {
+						weekArr: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+						timeDuration: [{
+							start: '07:30:00',
+							end: '11:30:00'
+						}, {
+							start: '13:30:00',
+							end: '17:30:00'
+						}]
+					},
+					status: 2
+				}, {
+					areaName: '秋季班',
+					addTime: {
+						weekArr: ['周一', '周二', '周三', '周四', '周五', '周六'],
+						timeDuration: [{
+							start: '07:00:00',
+							end: '11:00:00'
+						}, {
+							start: '14:00:00',
+							end: '18:00:00'
+						}]
+					},
+					status: 1
+				}]
+			}
+		},
+		methods: {
+			// 展示删除弹窗
+			showDelDialog(row) {
+				this.$confirm(`确认删除${ row.areaName }吗?`, '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					// 执行删除逻辑
+					this.$message({
+						type: 'success',
+						message: '删除成功!',
+						showClose: true
+					})
+				}).catch(() => {})
+			},
+			// 提交创建弹窗的数据
+			submitCreate() {
+
+			},
+			pageChange(p) {
+				this.queryCondition.page = p
+				// 这里进行分页查询
+			}
+		}
+	})
 </script>

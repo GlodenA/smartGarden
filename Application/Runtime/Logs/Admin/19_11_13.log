@@ -1,0 +1,802 @@
+[ 2019-11-13T15:26:59+08:00 ] ::1 /smartGarden/manager.php
+ERR: 123456
+[ 2019-11-13T15:26:59+08:00 ] ::1 /smartGarden/manager.php
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000322s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000290s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000378s ]
+
+[ 2019-11-13T15:26:59+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T15:26:59+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000263s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000285s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000373s ]
+ERR: SQLSTATE[HY000] [1049] Unknown database 'testdwdb'
+
+[ 2019-11-13T15:32:27+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T15:32:28+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000021s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000318s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000379s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000478s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.1222s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.4906s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.1606s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000078s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000181s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.017313s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.017418s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000253s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000350s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000378s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000476s ]
+
+[ 2019-11-13T15:33:20+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login
+ERR: 123456
+[ 2019-11-13T15:33:20+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000295s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000339s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000414s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0233s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0190s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0154s ]
+ERR: -------login2-----
+SQL: SHOW COLUMNS FROM `yl_admin` [ RunTime:0.0262s ]
+SQL: SELECT * FROM `yl_admin` WHERE (  `mobile` = 'admin' OR `username` = 'admin' ) LIMIT 1   [ RunTime:0.0256s ]
+SQL: UPDATE `yl_admin` SET `last_date`='1573630400',`last_ip`='' WHERE `mobile` = 'admin' OR `username` = 'admin' [ RunTime:0.0213s ]
+
+[ 2019-11-13T15:33:21+08:00 ] ::1 /smartGarden/manager.php?s=
+ERR: 123456
+[ 2019-11-13T15:33:22+08:00 ] ::1 /smartGarden/manager.php?s=
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000019s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000274s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000302s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000409s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0423s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Index/index' LIMIT 1   [ RunTime:0.0133s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0147s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0156s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0303s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0426s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0398s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0472s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000106s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000204s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.037638s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.037733s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000276s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000358s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000376s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000461s ]
+
+[ 2019-11-13T15:33:22+08:00 ] ::1 /smartGarden/manager.php?s=/Index/main
+ERR: 123456
+[ 2019-11-13T15:33:26+08:00 ] ::1 /smartGarden/manager.php?s=/Index/main
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000305s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000366s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000459s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.1271s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Index/main' LIMIT 1   [ RunTime:0.0724s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.1828s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0404s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0511s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.1161s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.1048s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0725s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.1225s ]
+SQL: SELECT w.type,w.uid,w.add_time,a.realname,a.job_number,m.machine_id,m.machine_name,m.machine_imei,a.position,a.parent_id FROM yl_warning_message w,yl_member a,yl_machine m WHERE w.add_time > 1573574400 AND ( w.uid=m.userid and a.userid=m.userid and w.type > 1 ) ORDER BY w.add_time desc LIMIT 10   [ RunTime:0.0747s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0373s ]
+SQL: SELECT w.type,w.uid,w.add_time,a.realname,a.job_number,m.machine_id,m.machine_name,m.machine_imei,a.position,a.parent_id FROM yl_warning_message w,yl_member a,yl_machine m WHERE w.add_time > 1572537600 AND ( w.uid=m.userid and a.userid=m.userid and w.type > 1 ) ORDER BY w.add_time desc LIMIT 10   [ RunTime:0.0356s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0342s ]
+SQL: SELECT w.type,w.uid,w.add_time,a.realname,a.job_number,m.machine_id,m.machine_name,m.machine_imei,a.position,a.parent_id FROM yl_warning_message w,yl_member a,yl_machine m WHERE w.add_time > 1546272000 AND ( w.uid=m.userid and a.userid=m.userid and w.type > 1 ) ORDER BY w.add_time desc LIMIT 10   [ RunTime:0.0788s ]
+SQL: SHOW COLUMNS FROM `yl_member` [ RunTime:0.0649s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_member` WHERE `is_delete` = 0 LIMIT 1   [ RunTime:0.0387s ]
+SQL: SHOW COLUMNS FROM `yl_machine` [ RunTime:0.0218s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_machine` WHERE `is_delete` = 0 LIMIT 1   [ RunTime:0.0399s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_machine` WHERE ( `machine_status` = 'Stop' OR `machine_status` = 'Move' ) AND `is_delete` = 0 LIMIT 1   [ RunTime:0.0528s ]
+SQL: SHOW COLUMNS FROM `yl_site_log` [ RunTime:0.0577s ]
+SQL: SHOW COLUMNS FROM `yl_site_log` [ RunTime:0.0704s ]
+SQL: SELECT COUNT(distinct(s.machine_id)) AS tp_count FROM yl_site_log s,yl_machine m WHERE m.is_delete = 0 AND s.add_time > 1573574400 AND ( m.machine_id = s.machine_id ) LIMIT 1   [ RunTime:0.0459s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_member` WHERE `is_delete` = 0 AND `job_status` = 1 LIMIT 1   [ RunTime:0.0566s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_member` WHERE `is_delete` = 0 AND `job_status` = 0 LIMIT 1   [ RunTime:0.0524s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_member` WHERE `is_delete` = 0 AND `job_status` = 2 LIMIT 1   [ RunTime:0.0746s ]
+SQL: SHOW COLUMNS FROM `yl_attendance` [ RunTime:0.0600s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1573574400 AND `add_time` < 1573660799  ) AND ( first_result=1 ) LIMIT 1   [ RunTime:0.1274s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1573574400 AND `add_time` < 1573660799  ) AND ( first_result=3 ) LIMIT 1   [ RunTime:0.0581s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1573574400 AND `add_time` < 1573660799  ) AND ( first_result=5 ) LIMIT 1   [ RunTime:0.0444s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1573574400 AND `add_time` < 1573660799  ) AND ( second_result=2 ) LIMIT 1   [ RunTime:0.0596s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1573574400 AND `add_time` < 1573660799  ) AND ( second_result=4 ) LIMIT 1   [ RunTime:0.0503s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1573574400 AND `add_time` < 1573660799  ) AND (  `first_result` > 1 OR `second_result` > 2 ) LIMIT 1   [ RunTime:0.0487s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1573574400 AND `add_time` < 1573660799  ) AND ( third_result=1 ) LIMIT 1   [ RunTime:0.0473s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1573574400 AND `add_time` < 1573660799  ) AND ( third_result=3 ) LIMIT 1   [ RunTime:0.0452s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1573574400 AND `add_time` < 1573660799  ) AND ( third_result=5 ) LIMIT 1   [ RunTime:0.0415s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1573574400 AND `add_time` < 1573660799  ) AND ( fourth_result=2 ) LIMIT 1   [ RunTime:0.0648s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1573574400 AND `add_time` < 1573660799  ) AND ( fourth_result=4 ) LIMIT 1   [ RunTime:0.0947s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `yl_attendance` WHERE `is_delete` = 0 AND ( `add_time` > 1573574400 AND `add_time` < 1573660799  ) AND (  `third_result` > 1 OR `fourth_result` > 2 ) LIMIT 1   [ RunTime:0.1330s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000173s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000264s ]
+SQL: SHOW COLUMNS FROM `yl_member_position` [ RunTime:0.0534s ]
+SQL: SELECT `name` FROM `yl_member_position` WHERE `id` = '2' LIMIT 1   [ RunTime:0.0241s ]
+SQL: SELECT `realname` FROM `yl_member` WHERE `userid` = '1' LIMIT 1   [ RunTime:0.0266s ]
+SQL: SELECT `name` FROM `yl_member_position` WHERE `id` = '2' LIMIT 1   [ RunTime:0.0389s ]
+SQL: SELECT `realname` FROM `yl_member` WHERE `userid` = '1' LIMIT 1   [ RunTime:0.0165s ]
+SQL: SELECT `name` FROM `yl_member_position` WHERE `id` = '2' LIMIT 1   [ RunTime:0.0225s ]
+SQL: SELECT `realname` FROM `yl_member` WHERE `userid` = '1' LIMIT 1   [ RunTime:0.0145s ]
+SQL: SELECT `name` FROM `yl_member_position` WHERE `id` = '2' LIMIT 1   [ RunTime:0.0141s ]
+SQL: SELECT `realname` FROM `yl_member` WHERE `userid` = '1' LIMIT 1   [ RunTime:0.0304s ]
+SQL: SELECT `name` FROM `yl_member_position` WHERE `id` = '2' LIMIT 1   [ RunTime:0.0230s ]
+SQL: SELECT `realname` FROM `yl_member` WHERE `userid` = '1' LIMIT 1   [ RunTime:0.0187s ]
+SQL: SELECT `name` FROM `yl_member_position` WHERE `id` = '2' LIMIT 1   [ RunTime:0.0133s ]
+SQL: SELECT `realname` FROM `yl_member` WHERE `userid` = '1' LIMIT 1   [ RunTime:0.0150s ]
+SQL: SELECT `name` FROM `yl_member_position` WHERE `id` = '2' LIMIT 1   [ RunTime:0.0108s ]
+SQL: SELECT `realname` FROM `yl_member` WHERE `userid` = '1' LIMIT 1   [ RunTime:0.0137s ]
+SQL: SELECT `name` FROM `yl_member_position` WHERE `id` = '2' LIMIT 1   [ RunTime:0.0130s ]
+SQL: SELECT `realname` FROM `yl_member` WHERE `userid` = '1' LIMIT 1   [ RunTime:0.0135s ]
+SQL: SELECT `name` FROM `yl_member_position` WHERE `id` = '2' LIMIT 1   [ RunTime:0.0120s ]
+SQL: SELECT `realname` FROM `yl_member` WHERE `userid` = '1' LIMIT 1   [ RunTime:0.0288s ]
+SQL: SELECT `name` FROM `yl_member_position` WHERE `id` = '2' LIMIT 1   [ RunTime:0.0158s ]
+SQL: SELECT `realname` FROM `yl_member` WHERE `userid` = '1' LIMIT 1   [ RunTime:0.0196s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.549845s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.550126s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000340s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000423s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000572s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000706s ]
+
+[ 2019-11-13T15:33:27+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-13T15:33:28+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000264s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000267s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000339s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0961s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.0775s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0832s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0650s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0597s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.1037s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.1289s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0780s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0637s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573544008 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0642s ]
+
+[ 2019-11-13T15:33:32+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+ERR: 123456
+[ 2019-11-13T15:33:34+08:00 ] ::1 /smartGarden/manager.php?s=/Map/getWarningMessage
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000261s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000272s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000346s ]
+SQL: SHOW COLUMNS FROM `yl_auth_rule` [ RunTime:0.0745s ]
+SQL: SELECT * FROM `yl_auth_rule` WHERE `name` = 'Map/getWarningMessage' LIMIT 1   [ RunTime:0.1189s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0671s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0829s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.1067s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.1029s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0840s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0609s ]
+SQL: SHOW COLUMNS FROM `yl_warning_message` [ RunTime:0.0958s ]
+SQL: SELECT w.*,m.realname,m.job_number,m.mobile FROM yl_warning_message w left join yl_member m on m.userid = w.uid  WHERE w.add_time > 1573544013 AND w.type > 1 ORDER BY w.add_time desc LIMIT 5   [ RunTime:0.0993s ]
+
+[ 2019-11-13T15:35:03+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T15:35:03+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000026s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000314s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000287s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000375s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0171s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0140s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0071s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0142s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0209s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0145s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000090s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000195s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.016401s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.016501s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000274s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000358s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000386s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000469s ]
+
+[ 2019-11-13T15:35:03+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T15:35:04+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000275s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000284s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000371s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0247s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0341s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0587s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0348s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0267s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0216s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000069s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000159s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.006070s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.006201s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000321s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000422s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000386s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000469s ]
+
+[ 2019-11-13T15:35:04+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T15:35:04+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000019s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000309s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000312s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000403s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0138s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0150s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0169s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0085s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0118s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0125s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000073s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000179s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.006833s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.006955s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000267s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000349s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000372s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000454s ]
+
+[ 2019-11-13T15:36:58+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T15:37:01+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000020s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000327s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000371s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000462s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.3917s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.3874s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.7349s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0945s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.1228s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.1068s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000064s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000154s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.006432s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.006533s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000262s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000345s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000392s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000473s ]
+
+[ 2019-11-13T15:37:01+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T15:37:03+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000270s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000335s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000427s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0995s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0942s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.1311s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.3982s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0798s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0966s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000067s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000161s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.005934s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.006026s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000257s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000338s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000364s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000447s ]
+
+[ 2019-11-13T15:37:03+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T15:37:03+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000034s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000505s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000415s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000508s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0562s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0462s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0967s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0670s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0795s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0722s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000066s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000158s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.005558s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.005654s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000226s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000306s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000337s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000419s ]
+
+[ 2019-11-13T15:37:18+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T15:37:20+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000019s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000305s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000370s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000466s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.1532s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.1110s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.1055s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0495s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.1402s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.1488s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000066s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000153s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.005813s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.005905s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000251s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000333s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000369s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000452s ]
+
+[ 2019-11-13T16:01:55+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T16:01:55+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000298s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000368s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000461s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0136s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0068s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0070s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0084s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0771s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0343s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000075s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000181s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.030743s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.030874s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000376s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000503s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000533s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000667s ]
+
+[ 2019-11-13T16:04:20+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T16:04:20+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000020s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000312s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000400s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000494s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0112s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0072s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0165s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0224s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0177s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0120s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000105s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000254s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.008317s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.008468s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000348s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000478s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000541s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000671s ]
+
+[ 2019-11-13T16:13:57+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T16:13:57+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000024s ]
+INFO: [ app_init ] --END-- [ RunTime:0.009232s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000375s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000467s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0179s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0233s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0300s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0160s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0133s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0164s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000064s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000156s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.014376s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.014475s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000265s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000346s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000381s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000471s ]
+
+[ 2019-11-13T16:16:06+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T16:16:06+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000299s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000413s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000519s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0110s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0087s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0262s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0200s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0107s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0135s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000056s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000148s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.014514s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.014618s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000302s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000396s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000400s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000484s ]
+
+[ 2019-11-13T16:16:13+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T16:16:13+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000029s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000476s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000426s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000537s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0096s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0192s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0089s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0063s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0093s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0202s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000099s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000272s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.021661s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.021791s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000294s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000380s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000552s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000653s ]
+
+[ 2019-11-13T16:18:38+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T16:18:38+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000024s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000321s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000389s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000514s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0132s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0138s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0143s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0060s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0222s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0116s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000060s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000152s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.014996s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.015163s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000398s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000579s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000533s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000686s ]
+
+[ 2019-11-13T16:19:25+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T16:19:25+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000033s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000476s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000565s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000721s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0142s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0086s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0079s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0071s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0066s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0115s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000059s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000157s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.015267s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.015377s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000271s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000354s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000410s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000495s ]
+
+[ 2019-11-13T16:20:43+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T16:20:43+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000020s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000324s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000368s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000485s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0093s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0223s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0117s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0077s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0069s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0066s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000057s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000148s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.014505s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.014628s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000267s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000373s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000378s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000485s ]
+
+[ 2019-11-13T16:20:56+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T16:20:56+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000272s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000304s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000397s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0071s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0133s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0140s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0076s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0057s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0084s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000087s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000223s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.017938s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.018071s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000373s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000502s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000605s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000745s ]
+
+[ 2019-11-13T16:22:44+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T16:22:44+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000291s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000352s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000467s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0270s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0119s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0114s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0088s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0167s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0090s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000064s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000156s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.015060s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.015186s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000299s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000410s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000435s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000551s ]
+
+[ 2019-11-13T16:23:22+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T16:23:23+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000023s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000371s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000424s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000530s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.1663s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.1037s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0978s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0770s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.1331s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0589s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000056s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000143s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.014325s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.014424s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000273s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000354s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000383s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000466s ]
+
+[ 2019-11-13T16:24:29+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T16:24:30+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000019s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000274s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000301s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000412s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0252s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0307s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0194s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0171s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0155s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0324s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000058s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000149s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.015120s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.015243s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000274s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000381s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000391s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000502s ]
+
+[ 2019-11-13T16:24:46+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T16:24:47+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000020s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000302s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000304s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000397s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0213s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0176s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0283s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0246s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0168s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0083s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000062s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000166s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.017028s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.017132s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000284s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000370s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000442s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000532s ]
+
+[ 2019-11-13T16:27:10+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+ERR: 123456
+[ 2019-11-13T16:27:10+08:00 ] ::1 /smartGarden/manager.php?s=/Index/login.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000022s ]
+INFO: [ app_init ] --END-- [ RunTime:0.005340s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000398s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000525s ]
+SQL: SHOW COLUMNS FROM `yl_admin_menu` [ RunTime:0.0146s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group` [ RunTime:0.0330s ]
+SQL: SHOW COLUMNS FROM `yl_auth_group_access` [ RunTime:0.0463s ]
+SQL: SELECT `group_id` FROM `yl_auth_group_access` WHERE `uid` = 1 LIMIT 1   [ RunTime:0.0196s ]
+SQL: SELECT `menu_ids` FROM `yl_auth_group` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0423s ]
+SQL: SELECT * FROM `yl_admin_menu` WHERE `is_show` = 1 AND `is_delete` = 0 ORDER BY sort asc,id asc  [ RunTime:0.0240s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000078s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000174s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.016098s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.016223s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000272s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000382s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000401s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000535s ]
+
