@@ -76,17 +76,22 @@
                 {{ $index + 1 }}
               </template>
             </el-table-column>
-                        <el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'add_time'">
-                          <template #default="{ row }">
-                            {{ formatedDateYmdhms(row.add_time) }}
-                          </template>
-                        </el-table-column>
-                        <el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'type'">
-                          <template #default="{ row }">
-                            <el-link type="danger"
+            <el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'add_time'">
+              <template #default="{ row }">
+                  {{ formatedDateYmdhms(row.add_time) }}
+              </template>
+            </el-table-column>
+            <el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'realname'">
+              <template #default="{ row }">
+                <el-button  type="text" @click="userInfo(row)" >{{ row[prop] }}</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'type'">
+                <template #default="{ row }">
+                  <el-link type="danger"
                                      :underline="false"
                                     @click.native="window.open(`__MODULE__/Machine/machineOrbit/machine_id/${row.machine_imei}/searchTime/${formatedDateYmd(row.add_time)}`, '_self')"
-                            >
+                   >
                               {{
                                 new Map([
                                   ['1', '远离工作区域'],
@@ -204,6 +209,18 @@
       },
       changeManager(e){
         this.doQuery()
+      },
+      userInfo(row){
+          console.log(row)
+        layer.open({
+          type: 2,
+          title:"员工详情",
+          shadeClose: true,
+          shade: 0.2,
+          scrollbar: false,
+          area: ['800px', '400px'],
+          content: "__MODULE__/Member/memberInfo/userid/"+row.userid
+        });
       },
       exportExcel(){
         param = {

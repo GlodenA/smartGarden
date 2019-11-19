@@ -92,15 +92,15 @@ class WarningMessageController extends BaseController
             ->limit($Page->firstRow.','.$Page->listRows)
             ->order("w.add_time desc")
             ->select();
-        $number = $Page->parameter["p"];
-        if($number && $number > 0){
-            $number = ($Page->parameter["p"] - 1)*20;
-        }else{
-            $number = 0;
-        }
-        $this->assign('number',$number);
-        $this->assign("page",$Page->show());
-        $this->assign("warningMessageList",$warningMessageList);
+//        $number = $Page->parameter["p"];
+//        if($number && $number > 0){
+//            $number = ($Page->parameter["p"] - 1)*20;
+//        }else{
+//            $number = 0;
+//        }
+//        $this->assign('number',$number);
+//        $this->assign("page",$Page->show());
+//        $this->assign("warningMessageList",$warningMessageList);
         $this->display("warning_list");
     }
     //告警列表
@@ -159,7 +159,7 @@ class WarningMessageController extends BaseController
         $warningMessageList = M()
             ->table('__WARNING_MESSAGE__ w,__MEMBER__ a,__MACHINE__ m')
             ->where($where)
-            ->field('w.type,w.uid,w.add_time,a.realname,a.job_number,m.machine_id,m.machine_imei,m.machine_name,a.position,a.parent_id')
+            ->field('w.type,w.uid,w.add_time,a.realname,a.job_number,m.machine_id,m.machine_imei,m.machine_name,a.position,a.parent_id,a.userid')
             ->limit($firstRow.','.$listRows)
             ->order("w.add_time desc")
             ->select();
