@@ -24,7 +24,7 @@
             <el-input v-model="queryCondition.name" style="width:100px;"></el-input>
           </el-form-item>
           <el-form-item label="时间">
-            <el-date-picker v-model="queryCondition.time" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+            <el-date-picker v-model="queryCondition.time" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
             </el-date-picker>
           </el-form-item>
           <el-form-item label="考勤状态">
@@ -57,7 +57,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="管理人员">
-            <el-select v-model="queryCondition.position" style="width:120px;">
+            <el-select v-model="queryCondition.managerList" style="width:120px;">
               <el-option :value="0" label="全部"></el-option>
               <volist name="managerList" id="sl">
                 <el-option value="{$sl.userid}" label="{$sl.realname}"></el-option>
@@ -65,7 +65,7 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button icon="el-icon-search" type="primary">
+            <el-button icon="el-icon-search" type="primary" @click="doQuery">
               查询
             </el-button>
           </el-form-item>
@@ -91,12 +91,10 @@
                 <el-tooltip effect="dark" placement="left">
                   <el-button type="text">详情</el-button>
                   <div slot="content">
-                    <p>上午上班打卡时间：{{ row.morningSignTime }}</p>
-                    <p>上午下班打卡时间：{{ row.morningLeaveTime }}</p>
-                    <p>下午上班打卡时间：{{ row.afternoonSignTime }}</p>
-                    <p>下午下班打卡时间：{{ row.afternoonLeaveTime }}</p>
-                    <p>设备串号：{{ row.deviceNumber }}</p>
-                    <p>员工信息：{{ row.employeeInfo }}</p>
+                    <p>上午上班打卡时间：{{ row.first_time }}</p>
+                    <p>上午下班打卡时间：{{ row.second_time }}</p>
+                    <p>下午上班打卡时间：{{ row.third_time }}</p>
+                    <p>下午下班打卡时间：{{ row.fourth_time }}</p>
                   </div>
                 </el-tooltip>
               </template>
@@ -105,9 +103,12 @@
           </template>
         </el-table>
         <div class="flex mt3 justify-between items-center">
-          <el-button icon="el-icon-download">
+          <el-button icon="el-icon-download" @click="exportExcel">
             导出Excel
           </el-button>
+<!--          <a url="__CONTROLLER__/exportAttendanceList" id="export" class="btn btn-sm btn-info">-->
+<!--            导出Excel-->
+<!--          </a>-->
           <el-pagination
             background
             layout="prev, pager, next"
@@ -128,65 +129,50 @@
         queryCondition: {
           workNumber: '',
           name: '',
-          time: '',
+          time: [],
           status: 0,
           position: 0,
           managerList: 0,
           page: 1
         },
-        totalNumber: 1000,
-        tableData: [{
-          job_number: '938240',
-          realname: '张飞',
-          signStatus: 1,
-          date: '2019-11-15',
-          leaveTimes: 2,
-          morningSignTime: '09:00',
-          morningLeaveTime: '11:30',
-          afternoonSignTime: '14:00',
-          afternoonLeaveTime: '18:00',
-          deviceNumber: '985345-23059-90',
-          employeeInfo: 'XXXXXX'
-        }, {
-          job_number: '534351',
-          realname: '赵云',
-          signStatus: 2,
-          date: '2019-11-15',
-          leaveTimes: 1,
-          morningSignTime: '09:00',
-          morningLeaveTime: '11:30',
-          afternoonSignTime: '14:00',
-          afternoonLeaveTime: '18:00',
-          deviceNumber: '985345-23059-90',
-          employeeInfo: 'XXXXXX'
-        }, {
-          job_number: '2093480',
-          realname: '曹操',
-          signStatus: 3,
-          date: '2019-11-15',
-          leaveTimes: 1,
-          morningSignTime: '09:00',
-          morningLeaveTime: '11:30',
-          afternoonSignTime: '14:00',
-          afternoonLeaveTime: '18:00',
-          deviceNumber: '985345-23059-90',
-          employeeInfo: 'XXXXXX'
-        }],
+        totalNumber: 0,
+         tableData: [
+           ],
         tableColumns: [
           ['serialNumber', '序号'],
           ['job_number', '工号'],
           ['realname', '姓名'],
+          ['position_name', '职位'],
+          ['parent_name', '管理人员'],
           ['signStatus', '打卡情况'],
-          ['date', '日期'],
-          ['leaveTimes', '离岗次数'],
+          ['add_time', '考勤日期'],
+          ['leaveTimeCount', '离岗次数'],
+          ['remark','备注'],
           ['rowOperations', '操作']
         ]
       }
     },
-    created(){
-      // 在这里初始化获取第一页的数据
+    //页面加载时候，在mounted中进行赋值
+    mounted() {
+      // 初始化查询，默认为今天
+      console.log(this.timeDefault);
+      this.queryCondition.time = [this.timeDefault,this.timeDefault];
+
     },
+    computed: {
+      timeDefault() {
+        var date = new Date();
+        var s1 = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        return s1;
+      },
+    created(){
+      this.doQuery();
+    },
+},
+
     methods: {
+
+
       /**
        * [pageChange 分页页数变化触发事件]
        * @param  {[type]} p [需要查询数据的那一页]
@@ -194,7 +180,8 @@
        */
       pageChange(p){
         // 在这里用 p 向后台ajax获取分页数据
-        console.log(`新的页码：${p}`)
+        // console.log(`新的页码：${p}`)
+        this.queryCondition.page=p
       },
 
       /**
@@ -203,6 +190,35 @@
        */
       doQuery(){
         // 在这里将查询条件传后台获取查询结果
+
+        param = {
+          "position":this.queryCondition.workNumber,
+          "name":this.queryCondition.name,
+          "time":this.queryCondition.time,
+          "status":this.queryCondition.status,
+          "position":this.queryCondition.position,
+          "page":this.queryCondition.page,
+        }
+        DMS.ajaxPost('__CONTROLLER__/getAttendanceList',
+          param, res => {
+              this.tableData=res.ATTENDENCELIST;
+              this.totalNumber=res.totalNumber;
+          })
+
+      },
+      exportExcel(){
+        param = {
+          "position":this.queryCondition.workNumber,
+          "name":this.queryCondition.name,
+          "time":this.queryCondition.time,
+          "status":this.queryCondition.status,
+          "position":this.queryCondition.position,
+          "page":this.queryCondition.page,
+        }
+        DMS.ajaxPost('__CONTROLLER__/exportAttendanceList',
+        param, res => {
+
+        })
       }
     }
   })
