@@ -120,7 +120,7 @@
             <el-button :disabled="!hasSelection" type="danger" icon="el-icon-sort" class="mx2">
               批量切换管理人员
             </el-button>
-            <el-button icon="el-icon-download">
+            <el-button icon="el-icon-download" @click="window.open('/smartGarden/manager.php?s=/Member/memberExcel')">
               导出
             </el-button>
           </div>
