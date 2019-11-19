@@ -78,14 +78,14 @@
             </el-table-column>
                         <el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'add_time'">
                           <template #default="{ row }">
-                            {{ formatedDate(row.add_time) }}
+                            {{ formatedDateYmdhms(row.add_time) }}
                           </template>
                         </el-table-column>
                         <el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'type'">
                           <template #default="{ row }">
                             <el-link type="danger"
                                      :underline="false"
-                                    @click.native="window.open(`__MODULE__/Machine/machineOrbit/machine_id/${row.machine_imei}/searchTime/${formatedDate(row.add_time)}`, '_self')"
+                                    @click.native="window.open(`__MODULE__/Machine/machineOrbit/machine_id/${row.machine_imei}/searchTime/${formatedDateYmd(row.add_time)}`, '_self')"
                             >
                               {{
                                 new Map([
@@ -164,15 +164,18 @@
          var s1 = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
          return s1;
       },
-      created(){
-        this.doQuery();
-      }
     },
-
+    created(){
+      this.doQuery();
+    },
     methods: {
-      formatedDate(timeStamp){
+      formatedDateYmdhms(timeStamp){
         let d = new Date(timeStamp * 1000)
         return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
+      },
+      formatedDateYmd(timeStamp){
+        let d = new Date(timeStamp * 1000)
+        return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
       },
       doQuery(){
         param = {
