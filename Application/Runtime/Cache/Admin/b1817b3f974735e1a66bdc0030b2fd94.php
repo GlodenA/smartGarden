@@ -37,10 +37,10 @@
             <a href="">首页</a>
           </el-breadcrumb-item>
           <el-breadcrumb-item>
-            考勤管理
+            请假管理
           </el-breadcrumb-item>
           <el-breadcrumb-item>
-            考勤统计
+            换班申请
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -66,10 +66,13 @@
           }">
             <el-form-item prop="date" label="换班日期">
               <el-date-picker
-                :editable="false"
+                style="width:100%;"
                 v-model="applyInfo.date"
-                type="date"
-                style="width:100%;">
+                type="datetimerange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                align="right">
               </el-date-picker>
             </el-form-item>
             <el-form-item prop="applicant" label="申请人">
@@ -77,10 +80,6 @@
             </el-form-item>
             <el-form-item prop="targetEmployee" label="换班人">
               <el-input v-model="applyInfo.targetEmployee"/>
-            </el-form-item>
-            <el-form-item prop="time" label="时间">
-              <el-time-picker v-model="applyInfo.time" style="width:100%;">
-              </el-time-picker>
             </el-form-item>
             <el-form-item prop="remark" label="备注">
               <el-input
@@ -108,7 +107,6 @@
           date: '',
           applicant: '',
           targetEmployee: '',
-          time: '',
           remark: ''
         }
       }

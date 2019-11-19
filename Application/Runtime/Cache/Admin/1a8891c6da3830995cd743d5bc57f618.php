@@ -27,72 +27,63 @@
     </head>
     <body class="overflow-hidden">
 
-<div class="padding-md">
+<div class="padding-md" id="GROUPLIST">
 	<div class="smart-widget widget-dark-blue">
-		<div class="smart-widget-header">
-			<a href="javascript:menuAdd()" class="btn btn-sm btn-info"><i class="fa fa-plus"></i>添加职位</a>
-		</div>
 		<div class="smart-widget-inner">
 			<div class="smart-widget-body">
-				<table class="table table-striped table-bordered" id="dataTable">
-					<thead>
-					<tr>
-						<th>ID</th>
-						<th>名称</th>
-						<th>操作</th>
-					</tr>
-					</thead>
-					<tbody>
-					<?php if(is_array($menuList)): foreach($menuList as $key=>$v): ?><tr id="data-<?php echo ($v['id']); ?>">
-							<td><?php echo ($v['id']); ?></td>
-							<td><?php echo ($v['name']); ?></td>
-							<td>
-								<a href="javascript:menuAdd(<?php echo ($v['id']); ?>)" class="btn btn-manager btn-warning btn-xs" data-toggle="tooltip" data-placement="top" title="添加下级" data-original-title="添加下级"><i class="fa fa-plus"></i></a>
-								<a href="javascript:menuEdit(<?php echo ($v['id']); ?>)" class="btn btn-manager btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="修改"><i class="fa fa-pencil"></i></a>
-								<a href="javascript:menuDelete(<?php echo ($v['id']); ?>)" class="btn btn-manager btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-trash-o"></i></a>
-							</td>
-						</tr>
-						<?php if($v['children']){ ?>
-						<?php if(is_array($v['children'])): foreach($v['children'] as $key=>$r): ?><tr id="data-<?php echo ($r['id']); ?>">
-								<td><?php echo ($r['id']); ?></td>
-								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├&nbsp;&nbsp;<?php echo ($r['name']); ?></td>
-								<td>
-									<a href="javascript:menuEdit(<?php echo ($r['id']); ?>)" class="btn btn-manager btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="修改"><i class="fa fa-pencil"></i></a>
-									<a href="javascript:menuDelete(<?php echo ($r['id']); ?>)" class="btn btn-manager btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-trash-o"></i></a>
-								</td>
-							</tr><?php endforeach; endif; ?>
-						<?php } endforeach; endif; ?>
-					</tbody>
-				</table>
+				<el-breadcrumb separator="/">
+          <el-breadcrumb-item>
+            <a href="">首页</a>
+          </el-breadcrumb-item>
+          <el-breadcrumb-item>
+            员工管理
+          </el-breadcrumb-item>
+          <el-breadcrumb-item>
+            员工职位
+          </el-breadcrumb-item>
+        </el-breadcrumb>
+        <el-divider></el-divider>
+				<el-table :data="tableData">
+					<el-table-column prop="id" label="ID"></el-table-column>
+					<el-table-column prop="name" label="名称"></el-table-column>
+					<el-table-column label="操作">
+
+					</el-table-column>
+				</el-table>
 			</div>
 		</div>
 	</div>
 </div>
-<script type="text/javascript">
-	function menuAdd(pid){
-		if(pid){
-			DMS.ajaxShow("新增职位","/smartGarden/manager.php?s=/Member/menuAdd/pid/"+pid);
-		}else{
-			DMS.ajaxShow("新增职位","/smartGarden/manager.php?s=/Member/menuAdd");
-		}
-	}
-	function menuEdit(id){
-		DMS.ajaxShow("职位编辑","/smartGarden/manager.php?s=/Member/menuEdit/id/"+id);
-	}
-	function menuDelete(id){
-		DMS.dialog("确定要删除吗?",function(){
-			DMS.ajaxPost("/smartGarden/manager.php?s=/Member/menuDelete",{id:id},function(ret){
-				if(ret.status==1){
-					DMS.success(ret.info,0,function(){
-						$("#data-"+id).remove();
-					});
-				}else{
-					DMS.error(ret.info,0);
-				}
-			})
-		});
-	}
+<script>
+	const tableData = []
 </script>
+<?php if(is_array($menuList)): foreach($menuList as $key=>$v): ?><script type="text/javascript">
+		tableData.push({
+			id: "<?php echo ($v['id']); ?>",
+			name: "<?php echo ($v['name']); ?>",
+		})
+	</script>
+	<?php if(is_array($v['children'])): foreach($v['children'] as $key=>$r): ?><script type="text/javascript">
+			tableData.push({
+				id: "<?php echo ($r['id']); ?>",
+				name: "<?php echo ($r['name']); ?>",
+				isChild: true
+			})
+		</script><?php endforeach; endif; endforeach; endif; ?>
+<script type="text/javascript">
+	const GROUPLIST = new Vue({
+		el: '#GROUPLIST',
+		data(){
+			return {
+				tableData
+			}
+		},
+		mounted(){
+			console.log(this.tableData);
+		}
+	})
+</script>
+
             <!-- <footer class="footer">
                 <img src="<?php echo C('ADMIN_IMAGE_PATH');?>/logo_common.png" />
                 <p class="no-margin">
