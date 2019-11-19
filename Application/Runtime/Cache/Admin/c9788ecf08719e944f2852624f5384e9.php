@@ -64,6 +64,13 @@
               { required: true, message: '请输入备注！', trigger: 'blur' },
             ],
           }">
+            <el-form-item label="员工工号">
+              <el-input v-model="applyInfo.job_number">
+                <el-button slot="suffix" size="small" icon="el-icon-search" type="primary" @click="queryEmployee">
+                  查询
+                </el-button>
+              </el-input>
+            </el-form-item>
             <el-form-item prop="date" label="请假日期">
               <el-date-picker
                 style="width:100%;"
@@ -105,6 +112,7 @@
     data(){
       return {
         applyInfo: {
+          job_number: '',
           date: '',
           applicant: '',
           type: 1,
@@ -121,6 +129,10 @@
             console.log('提交数据至后台')
           }
         })
+      },
+      // 查询员工信息
+      queryEmployee(){
+
       }
     }
   })

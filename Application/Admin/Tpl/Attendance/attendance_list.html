@@ -86,7 +86,7 @@
                 <el-tag v-if="row.signStatus === 3" type="info">暂无结果</el-tag>
               </template>
             </el-table-column>
-            <el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'rowOperations'">
+            <el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'rowOperations'" width="200">
               <template #default="{ row }">
                 <el-tooltip effect="dark" placement="left">
                   <el-button type="text">详情</el-button>
@@ -97,6 +97,19 @@
                     <p>下午下班打卡时间：{{ row.fourth_time }}</p>
                   </div>
                 </el-tooltip>
+                <el-button type="text" @click="() => {
+                  Object.keys(edit.formData).forEach(f => {
+                    if(f in row){
+                      edit.formData[f] = row[f]
+                    }
+                  })
+                  edit.dialog = true
+                }">
+                  编辑
+                </el-button>
+                <el-button v-if="row.leaveTimeCount * 1 === 0" type="text">
+                  离岗详情
+                </el-button>
               </template>
             </el-table-column>
             <el-table-column :key="prop" :prop="prop" :label="label" v-else></el-table-column>
@@ -120,12 +133,58 @@
       </div>
     </div>
   </div>
+  <el-dialog :visible.sync="edit.dialog" width="61.8%" title="考勤编辑">
+    <el-form :model="edit.formData" label-width="150px" :rules="{
+      remark: [
+         { required: true, message: '请输入备注！', trigger: 'blur' }
+      ]
+    }">
+      <el-row :gutter="20">
+        <el-col :span="12" v-for="([f, l], i) in [
+          ['realname', '姓名'],
+          ['job_number', '工号'],
+          ['machine_id', '设备串号'],
+          ['first_time', '上午上班打卡时间'],
+          ['second_time', '上午下班打卡时间'],
+          ['third_time', '下午上班打卡时间'],
+          ['fourth_time', '下午下班打卡时间'],
+        ]" :key="f">
+          <el-form-item :label="l">
+            <el-input disabled v-model="edit.formData[f]"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="备注" >
+            <el-input type="textarea" :rows="5" v-model="edit.formData.remark"/>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <div slot="footer" class="flex justify-center">
+      <el-button type="primary">
+        提交
+      </el-button>
+    </div>
+  </el-dialog>
 </div>
 <script>
   const attendenceList = new Vue({
     el: '#ATTENDENCELIST',
     data() {
       return {
+        edit: {
+          dialog: false,
+          formData: {
+            realname: '',
+            job_number: '',
+            machine_id: '',
+            first_time: '',
+            second_time: '',
+            third_time: '',
+            fourth_time: '',
+            remark: ''
+          }
+        },
         queryCondition: {
           workNumber: '',
           name: '',
