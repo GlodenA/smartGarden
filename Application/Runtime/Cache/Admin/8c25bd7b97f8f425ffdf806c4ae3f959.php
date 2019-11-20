@@ -187,6 +187,8 @@
         tableSelections: [],
         tableData: [{
           realname: '孙吉祥',
+          gender: '男',
+          job_position: '工人',
           mobile: '17815638478',
           job_number: '9120',
           parent_name: '张德强',
@@ -194,6 +196,8 @@
           job_status: 1
         }, {
           realname: '赵佳琪',
+          gender: '男',
+          job_position: '工人',
           mobile: '17812638478',
           job_number: '2341',
           parent_name: '张德强',
@@ -201,6 +205,8 @@
           job_status: 2
         }, {
           realname: '孙立群',
+          gender: '男',
+          job_position: '工人',
           mobile: '17815648478',
           job_number: '3221',
           parent_name: '张德强',
@@ -217,6 +223,8 @@
         },
         tableColumns: [
           ['姓名', 'realname'],
+          ['性别', 'gender'],
+          ['职位', 'job_position'],
           ['手机号码', 'mobile'],
           ['员工号', 'job_number'],
           ['管理人员', 'parent_name'],

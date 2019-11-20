@@ -32,13 +32,22 @@
               { required: true, message: '请输入备注！', trigger: 'blur' },
             ],
           }">
-            <el-form-item label="员工工号">
-              <el-input v-model="applyInfo.job_number">
-                <el-button slot="suffix" size="small" icon="el-icon-search" type="primary" @click="queryEmployee">
-                  查询
-                </el-button>
-              </el-input>
-            </el-form-item>
+            <el-row :gutter="12">
+              <el-col :span="12">
+                <el-form-item prop="applicant" label="申请人">
+                  <el-input v-model="applyInfo.applicant" disabled/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <div class="flex items-center">
+                  <el-input v-model="applyInfo.job_number" class="mr2">
+                  </el-input>
+                  <el-button icon="el-icon-search" type="primary" @click="queryEmployee">
+                    查询
+                  </el-button>
+                </div>
+              </el-col>
+            </el-row>
             <el-form-item prop="date" label="请假日期">
               <el-date-picker
                 style="width:100%;"
@@ -50,9 +59,6 @@
                 end-placeholder="结束日期"
                 align="right">
               </el-date-picker>
-            </el-form-item>
-            <el-form-item prop="applicant" label="申请人">
-              <el-input v-model="applyInfo.applicant" disabled/>
             </el-form-item>
             <el-form-item prop="targetEmployee" label="申请类型">
               <el-radio v-model="applyInfo.type" :label="1">请假</el-radio>
