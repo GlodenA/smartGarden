@@ -18,10 +18,10 @@
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/layer/layer.js"></script>
       <!-- Vue, element, 间距工具类 相关 -->
-      <link rel="stylesheet" href="/Public/Admin/Css//util/flex.css">
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/Css//util/flex.css">
       <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
       <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
-      <link rel="stylesheet" href="/Public/Admin/element/index.css">
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/element/index.css">
       <script src="https://unpkg.com/element-ui/lib/index.js"></script>
       <!-- Vue, element, 间距工具类 相关 -->
     </head>
@@ -62,13 +62,22 @@
               { required: true, message: '请输入备注！', trigger: 'blur' },
             ],
           }">
-            <el-form-item label="员工工号">
-              <el-input v-model="applyInfo.job_number">
-                <el-button slot="suffix" size="small" icon="el-icon-search" type="primary" @click="queryEmployee">
-                  查询
-                </el-button>
-              </el-input>
-            </el-form-item>
+            <el-row :gutter="12">
+              <el-col :span="12">
+                <el-form-item prop="applicant" label="申请人">
+                  <el-input v-model="applyInfo.applicant" disabled/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <div class="flex items-center">
+                  <el-input v-model="applyInfo.job_number" class="mr2">
+                  </el-input>
+                  <el-button icon="el-icon-search" type="primary" @click="queryEmployee">
+                    查询
+                  </el-button>
+                </div>
+              </el-col>
+            </el-row>
             <el-form-item prop="date" label="请假日期">
               <el-date-picker
                 style="width:100%;"
@@ -80,9 +89,6 @@
                 end-placeholder="结束日期"
                 align="right">
               </el-date-picker>
-            </el-form-item>
-            <el-form-item prop="applicant" label="申请人">
-              <el-input v-model="applyInfo.applicant" disabled/>
             </el-form-item>
             <el-form-item prop="targetEmployee" label="申请类型">
               <el-radio v-model="applyInfo.type" :label="1">请假</el-radio>
@@ -137,7 +143,7 @@
             // 这里代表表单验证通过，即将提交数据到后台
               console.log('提交数据至后台')
 
-              DMS.ajaxPost('/manager.php?s=/Attendance/leaveApply',info,ref =>{
+              DMS.ajaxPost('/smartGarden/manager.php?s=/Attendance/leaveApply',info,ref =>{
                   this.$message({
                   message: '请假成功',
                   type: 'success'
@@ -158,7 +164,7 @@
               });
               return;
           }
-          DMS.ajaxPost("/manager.php?s=/Attendance/getMemberInfo",param,ret =>{
+          DMS.ajaxPost("/smartGarden/manager.php?s=/Attendance/getMemberInfo",param,ret =>{
               if(ret.status==1){
               if(ret.data.machine_id > 0){
                   this.applyInfo.job_number = ret.data.job_number;
