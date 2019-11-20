@@ -124,27 +124,46 @@ class SchedulesController extends BaseController {
 
 	//时间列表
 	public function timeList(){
-		$keywords = I('keywords');
-    if($keywords){
-        $where['title'] = array('like',"%".$keywords."%");
-        $this->assign("keywords",$keywords);
-    }
-		$where['is_delete'] = 0;
-		$count = M("Schedules_time")->where($where)->count();
-    $Page = new \Think\Page($count,10);
-    $list = M("Schedules_time")->limit($Page->firstRow.','.$Page->listRows)->where($where)->order('id asc')->select();
-    $show = $Page->show();
-    $this->assign('page',$show);
-		$this->assign('total', $count);
-    $this->assign('list',$list);
-		$getPage = function(){
-			return $this->nowPage;
-		};
-		$getPageMethod = $getPage->bindTo($Page, \Think\Page::class);
-		$currentPage = $getPageMethod();
-		$this->assign('currentPage', $currentPage);
+//		$keywords = I('keywords');
+//    if($keywords){
+//        $where['title'] = array('like',"%".$keywords."%");
+//        $this->assign("keywords",$keywords);
+//    }
+//		$where['is_delete'] = 0;
+//		$count = M("Schedules_time")->where($where)->count();
+//    $Page = new \Think\Page($count,10);
+//        $listRows=10;
+//        $firstRow = $listRows*(I("currentPage")-1);
+//    $list = M("Schedules_time")->limit($firstRow.','.$listRows)->where($where)->order('id asc')->select();
+//    $show = $Page->show();
+//    $this->assign('page',$show);
+//		$this->assign('total', $count);
+    $this->assign('list',[]);
+//		$getPage = function(){
+//			return $this->nowPage;
+//		};
+//		$getPageMethod = $getPage->bindTo($Page, \Think\Page::class);
+//		$currentPage = $getPageMethod();
+//		$this->assign('currentPage', $currentPage);
 		$this->display('time_list');
 	}
+	public function getTimeList(){
+
+        $keywords = I('keywords');
+        if($keywords){
+            $where['title'] = array('like',"%".$keywords."%");
+            $this->assign("keywords",$keywords);
+        }
+        $where['is_delete'] = 0;
+        $count = M("Schedules_time")->where($where)->count();
+//    $Page = new \Think\Page($count,10);
+        $listRows=10;
+        $firstRow = $listRows*(I("currentPage")-1);
+        $list = M("Schedules_time")->limit($firstRow.','.$listRows)->where($where)->order('id asc')->select();
+        $ret["totalNumber"]=$count;
+        $ret["list"]=$list;
+        $this->ajaxReturn($ret);
+}
 
 	//添加时间段
 	public function timeAdd(){
