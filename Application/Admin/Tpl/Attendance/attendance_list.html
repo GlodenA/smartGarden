@@ -28,7 +28,7 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item label="考勤状态">
-            <el-select v-model="queryCondition.status" style="width:120px;">
+            <el-select v-model="queryCondition.status" style="width:120px;" @change="changeStatus">
               <el-option v-for="(item, i) in [
                 '全部',
                 '上午正常上班',
@@ -49,7 +49,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="职位">
-            <el-select v-model="queryCondition.position" style="width:120px;">
+            <el-select v-model="queryCondition.position" style="width:120px;" @change="changePosition">
               <el-option :value="0" label="全部"></el-option>
               <volist name="positionList" id="sl">
                 <el-option value="{$sl.id}" label="{$sl.name}"></el-option>
@@ -57,7 +57,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="管理人员">
-            <el-select v-model="queryCondition.managerList" style="width:120px;">
+            <el-select v-model="queryCondition.managerList" style="width:120px;" @change="changeManager">
               <el-option :value="0" label="全部"></el-option>
               <volist name="managerList" id="sl">
                 <el-option value="{$sl.userid}" label="{$sl.realname}"></el-option>
@@ -103,11 +103,12 @@
                       edit.formData[f] = row[f]
                     }
                   })
+                  edit.targetRow = row
                   edit.dialog = true
                 }">
                   编辑
                 </el-button>
-                <el-button v-if="row.leaveTimeCount * 1 === 0" type="text" @click="showLeaveDialog">
+                <el-button v-if="row.leaveTimeCount * 1 != 0" type="text" @click="showLeaveDialog(row)">
                   离岗详情
                 </el-button>
               </template>
@@ -162,25 +163,26 @@
       </el-row>
     </el-form>
     <div slot="footer" class="flex justify-center">
-      <el-button type="primary">
+      <el-button type="primary" @click="editRemarkSubmit">
         提交
       </el-button>
     </div>
   </el-dialog>
   <el-dialog :visible.sync="edit.leaveDialog" title="离岗详情" width="30%">
-    <el-form>
-      <el-form-item label="离岗时间">
-        <el-input disabled v-model="edit.leaveFormData.time1" />
-      </el-form-item>
-      <el-form-item label="返岗时间">
-        <el-input disabled v-model="edit.leaveFormData.time2" />
-      </el-form-item>
-    </el-form>
-    <div class="flex justify-end">
-      <el-button type="primary">
-        确定
-      </el-button>
-    </div>
+    <el-table border :data="testArr">
+
+      <el-table-column prop="add_time" label="离岗时间" >
+        <template #default="{ row }">
+          {{ formatedDateYmdhms(row.add_time) }}
+        </template>
+
+      </el-table-column>
+      <el-table-column prop="end_time" label="返岗时间" >
+        <template #default="{ row }">
+          {{ formatedDateYmdhms(row.end_time) }}
+        </template>
+      </el-table-column>
+    </el-table>
   </el-dialog>
 </div>
 <script>
@@ -188,7 +190,9 @@
     el: '#ATTENDENCELIST',
     data() {
       return {
+        testArr: [],
         edit: {
+          targetRow: {},
           dialog: false,
           leaveDialog: false,
           leaveFormData: {
@@ -196,6 +200,7 @@
             time2: ''
           },
           formData: {
+            id:'',
             realname: '',
             job_number: '',
             machine_id: '',
@@ -235,7 +240,6 @@
     //页面加载时候，在mounted中进行赋值
     mounted() {
       // 初始化查询，默认为今天
-      console.log(this.timeDefault);
       this.queryCondition.time = [this.timeDefault,this.timeDefault];
     },
     computed: {
@@ -244,15 +248,26 @@
         var s1 = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
         return s1;
       },
+
+   },
     created(){
       this.doQuery();
     },
-},
 
     methods: {
 
-      showLeaveDialog(){
+      formatedDateYmdhms(timeStamp){
+        let d = new Date(timeStamp * 1000)
+        return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
+      },
+      showLeaveDialog(row){
         // 从接口查询离岗详情并赋值给this.edit.leaveFormData
+        DMS.ajaxPost("__CONTROLLER__/leaveInfo",{
+          userid: row.userid,
+          add_time: row.add_time,
+        },ret => {
+          this.testArr=ret.leaveInfo
+        })
         this.edit.leaveDialog = true
       },
 
@@ -281,6 +296,7 @@
           "time":this.queryCondition.time,
           "status":this.queryCondition.status,
           "position":this.queryCondition.position,
+          "parent_id":this.queryCondition.managerList,
           "page":this.queryCondition.page,
         }
         DMS.ajaxPost('__CONTROLLER__/getAttendanceList',
@@ -290,6 +306,34 @@
           })
 
       },
+      changePosition(e){
+        this.doQuery()
+      },
+      changeStatus(e){
+        this.doQuery()
+      },
+      changeManager(e){
+        this.doQuery()
+      },
+      editRemarkSubmit(e){
+        let remark = this.edit.formData.remark
+        DMS.ajaxPost("__CONTROLLER__/attendanceRemark",{
+          id: this.edit.formData.id,
+          remark
+        },ret => {
+          if(ret.status==1){
+            this.$alert('提交成功', '', {
+              confirmButtonText: '确定',
+            });
+            this.edit.targetRow.remark = remark
+          }else{
+            this.$alert('提交失败', '', {
+              confirmButtonText: '确定',
+            });
+          }
+          this.edit.dialog = false
+        })
+      },
       exportExcel(){
         param = {
           "workNumber":this.queryCondition.workNumber,
@@ -297,13 +341,9 @@
           "time":this.queryCondition.time,
           "status":this.queryCondition.status,
           "position":this.queryCondition.position,
+          "parent_id":this.queryCondition.managerList,
           "page":this.queryCondition.page,
         }
-        // DMS.ajaxPost('__CONTROLLER__/exportAttendanceList',
-        // param, res => {
-        //
-        // })
-
         window.open('__CONTROLLER__/exportAttendanceList/workNumber/'+param["workNumber"]+'/name/'+param["name"]+'/time/'+param["time"]+'/status/'+param["status"]+'/position/'+param["position"]
                ,"_self");
       }
