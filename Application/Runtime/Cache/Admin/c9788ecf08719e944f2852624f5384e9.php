@@ -18,10 +18,10 @@
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/layer/layer.js"></script>
       <!-- Vue, element, 间距工具类 相关 -->
-      <link rel="stylesheet" href="/Public/Admin/Css//util/flex.css">
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/Css//util/flex.css">
       <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
       <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
-      <link rel="stylesheet" href="/Public/Admin/element/index.css">
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/element/index.css">
       <script src="https://unpkg.com/element-ui/lib/index.js"></script>
       <!-- Vue, element, 间距工具类 相关 -->
     </head>
@@ -54,9 +54,7 @@
             applicant: [
               { required: true, message: '请输入申请人！', trigger: 'blur' },
             ],
-            targetEmployee: [
-              { required: true, message: '请输入申请类型！', trigger: 'blur' },
-            ],
+
             time: [
               { required: true, message: '请选择时间！', trigger: 'blur' },
             ],
@@ -64,26 +62,33 @@
               { required: true, message: '请输入备注！', trigger: 'blur' },
             ],
           }">
-            <el-form-item label="员工工号">
-              <el-input v-model="applyInfo.job_number">
-                <el-button slot="suffix" size="small" icon="el-icon-search" type="primary" @click="queryEmployee">
-                  查询
-                </el-button>
-              </el-input>
-            </el-form-item>
+            <el-row :gutter="12">
+              <el-col :span="12">
+                <el-form-item prop="applicant" label="申请人">
+                  <el-input v-model="applyInfo.applicant" disabled/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <div class="flex items-center">
+                  <el-input v-model="applyInfo.job_number" class="mr2">
+                  </el-input>
+                  <el-button icon="el-icon-search" type="primary" @click="queryEmployee">
+                    查询
+                  </el-button>
+                </div>
+              </el-col>
+            </el-row>
             <el-form-item prop="date" label="请假日期">
               <el-date-picker
                 style="width:100%;"
                 v-model="applyInfo.date"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 type="datetimerange"
                 range-separator="至"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
                 align="right">
               </el-date-picker>
-            </el-form-item>
-            <el-form-item prop="applicant" label="申请人">
-              <el-input v-model="applyInfo.applicant"/>
             </el-form-item>
             <el-form-item prop="targetEmployee" label="申请类型">
               <el-radio v-model="applyInfo.type" :label="1">请假</el-radio>
@@ -117,25 +122,73 @@
           applicant: '',
           type: 1,
           time: '',
-          remark: ''
+          remark: '',
+          user_id:'',
+          machine_id:'',
         }
       }
     },
     methods: {
       submit(){
+          info = {
+              "date[0]": this.applyInfo.date[0],
+              "date[1]": this.applyInfo.date[1],
+              "user_id":this.applyInfo.user_id,
+              "machine_id":this.applyInfo.machine_id,
+              "remark":this.applyInfo.remark,
+          }
+          console.log(info)
         this.$refs.mainForm.validate(r => {
           if(r){
             // 这里代表表单验证通过，即将提交数据到后台
-            console.log('提交数据至后台')
+              console.log('提交数据至后台')
+
+              DMS.ajaxPost('/smartGarden/manager.php?s=/Attendance/leaveApply',info,ref =>{
+                  this.$message({
+                  message: '请假成功',
+                  type: 'success'
+              });
+              })
           }
         })
       },
       // 查询员工信息
       queryEmployee(){
-
+          param = {
+              "keywords":this.applyInfo.job_number
+          }
+          if(!param.keywords){
+              this.$message({
+                  message: '请输入员工号/手机号',
+                  type: 'warning'
+              });
+              return;
+          }
+          DMS.ajaxPost("/smartGarden/manager.php?s=/Attendance/getMemberInfo",param,ret =>{
+              if(ret.status==1){
+              if(ret.data.machine_id > 0){
+                  this.applyInfo.job_number = ret.data.job_number;
+                  this.applyInfo.applicant = ret.data.realname;
+                  this.applyInfo.user_id = ret.data.userid;
+                  this.applyInfo.machine_id = ret.data.machine_id;
+              }else{
+                  this.$message({
+                      message: '请先给员工绑定设备',
+                      type: 'warning'
+                  });
+                  return;
+              }
+          }else
+          {
+              this.$message({
+                  message: '无此员工信息',
+                  type: 'warning'
+              });
+          }
+          })
+          }
       }
-    }
-  })
+    })
 </script>
 
             <!-- <footer class="footer">
