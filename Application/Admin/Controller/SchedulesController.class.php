@@ -103,7 +103,7 @@ class SchedulesController extends BaseController {
             $whereTime['is_delete'] = 0;
             $whereTime['is_show'] = 1;
             $timeList = M("Schedules_time")->where($whereTime)->order('id asc')->select();
-            $this->assign('timeList',$timeList); 
+            $this->assign('timeList',$timeList);
             $this->display("schedules_edit");
         }
 	}
@@ -124,20 +124,46 @@ class SchedulesController extends BaseController {
 
 	//时间列表
 	public function timeList(){
-		$keywords = I('keywords');
+//		$keywords = I('keywords');
+//    if($keywords){
+//        $where['title'] = array('like',"%".$keywords."%");
+//        $this->assign("keywords",$keywords);
+//    }
+//		$where['is_delete'] = 0;
+//		$count = M("Schedules_time")->where($where)->count();
+//    $Page = new \Think\Page($count,10);
+//        $listRows=10;
+//        $firstRow = $listRows*(I("currentPage")-1);
+//    $list = M("Schedules_time")->limit($firstRow.','.$listRows)->where($where)->order('id asc')->select();
+//    $show = $Page->show();
+//    $this->assign('page',$show);
+//		$this->assign('total', $count);
+    $this->assign('list',[]);
+//		$getPage = function(){
+//			return $this->nowPage;
+//		};
+//		$getPageMethod = $getPage->bindTo($Page, \Think\Page::class);
+//		$currentPage = $getPageMethod();
+//		$this->assign('currentPage', $currentPage);
+		$this->display('time_list');
+	}
+	public function getTimeList(){
+
+        $keywords = I('keywords');
         if($keywords){
             $where['title'] = array('like',"%".$keywords."%");
             $this->assign("keywords",$keywords);
         }
-		$where['is_delete'] = 0;
-		$count = M("Schedules_time")->where($where)->count();
-        $Page = new \Think\Page($count,20);
-        $list = M("Schedules_time")->limit($Page->firstRow.','.$Page->listRows)->where($where)->order('id asc')->select();
-        $show = $Page->show();
-        $this->assign('page',$show);
-        $this->assign('list',$list);
-		$this->display('time_list');
-	}
+        $where['is_delete'] = 0;
+        $count = M("Schedules_time")->where($where)->count();
+//    $Page = new \Think\Page($count,10);
+        $listRows=10;
+        $firstRow = $listRows*(I("currentPage")-1);
+        $list = M("Schedules_time")->limit($firstRow.','.$listRows)->where($where)->order('id asc')->select();
+        $ret["totalNumber"]=$count;
+        $ret["list"]=$list;
+        $this->ajaxReturn($ret);
+}
 
 	//添加时间段
 	public function timeAdd(){
@@ -150,7 +176,7 @@ class SchedulesController extends BaseController {
             adminLog("添加时间段".$data["name"]);
         }else{
             $this->display("time_add");
-        }		
+        }
 	}
 
 	//编辑时间段
@@ -189,4 +215,9 @@ class SchedulesController extends BaseController {
             $this->error("删除失败");
         }
 	}
+
+	public function groupAttendence(){
+		$this->display('group_attendence');
+	}
+
 }

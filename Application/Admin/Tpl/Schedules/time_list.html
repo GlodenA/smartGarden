@@ -32,35 +32,48 @@
             </el-table-column>
             <el-table-column label="操作" prop="id">
               <template #default="{ row }">
-                <el-button type="text" @click="() => { window.location.href = `__CONTROLLER__/timeEdit/id/{row.id}` }">编辑</el-button>
+                <el-button type="text" @click="showEditDialog(row)">编辑</el-button>
+                <el-button type="text" @click="timeDelete(row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
           <div class="row justify-end mt2">
-            <el-pagination
-              background
-              layout="prev, pager, next"
-              :total="{$total}"
-              :current-page="{$currentPage}"
-              @current-change="pageChange">
+            <el-pagination background layout="prev, pager, next" :total="totalNumber" :page-size="10" :current-page="currentPage" @current-change="pageChange">
             </el-pagination>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- 编辑弹窗 -->
+  <el-dialog :visible.sync="editDialog" title="编辑时间段" width="30%">
+    <el-form ref="editForm" :model="editForm" label-width="80px" :rules="timeRules">
+      <el-form-item label="名称" prop="title">
+        <el-input v-model="editForm.title"></el-input>
+      </el-form-item>
+      <el-form-item label="上班时间" prop="start_time">
+        <el-time-picker v-model="editForm.start_time" style="width:100%;" value-format="HH:mm:ss">
+        </el-time-picker>
+      </el-form-item>
+      <el-form-item label="下班时间" prop="end_time">
+        <el-time-picker v-model="editForm.end_time" style="width:100%;" value-format="HH:mm:ss">
+        </el-time-picker>
+      </el-form-item>
+      <el-form-item label="状态" prop="state">
+        <el-radio v-model="editForm.state" :label="1">正常</el-radio>
+        <el-radio v-model="editForm.state" :label="2">禁止</el-radio>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="row justify-center">
+      <el-button type="primary" plain @click="editDialog = false">取消</el-button>
+      <el-button type="primary" @click="doEdit">提交</el-button>
+    </div>
+  </el-dialog>
+
+  <!-- 创建弹窗 -->
   <el-dialog :visible.sync="createDialog" title="添加时间段" width="30%">
-    <el-form ref="createForm" :model="newData" label-width="80px" :rules="{
-      title: [
-        { required: true, message: '请输入名称！', trigger: 'blur' },
-      ],
-      start_time: [
-        { required: true, message: '请选择上班时间！', trigger: 'blur' },
-      ],
-      end_time: [
-        { required: true, message: '请选择下班时间！', trigger: 'blur' },
-      ]
-    }">
+    <el-form ref="createForm" :model="newData" label-width="80px" :rules="timeRules">
       <el-form-item label="名称" prop="title">
         <el-input v-model="newData.title"></el-input>
       </el-form-item>
@@ -87,23 +100,49 @@
   let tableData = []
 </script>
 <volist name="list" id="v" key="k">
-<script type="text/javascript">
-  tableData.push({
-    id: "{$v['id']}",
-    title: "{$v['title']}",
-    start_time: "{$v['start_time']}",
-    end_time: "{$v['end_time']}"
-  })
-</script>
+  <script type="text/javascript">
+    tableData.push({
+      id: "{$v['id']}",
+      title: "{$v['title']}",
+      start_time: "{$v['start_time']}",
+      end_time: "{$v['end_time']}"
+    })
+  </script>
 </volist>
 <script type="text/javascript">
   const timeList = new Vue({
     el: '#TIMELIST',
-    data(){
+    data() {
       return {
+        timeRules: {
+          title: [{
+            required: true,
+            message: '请输入名称！',
+            trigger: 'blur'
+          }, ],
+          start_time: [{
+            required: true,
+            message: '请选择上班时间！',
+            trigger: 'blur'
+          }, ],
+          end_time: [{
+            required: true,
+            message: '请选择下班时间！',
+            trigger: 'blur'
+          }, ]
+        },
         tableData,
         createDialog: false,
+        currentPage: 1,
+        totalNumber: 0,
         newData: {
+          title: '',
+          start_time: '',
+          end_time: '',
+          state: '1'
+        },
+        editDialog: false,
+        editForm: {
           title: '',
           start_time: '',
           end_time: '',
@@ -111,25 +150,72 @@
         }
       }
     },
+    created() {
+      this.doQuery();
+    },
+    mounted() {
+      console.log(this.tableData)
+    },
     methods: {
-      pageChange(p){
-        window.location.href = `/smartGarden/manager.php?s=/Schedules/timeList/p/${p}.html`
+      showEditDialog(row) {
+        this.editForm = row
+        this.editDialog = true
       },
-      doCreate(){
+      doEdit() {},
+      doQuery() {
+        DMS.ajaxPost('__CONTROLLER__/getTimeList', {
+          "currentPage": this.currentPage
+        }, res => {
+          this.tableData = res.list;
+          this.totalNumber = res.totalNumber * 1;
+        })
+      },
+      pageChange(p) {
+        // window.location.href = `/smartGarden/manager.php?s=/Schedules/timeList/p/${p}.html`
+        this.currentPage = p;
+        this.doQuery();
+      },
+      doCreate() {
         this.$refs.createForm.validate(r => {
-          if(r){
-            DMS.ajaxPost("__CONTROLLER__/timeAdd",{
+          if (r) {
+            DMS.ajaxPost("__CONTROLLER__/timeAdd", {
               info: this.newData
             }, res => {
-              if(res.status === 1){
+              if (res.status === 1) {
                 this.$alert('添加成功！', '通知', {
-                   confirmButtonText: '确定',
-                   callback: action => {
-                     this.createDialog = false
-                     window.location.reload()
-                   }
-                 })
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    this.createDialog = false
+                    window.location.reload()
+                  }
+                })
+              } else {
+                this.$alert('添加失败！', '通知', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    this.createDialog = false
+                    window.location.reload()
+                  }
+                })
               }
+            })
+          }
+        })
+      },
+      timeDelete(row) {
+        DMS.ajaxPost('__CONTROLLER__/timeDelete', {
+          "id": row.id
+        }, res => {
+          if (res.status === 1) {
+            this.$alert('删除成功！', '通知', {
+              confirmButtonText: '确定',
+              callback: action => {
+                window.location.reload()
+              }
+            })
+          } else {
+            this.$alert('删除失败！', '通知', {
+              confirmButtonText: '确定',
             })
           }
         })

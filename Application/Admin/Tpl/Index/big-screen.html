@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>大屏展示 | 智慧园林</title>
+  <!-- Vue, 间距工具类 相关 -->
+  <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+  <style media="screen">
+    :root {
+      --red: #FC3D4F;
+      --white: #fff;
+    }
+
+    #BIGSCREEN {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url(__ROOT__/Public/Admin/Image/bigScreen/bg-star.png);
+      background-size: cover;
+      background-position: center;
+    }
+
+    .text-white {
+      color: var(--white);
+    }
+
+    .text-bold{
+      font-weight: bold;
+    }
+
+    #BIGSCREEN .left {
+      width: 25%;
+    }
+
+    #BIGSCREEN .left .data-item+.data-item{
+      margin-top: 24px;
+    }
+
+    #BIGSCREEN .left .data-item .title{
+      color: var(--white);
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    #BIGSCREEN .left .data-item:nth-child(1) .number{
+      color: #2DF9EE;
+    }
+
+    #BIGSCREEN .left .data-item:nth-child(2) .number{
+      color: #4BA3F9;
+    }
+
+    #BIGSCREEN .left .data-item:nth-child(3) .number{
+      color: var(--red);
+    }
+
+    #BIGSCREEN .left .data-item .number{
+      font-size: 56px;
+    }
+
+    #BIGSCREEN .left .data-item .c-items{
+      color: #fff;
+      font-size: 12px;
+    }
+
+    #BIGSCREEN .left .data-item .c-items .c-item:nth-child(1) .c-number{
+      color: #F8CC2E;
+    }
+
+    #BIGSCREEN .left .data-item .c-items .c-item:nth-child(2) .c-number{
+      color: var(--red);
+    }
+
+    #BIGSCREEN .left .data-item .c-items .c-item .c-label{
+      color: #ccc;
+    }
+
+    #BIGSCREEN .left .chart-box #employee-chart{
+      height: 300px;
+    }
+
+    #BIGSCREEN .middle {
+      flex-grow: 1
+    }
+
+    #BIGSCREEN .right {
+      width: 35%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="BIGSCREEN">
+    <div class="flex justify-between items-center text-white p3">
+      <h1>
+        XX园林定位系统
+      </h1>
+      <p>
+        {{ today.getFullYear() }}年{{ today.getMonth() + 1 }}月{{ today.getDate() }}日
+      </p>
+    </div>
+    <div class="flex px3">
+      <div class="left">
+        <div v-for="([ title, num, cItems]) in bigData" :key="title" class="data-item">
+          <div class="title">{{ title }}</div>
+          <div class="flex items-center">
+            <div class="number">
+              {{ num }}
+            </div>
+            <div class="ml3 c-items">
+              <div class="c-item" v-for="([label, cNum]) in cItems" :key="label">
+                <span class="c-label">{{ label }}：</span>
+                <span class="c-number">{{ cNum }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-box">
+          <div class="text-white mt4 text-bold">
+            在岗情况占比
+          </div>
+          <canvas
+            id="employee-chart"
+          ></canvas>
+        </div>
+      </div>
+      <div class="middle">
+
+      </div>
+      <div class="right">
+
+      </div>
+    </div>
+  </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+<script>
+  const BIGSCREEN = new Vue({
+    el: '#BIGSCREEN',
+    data() {
+      return {
+        today: new Date(),
+        bigData: [
+          [
+            '总设备数',
+            332,
+            [
+              ['在线设备', 278],
+              ['离线设备', 54]
+            ]
+          ],
+          [
+            '总员工数',
+            278,
+            [
+              ['在岗员工', 19],
+              ['离岗员工', 242],
+              ['未上岗', 17],
+            ]
+          ],
+          [
+            '异常情况',
+            132,
+            [
+              ['迟到', 19],
+              ['旷工', 242],
+              ['早退', 21],
+            ]
+          ]
+        ],
+        chartData: {
+    			legend: false,
+    			tooltips: false,
+    			elements: {
+    				arc: {
+    					backgroundColor: ['#D3AE2C', '#D63548', '#A4D831', '#0573EA'],
+    				}
+    			}
+    		}
+      }
+    },
+    mounted(){
+  		var chart = new Chart('chart-0', {
+  			type: 'pie',
+  			data: data,
+  			options: options
+  		});
+
+    },
+    methods: {
+
+    }
+  })
+</script>
+
+</html>

@@ -1,156 +1,162 @@
 <link href="{:C('ADMIN_JS_PATH')}/layui/css/layui.css" rel="stylesheet">
-<div class="padding-md">
-    <!-- 面包屑导航 -->
-    <div>
-        <ul class="breadcrumb">
-            当前位置：
-            <li><a href="#">主页</a></li>
-            <li><a href="__CONTROLLER__/leaveList">请假列表</a></li>
-            <li><a href="#">请假申请</a></li>
-        </ul>
-    </div>
-    <div class="smart-widget widget-dark-blue">
-        <div class="smart-widget-inner padding-md">
-            <div class="smart-widget-body">
-                <div class="header-text">
-                    请假申请
+<div class="padding-md" id="APPLYEXCHANGE">
+  <div class="smart-widget" style="margin-bottom: 1px;">
+    <div class="smart-widget-inner">
+      <div class="smart-widget-body">
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item>
+            <a href="">首页</a>
+          </el-breadcrumb-item>
+          <el-breadcrumb-item>
+            考勤管理
+          </el-breadcrumb-item>
+          <el-breadcrumb-item>
+            考勤统计
+          </el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
+      <el-divider></el-divider>
+      <el-row>
+        <el-col :offset="8" :span="8">
+          <el-form :model="applyInfo" label-width="100px" ref="mainForm" :rules="{
+            date: [
+              { required: true, message: '请选择换班日期！', trigger: 'blur' },
+            ],
+            applicant: [
+              { required: true, message: '请输入申请人！', trigger: 'blur' },
+            ],
+            time: [
+              { required: true, message: '请选择时间！', trigger: 'blur' },
+            ],
+            remark: [
+              { required: true, message: '请输入备注！', trigger: 'blur' },
+            ],
+          }">
+            <el-row :gutter="12">
+              <el-col :span="12">
+                <el-form-item prop="applicant" label="申请人">
+                  <el-input v-model="applyInfo.applicant" disabled/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <div class="flex items-center">
+                  <el-input v-model="applyInfo.job_number" class="mr2">
+                  </el-input>
+                  <el-button icon="el-icon-search" type="primary" @click="queryEmployee">
+                    查询
+                  </el-button>
                 </div>
-                <form class="form-horizontal no-margin" id="search_form">
-                    <div class="form-group">
-                        <label class="control-label col-md-2">员工搜索</label>
-                        <div class="col-md-6">
-                            <input type="text" class="form-control" id="keyword" placeholder="请输入员工号/手机号">
-                        </div>
-                        <a href="javascript:getMemberInfo();" class="btn btn-sm btn-success">查询</a>
-                    </div>
-                </form>
-                <form class="form-horizontal no-margin hide" method="post" id="form">
-                    <input type="hidden" class="form-control" name="info[userid]" id="userid">
-                    <input type="hidden" class="form-control" name="info[machine_id]" id="machine_id">
-                    <div class="form-group">
-                        <label class="control-label col-md-2">员工号</label>
-                        <div class="col-md-6">
-                            <input type="text" class="form-control" name="info[job_number]" id="job_number">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-2">姓名</label>
-                        <div class="col-md-6">
-                            <input type="text" class="form-control" name="info[realname]" id="realname">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-2">请假开始时间</label>
-                        <div class="col-md-6">
-                        <input type="text" class="form-control time-input" name="info[start_time]" id="start_time" placeholder="起始时间">
-                        </div>
-                        </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-2">请假结束时间</label>
-                        <div class="col-md-6">
-                        <input type="text" class="form-control time-input" name="info[end_time]" id="end_time" placeholder="结束时间">
-                        </div>
-                        </div>
-                    <div class="text-center m-top-md">
-                        <button type="submit" class="btn btn-info" id="sub">提交</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+              </el-col>
+            </el-row>
+            <el-form-item prop="date" label="请假日期">
+              <el-date-picker
+                style="width:100%;"
+                v-model="applyInfo.date"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                type="datetimerange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                align="right">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item prop="targetEmployee" label="申请类型">
+              <el-radio v-model="applyInfo.type" :label="1">请假</el-radio>
+              <el-radio v-model="applyInfo.type" :label="2">休假</el-radio>
+            </el-form-item>
+            <el-form-item prop="remark" label="备注">
+              <el-input
+                type="textarea"
+                :rows="6"
+                v-model="applyInfo.remark">
+              </el-input>
+            </el-form-item>
+          </el-form>
+          <div class="row justify-center my4">
+            <el-button @click="$refs.mainForm.resetFields()">重置</el-button>
+            <el-button type="primary" class="ml4" @click="submit">提交</el-button>
+          </div>
+        </el-col>
+      </el-row>
     </div>
+  </div>
 </div>
-<script src="{:C('ADMIN_JS_PATH')}/jquery.validate.min.js" type="text/javascript"></script>
-<script src="{:C('ADMIN_JS_PATH')}/layui/layui.js"></script>
-<script src="{:C('ADMIN_JS_PATH')}/time.js"></script>
 <script type="text/javascript">
-    $(document).ready(function(){
-        layui.use('laydate', function(){
-            var laydate = layui.laydate;
-            var start = laydate.render({
-                elem: '#start_time',
-                type: 'datetime',
-                theme: 'grid',
-                festival: true, //显示节日
-                calendar: true,
-                min:1,
-                max:7,
-                done: function(value, date){
-                    end.config.min = start.config.dateTime;
-                    end.config.max.year = date.year;
-                    end.config.max.month = date.month-1;
-                    end.config.max.date = date.date;
-                    end.config.max.hours = 23;
-                    end.config.max.minutes = 59;
-                    end.config.max.seconds = 59;
-                }
-            });
-            var end = laydate.render({
-                elem: '#end_time',
-                type: 'datetime',
-                theme: 'grid',
-                festival: true, //显示节日
-                calendar: true,
-                min:1,
-                max:7,
-                done: function(value, date){
-                    start.config.max = end.config.dateTime;
-                    start.config.min.year = date.year;
-                    start.config.min.month = date.month-1;
-                    start.config.min.date = date.date;
-                    start.config.min.hours = 00;
-                    start.config.min.minutes = 00;
-                    start.config.min.seconds = 00;
-                }
-            });
-        });
-    });
-    // 查询操作
-    function getMemberInfo(){
-        var keywords = $('#keyword').val();
-        if(!keywords){
-            $("#form").addClass("hide");
-            layer.msg("请输入员工号/手机号");
-            return;
+  const APPLYEXCHANGE = new Vue({
+    el: '#APPLYEXCHANGE',
+    data(){
+      return {
+        applyInfo: {
+          job_number: '',
+          date: '',
+          applicant: '',
+          type: 1,
+          time: '',
+          remark: '',
+          user_id:'',
+          machine_id:'',
         }
-        DMS.ajaxPost("__CONTROLLER__/getMemberInfo",{keywords:keywords},function(ret){
-            if(ret.status==1){
-                if(ret.data.machine_id > 0){
-                    $("#form").removeClass("hide");
-                    $("#job_number").val(ret.data.job_number);
-                    $("#realname").val(ret.data.realname);
-                    $("#userid").val(ret.data.userid);
-                    $("#machine_id").val(ret.data.machine_id);
-                }else{
-                    $("#form").addClass("hide");
-                    layer.msg("请先给员工绑定设备", {icon: 0});
-                    return;
-                }
-            }else{
-                $("#form").addClass("hide");
-                layer.msg("无此员工信息", {icon: 0});
-            }
+      }
+    },
+    methods: {
+      submit(){
+          info = {
+              "date[0]": this.applyInfo.date[0],
+              "date[1]": this.applyInfo.date[1],
+              "user_id":this.applyInfo.user_id,
+              "machine_id":this.applyInfo.machine_id,
+              "remark":this.applyInfo.remark,
+          }
+          console.log(info)
+        this.$refs.mainForm.validate(r => {
+          if(r){
+            // 这里代表表单验证通过，即将提交数据到后台
+              console.log('提交数据至后台')
+
+              DMS.ajaxPost('__CONTROLLER__/leaveApply',info,ref =>{
+                  this.$message({
+                  message: '请假成功',
+                  type: 'success'
+              });
+              })
+          }
         })
-    }
-    $(function(){
-        $("#form").validate({
-            submitHandler:function(form){
-                save();
-            }
-        });
+      },
+      // 查询员工信息
+      queryEmployee(){
+          param = {
+              "keywords":this.applyInfo.job_number
+          }
+          if(!param.keywords){
+              this.$message({
+                  message: '请输入员工号/手机号',
+                  type: 'warning'
+              });
+              return;
+          }
+          DMS.ajaxPost("__CONTROLLER__/getMemberInfo",param,ret =>{
+              if(ret.status==1){
+              if(ret.data.machine_id > 0){
+                  this.applyInfo.job_number = ret.data.job_number;
+                  this.applyInfo.applicant = ret.data.realname;
+                  this.applyInfo.user_id = ret.data.userid;
+                  this.applyInfo.machine_id = ret.data.machine_id;
+              }else{
+                  this.$message({
+                      message: '请先给员工绑定设备',
+                      type: 'warning'
+                  });
+                  return;
+              }
+          }else
+          {
+              this.$message({
+                  message: '无此员工信息',
+                  type: 'warning'
+              });
+          }
+          })
+          }
+      }
     })
-    function save() {
-        DMS.ajaxPost("__CONTROLLER__/leaveApply",$('#form').serialize(),function(ret,err){
-            if(ret.status==1){
-                DMS.success(ret.info,1000,function(){
-                    if(ret.url){
-                        window.location.href = ret.url;
-                    }else{
-                        window.location.href = window.location.href;
-                    }
-                });
-            }else{
-                layer.msg(ret.info, {icon: 0});
-            }
-        })
-    }
 </script>

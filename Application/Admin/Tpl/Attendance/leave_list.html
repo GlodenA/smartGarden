@@ -8,10 +8,10 @@
             <a href="">首页</a>
           </el-breadcrumb-item>
           <el-breadcrumb-item>
-            考勤管理
+            请假管理
           </el-breadcrumb-item>
           <el-breadcrumb-item>
-            考勤统计
+            换班申请
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -35,23 +35,48 @@
               { required: true, message: '请输入备注！', trigger: 'blur' },
             ],
           }">
+            <el-row :gutter="12">
+              <el-col :span="12">
+                <el-form-item prop="applicant" label="申请人">
+                  <el-input v-model="applyInfo.applicant" disabled/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <div class="flex items-center">
+                  <el-input v-model="applyInfo.job_number" class="mr2">
+                  </el-input>
+                  <el-button icon="el-icon-search" type="primary" @click="queryEmployee">
+                    查询
+                  </el-button>
+                </div>
+              </el-col>
+            </el-row>
+            <el-row :gutter="12">
+              <el-col :span="12">
+                <el-form-item prop="targetEmployee" label="换班人">
+                  <el-input v-model="applyInfo.targetEmployee" disabled/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <div class="flex items-center">
+                  <el-input v-model="applyInfo.job_number" class="mr2">
+                  </el-input>
+                  <el-button icon="el-icon-search" type="primary" @click="queryEmployee">
+                    查询
+                  </el-button>
+                </div>
+              </el-col>
+            </el-row>
             <el-form-item prop="date" label="换班日期">
               <el-date-picker
-                :editable="false"
+                style="width:100%;"
                 v-model="applyInfo.date"
-                type="date"
-                style="width:100%;">
+                type="datetimerange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                align="right">
               </el-date-picker>
-            </el-form-item>
-            <el-form-item prop="applicant" label="申请人">
-              <el-input v-model="applyInfo.applicant"/>
-            </el-form-item>
-            <el-form-item prop="targetEmployee" label="换班人">
-              <el-input v-model="applyInfo.targetEmployee"/>
-            </el-form-item>
-            <el-form-item prop="time" label="时间">
-              <el-time-picker v-model="applyInfo.time" style="width:100%;">
-              </el-time-picker>
             </el-form-item>
             <el-form-item prop="remark" label="备注">
               <el-input
@@ -76,10 +101,10 @@
     data(){
       return {
         applyInfo: {
+          job_number: '',
           date: '',
           applicant: '',
           targetEmployee: '',
-          time: '',
           remark: ''
         }
       }
@@ -92,6 +117,10 @@
             console.log('提交数据至后台')
           }
         })
+      },
+      // 查询员工信息
+      queryEmployee(){
+
       }
     }
   })
