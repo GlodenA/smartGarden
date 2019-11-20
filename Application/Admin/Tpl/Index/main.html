@@ -117,6 +117,98 @@
 			<i class="el-icon-plus"></i>
 		</el-col>
 	</el-row>
+	<!--上午-->
+	<el-row :gutter="20" class="px4 real-time-monitor flex items-stretch py2"id="am">
+		<el-col :span="6" >
+			<p>上午考勤统计</p>
+			<h1 class="m0">
+				&nbsp;
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>正常上班打卡</p>
+			<h1 class="m0">
+				{$am_t_normal_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>迟到</p>
+			<h1 class="m0">
+				{$am_late_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>旷工</p>
+			<h1 class="m0">
+				{$am_absenteeism_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>早退</p>
+			<h1 class="m0">
+				{$am_leave_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>正常下班打卡</p>
+			<h1 class="m0">
+				{$am_d_normal_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>异常情况</p>
+			<h1 class="m0">
+				{$am_abnormal_count|default=0}
+			</h1>
+		</el-col>
+
+	</el-row>
+	<!--下午-->
+	<el-row :gutter="20" class="px4 real-time-monitor flex items-stretch py2" id="pm">
+		<el-col :span="6" >
+			<p>下午考勤统计</p>
+			<h1 class="m0">
+				&nbsp;
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>正常上班打卡</p>
+			<h1 class="m0">
+				{$pm_t_normal_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>迟到</p>
+			<h1 class="m0">
+				{$pm_late_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>旷工</p>
+			<h1 class="m0">
+				{$pm_absenteeism_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>早退</p>
+			<h1 class="m0">
+                {$pm_leave_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>正常下班打卡</p>
+			<h1 class="m0">
+				{$pm_d_normal_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>异常情况</p>
+			<h1 class="m0">
+				{$pm_abnormal_count|default=0}
+			</h1>
+		</el-col>
+
+	</el-row>
 
 	<el-divider></el-divider>
 	<div class="flex justify-between items-center">
@@ -248,12 +340,37 @@
 			}
 			,
 			getData(){
-				DMS.ajaxPost('__MODULE__/Index/main' , {
+				DMS.ajaxPost('__MODULE__/Index/mainPost' , {
 					page: null,
 				}, res => {
 					var option=[];
 					this.tableData=res['list_today'];
+					for(var a=0;a<res['list_today'].length;a++){
+						//判断类型
+						switch (res['list_today'][a]['type']) {
+							case '2':
+								res['list_today'][a]['type']='远离区域报警';
+								break;
+							case '3':
+								res['list_today'][a]['type']='低电量报警';
+								break;
+							case '4':
+								res['list_today'][a]['type']='迟到报警';
+								break;
+							case '5':
+								res['list_today'][a]['type']='旷工报警';
+								break;
+							case '6':
+								res['list_today'][a]['type']='早退报警';
+								break;
+							case '7':
+								res['list_today'][a]['type']='怠工报警';
+								break;
+						}
 
+					}
+
+					console.log(res['list_today'])
 					for (var a=0;a<res['options'].length;a++){
 						option.push(res['options'][a].showname);
 					}
@@ -261,6 +378,8 @@
 					//遍历一次useroption，给各种东西进行赋值
 					var userOption=[];
 					var userOptionValue=[];
+					var am=true;
+					var pm=true;
 					for (var a=0;a<res['userOptions'].length;a++){
 						switch (res['userOptions'][a]) {
 							case '1':
@@ -293,13 +412,21 @@
 								break;
 							case '8':
 								userOption.push('上午考勤统计');
-								userOptionValue.push(res['morning']);
+								am=false;
+								//document.getElementById("am").style.display = 'block';
 								break;
 							case '9':
 								userOption.push('下午考勤统计');
-								userOptionValue.push(res['afternoon']);
+								pm=false;
+								//document.getElementById("pm").style.display = 'block';
 								break;
 						}
+					}
+					if (am){
+						document.getElementById("am").style.display = 'none';
+					}
+					if (pm){
+						document.getElementById("pm").style.display = 'none';
 					}
 					this.selectedRealTimeMenus=userOption;//用户拥有的option的值   编辑打开的页面里面选中的选项
 					this.realTimeMonitorDataLabelArr=userOption;//用户拥有的option的值    在首页展示的选项
@@ -316,4 +443,6 @@
 		}
 	})
 	main.getData();
+
+
 </script>
