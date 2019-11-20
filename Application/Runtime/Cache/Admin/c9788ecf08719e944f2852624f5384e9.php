@@ -54,9 +54,7 @@
             applicant: [
               { required: true, message: '请输入申请人！', trigger: 'blur' },
             ],
-            targetEmployee: [
-              { required: true, message: '请输入申请类型！', trigger: 'blur' },
-            ],
+
             time: [
               { required: true, message: '请选择时间！', trigger: 'blur' },
             ],
@@ -75,6 +73,7 @@
               <el-date-picker
                 style="width:100%;"
                 v-model="applyInfo.date"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 type="datetimerange"
                 range-separator="至"
                 start-placeholder="开始日期"
@@ -83,7 +82,7 @@
               </el-date-picker>
             </el-form-item>
             <el-form-item prop="applicant" label="申请人">
-              <el-input v-model="applyInfo.applicant"/>
+              <el-input v-model="applyInfo.applicant" disabled/>
             </el-form-item>
             <el-form-item prop="targetEmployee" label="申请类型">
               <el-radio v-model="applyInfo.type" :label="1">请假</el-radio>
@@ -117,25 +116,73 @@
           applicant: '',
           type: 1,
           time: '',
-          remark: ''
+          remark: '',
+          user_id:'',
+          machine_id:'',
         }
       }
     },
     methods: {
       submit(){
+          info = {
+              "date[0]": this.applyInfo.date[0],
+              "date[1]": this.applyInfo.date[1],
+              "user_id":this.applyInfo.user_id,
+              "machine_id":this.applyInfo.machine_id,
+              "remark":this.applyInfo.remark,
+          }
+          console.log(info)
         this.$refs.mainForm.validate(r => {
           if(r){
             // 这里代表表单验证通过，即将提交数据到后台
-            console.log('提交数据至后台')
+              console.log('提交数据至后台')
+
+              DMS.ajaxPost('/manager.php?s=/Attendance/leaveApply',info,ref =>{
+                  this.$message({
+                  message: '请假成功',
+                  type: 'success'
+              });
+              })
           }
         })
       },
       // 查询员工信息
       queryEmployee(){
-
+          param = {
+              "keywords":this.applyInfo.job_number
+          }
+          if(!param.keywords){
+              this.$message({
+                  message: '请输入员工号/手机号',
+                  type: 'warning'
+              });
+              return;
+          }
+          DMS.ajaxPost("/manager.php?s=/Attendance/getMemberInfo",param,ret =>{
+              if(ret.status==1){
+              if(ret.data.machine_id > 0){
+                  this.applyInfo.job_number = ret.data.job_number;
+                  this.applyInfo.applicant = ret.data.realname;
+                  this.applyInfo.user_id = ret.data.userid;
+                  this.applyInfo.machine_id = ret.data.machine_id;
+              }else{
+                  this.$message({
+                      message: '请先给员工绑定设备',
+                      type: 'warning'
+                  });
+                  return;
+              }
+          }else
+          {
+              this.$message({
+                  message: '无此员工信息',
+                  type: 'warning'
+              });
+          }
+          })
+          }
       }
-    }
-  })
+    })
 </script>
 
             <!-- <footer class="footer">

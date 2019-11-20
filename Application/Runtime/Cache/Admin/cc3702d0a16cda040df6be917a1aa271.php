@@ -217,7 +217,7 @@ const header = new Vue({
               </ul><?php endif; ?>
           </li><?php endforeach; endif; ?>
         <li>
-          <a href="" class="flex items-center">
+          <a href="/manager.php?s=/Index/bigScreen" class="flex items-center" target="_blank">
             <i class="el-icon-full-screen"></i>
             <span class="ml2">大屏展示</span>
           </a>
