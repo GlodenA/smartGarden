@@ -272,9 +272,31 @@ class MemberController extends BaseController
         }else{
             $memberInfo["parent_name"] ="";
         }
-        $this->assign($memberInfo);
+//        $this->assign($memberInfo);
         adminLog("查看用户" . $memberInfo["userid"] . "详情");
-        $this->display("member_info");
+//        $this->display("member_info");
+            if($memberInfo["sex"] == 1)
+            {
+                $memberInfo["sex_name"]="男";
+            }else if($memberInfo["sex"] == 2)
+            {
+                $memberInfo["sex_name"]="女";
+            }
+
+            if($memberInfo["job_status"] == 1)
+            {
+                $memberInfo['job_status_name']="在岗";
+            }else if($memberInfo["job_status"] == 2)
+            {
+                $memberInfo["job_status_name"]="未上岗";
+            }else
+            {
+                $memberInfo["job_status_name"]="离岗";
+            }
+
+            $memberInfo["position_name"] = M("Member_position")->where(array("id"=>$memberInfo["position"],"is_delete"=>0))->getField("name");
+        $ret["member_info"]=$memberInfo;
+        $this->ajaxReturn($ret);
     }
 
     /**
