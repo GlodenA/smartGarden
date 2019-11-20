@@ -297,7 +297,7 @@ class MemberController extends BaseController
     public function memberDelete()
     {
         if (IS_POST) {
-            $userid = I("userid");
+            $userid = I("usersid");
             M('Member')->where(array("userid" => $userid))->setField("is_delete", 1);
             M('Machine')->where(array("userid" => $userid, "is_delete" => 0))->setField("userid", 0);
             M('Machine_bind')->where(array("userid" => $userid, "status" => 1))->setField("status", 0);
@@ -918,6 +918,9 @@ class MemberController extends BaseController
 //
 //            }
 
+        }
+        else{
+            $where["is_delete"]=0;
         }
         //查询职位列表
         $positionList = M("Member_position")->where(array("is_delete" => 0))->select();
