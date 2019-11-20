@@ -150,7 +150,7 @@
                         <template #default="{ row }">
                             <el-link :underline="false" type="primary">详情</el-link>
                             <el-link :underline="false" type="primary">编辑</el-link>
-                            <el-link :underline="false" type="danger">删除</el-link>
+                            <el-link :underline="false" type="danger" @click="deleteMember(row)">删除</el-link>
                             <el-link :underline="false" type="primary">绑定设备</el-link>
                             <el-link :underline="false" type="primary">解绑设备</el-link>
                             <el-link :underline="false" type="primary">员工轨迹</el-link>
@@ -242,6 +242,7 @@
               positionList,
               tableSelections: [],
               tableData: [{
+                  userid: '',
                   realname: '',
                   sxe: 0,
                   position: '',
@@ -352,13 +353,36 @@
                           message: '员工添加成功',
                           type: 'success'
                       });
+                      window.location.reload();
                   }
                   else{
                       this.$message({
                       message: '员工添加失败，请检查信息',
                       type: 'error'
                   });
+              window.location.reload();
                   }
+          })
+          },
+          deleteMember(row){
+              console.log(row.userid);
+              DMS.ajaxPost('/manager.php?s=/Member/memberDelete',
+                  {"usersid":row.userid}
+                  , res => {
+                  if(res){
+                      this.$message({
+                          message: '员工删除成功',
+                          type: 'success'
+                      });
+                      window.location.reload();
+                  }
+                  else{
+                      this.$message({
+                      message: '员工删除失败',
+                      type: 'error'
+                  });
+              window.location.reload();
+          }
           })
           },
           changePosition(e) {
