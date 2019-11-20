@@ -1,3 +1,27 @@
 <include file="Index/header_common" />
+<div id="LOADINGOVERLAY" v-loading.fullscreen.lock="globalLoading"></div>
+<script type="text/javascript">
+  window.LOADINGOVERLAY = new Vue({
+    el: '#LOADINGOVERLAY',
+    data(){
+      return {
+        globalLoading: false
+      }
+    },
+    methods: {
+      startLoading(){
+        this.globalLoading = true
+      },
+      endLoading(){
+        this.globalLoading = false
+      }
+    },
+    watch: {
+      globalLoading(v){
+        console.log('Loading change: ', v);
+      }
+    }
+  })
+</script>
 {__CONTENT__}
 <include file="Index/footer_common"/>

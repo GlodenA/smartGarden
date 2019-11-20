@@ -217,11 +217,7 @@ const header = new Vue({
               </ul><?php endif; ?>
           </li><?php endforeach; endif; ?>
         <li>
-<<<<<<< HEAD
           <a href="/smartGarden/manager.php?s=/Index/bigScreen" class="flex items-center" target="_blank">
-=======
-          <a href="/manager.php?s=/Index/bigScreen" class="flex items-center" target="_blank">
->>>>>>> 8b8a78bac57e707262b86e0dc575d9db0058656a
             <i class="el-icon-full-screen"></i>
             <span class="ml2">大屏展示</span>
           </a>
