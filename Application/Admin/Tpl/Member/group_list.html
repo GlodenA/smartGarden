@@ -19,6 +19,11 @@
           </el-breadcrumb-item>
         </el-breadcrumb>
         <el-divider></el-divider>
+				<div class="">
+					<el-button icon="el-icon-plus" type="primary" @click="addDialog = true">
+						添加职位
+					</el-button>
+				</div>
 				<el-table :data="tableData">
 					<el-table-column prop="id" label="ID"></el-table-column>
 					<el-table-column prop="name" label="名称">
@@ -48,6 +53,22 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- 添加职位 -->
+	<el-dialog title="添加职位" label-width="100px" :visible.sync="addDialog" width="480px">
+		<el-form :model="addFormData" :rules="nameRules">
+			<el-form-item prop="name" label="名称">
+				<el-input v-model="addFormData.name"/>
+			</el-form-item>
+		</el-form>
+		<div slot="footer" class="flex justify-center">
+			<el-button type="primary">
+				提交
+			</el-button>
+		</div>
+	</el-dialog>
+
+	<!-- 添加下级 -->
 	<el-dialog title="添加下级" label-width="100px" :visible.sync="addChildDialog" width="480px">
 		<el-form :model="addChildFormData" :rules="nameRules">
 			<el-form-item prop="name" label="名称">
@@ -60,6 +81,8 @@
 			</el-button>
 		</div>
 	</el-dialog>
+
+	<!-- 编辑职位信息 -->
 	<el-dialog title="编辑职位信息" label-width="100px" :visible.sync="editDialog" width="480px">
 		<el-form :model="editFormData" :rules="nameRules">
 			<el-form-item prop="name" label="名称">
@@ -110,6 +133,10 @@
 				},
 				editDialog: false,
 				editFormData: {
+					name: ''
+				},
+				addDialog: false,
+				addFormData: {
 					name: ''
 				}
 			}
