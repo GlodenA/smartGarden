@@ -61,7 +61,7 @@
 							</el-form-item>
 						</el-form>
 						<div class="row justify-center">
-							<el-button type="primary">提交</el-button>
+							<el-button type="primary" @click="submit">提交</el-button>
 						</div>
 					</el-col>
 				</el-row>
@@ -92,14 +92,18 @@
 							info: this.info
 						}, res => {
 							if (res.status == 1) {
-								this.$message({
-				          showClose: true,
-				          message: '提交成功！',
-									type: 'success'
-				        });
-								window.loaction.reload()
+								this.$alert('提交成功！', '通知', {
+									confirmButtonText: '确定',
+									callback: action => {
+										window.location.reload()
+									}
+								})
+
 							} else {
-								DMS.error('' + ret.info + '', 0);
+
+								this.$alert('提交失败！', '通知', {
+									confirmButtonText: '确定',
+								})
 							}
 						})
 					}

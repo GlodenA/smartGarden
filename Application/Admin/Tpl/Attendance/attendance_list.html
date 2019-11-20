@@ -322,16 +322,22 @@
           remark
         },ret => {
           if(ret.status==1){
-            this.$alert('提交成功', '', {
+            this.$alert('提交成功！', '通知', {
               confirmButtonText: '确定',
-            });
-            this.edit.targetRow.remark = remark
+              callback: action => {
+                this.edit.targetRow.remark = remark
+                this.edit.dialog = false
+              }
+            })
+
           }else{
-            this.$alert('提交失败', '', {
+            this.$alert('提交成功！', '通知', {
               confirmButtonText: '确定',
+              callback: action => {
+                this.edit.dialog = false
+              }
             });
           }
-          this.edit.dialog = false
         })
       },
       exportExcel(){
