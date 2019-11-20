@@ -17,7 +17,7 @@
                 <div class="flex justify-end">
                     <el-form inline>
                         <el-form-item label="关键字">
-                            <el-input v-model="queryCondition.keyword" style="width:120px;"></el-input>
+                            <el-input v-model="queryCondition.keyword" placeholder="根据员工号和姓名查询" style="width:120px;"></el-input>
                         </el-form-item>
                         <el-form-item label="时间">
                             <el-date-picker
@@ -126,6 +126,7 @@
                             background
                             layout="prev, pager, next"
                             :total="totalNumber"
+                            :page-size="10"
                             :current-page="queryCondition.page"
                             @current-change="pageChange">
                     </el-pagination>
@@ -247,12 +248,15 @@
                 this.doQuery()
             },
             changePosition(e){
+                this.queryCondition.page = 1
                 this.doQuery()
             },
             changeWarningType(e){
+                this.queryCondition.page = 1
                 this.doQuery()
             },
             changeManager(e){
+                this.queryCondition.page = 1
                 this.doQuery()
             },
 

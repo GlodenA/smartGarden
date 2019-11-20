@@ -17,10 +17,16 @@
           </el-breadcrumb>
         </div>
         <el-divider></el-divider>
-        <div class="info-line padding-md">
+        <div class="flex justify-between items-center px2 mb2">
           <el-button type="primary" icon="el-icon-plus" @click="createDialog = true">
             添加时间段
           </el-button>
+          <div class="row items-center">
+            <el-input v-model="keywords"  placeholder="请输入名称" class="mr2" ></el-input>
+            <el-button type="primary" @click="keywordChange()">
+              查询
+            </el-button>
+          </div>
         </div>
         <div class="smart-widget-inner">
           <el-table :data="tableData">
@@ -107,6 +113,7 @@
         createDialog: false,
         currentPage:1,
         totalNumber: 0,
+        keywords:'',
         newData: {
           title: '',
           start_time: '',
@@ -119,9 +126,14 @@
       this.doQuery();
     },
     methods: {
+      keywordChange(){
+        this.currentPage = 1
+        this.doQuery()
+      },
       doQuery(){
         DMS.ajaxPost('__CONTROLLER__/getTimeList',
-                {"currentPage": this.currentPage}, res => {
+                {"currentPage": this.currentPage,
+                "keywords":this.keywords}, res => {
                   this.tableData=res.list;
                   this.totalNumber=res.totalNumber * 1;
                 })
@@ -146,7 +158,7 @@
                    }
                  })
               }else{
-                this.$alert('添加失败！', '通知', {
+                this.$alert('添加失败！失败原因：'+res.info, '通知', {
                   confirmButtonText: '确定',
                   callback: action => {
                     this.createDialog = false
@@ -169,7 +181,7 @@
                       }
                     })
                   }else{
-                    this.$alert('删除失败！', '通知', {
+                    this.$alert('删除失败！失败原因：'+res.info, '通知', {
                       confirmButtonText: '确定',
                     })
                   }
