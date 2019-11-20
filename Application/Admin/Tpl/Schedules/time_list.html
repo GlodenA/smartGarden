@@ -38,7 +38,7 @@
             </el-table-column>
             <el-table-column label="操作" prop="id">
               <template #default="{ row }">
-                <el-button type="text" @click="() => { window.location.href = `__CONTROLLER__/timeEdit/id/{row.id}` }">编辑</el-button>
+                <el-button type="text" @click="showEditDialog(row)">编辑</el-button>
                 <el-button type="text" @click="timeDelete(row)">删除</el-button>
               </template>
             </el-table-column>
@@ -71,10 +71,11 @@
         <el-time-picker v-model="editForm.end_time" style="width:100%;" value-format="HH:mm:ss">
         </el-time-picker>
       </el-form-item>
-      <el-form-item label="状态" prop="state">
-        <el-radio v-model="editForm.state" :label="1">正常</el-radio>
-        <el-radio v-model="editForm.state" :label="2">禁止</el-radio>
+      <el-form-item label="状态" prop="is_show">
+        <el-radio v-model="editForm.is_show" label="1">正常</el-radio>
+        <el-radio v-model="editForm.is_show" label="0">禁止</el-radio>
       </el-form-item>
+
     </el-form>
     <div slot="footer" class="row justify-center">
       <el-button type="primary" plain @click="editDialog = false">取消</el-button>
@@ -96,9 +97,9 @@
         <el-time-picker v-model="newData.end_time" style="width:100%;" value-format="HH:mm:ss">
         </el-time-picker>
       </el-form-item>
-      <el-form-item label="状态" prop="state">
-        <el-radio v-model="newData.state" label="1">正常</el-radio>
-        <el-radio v-model="newData.state" label="2">禁止</el-radio>
+      <el-form-item label="状态" prop="is_show">
+        <el-radio v-model="newData.is_show" label="1">正常</el-radio>
+        <el-radio v-model="newData.is_show" label="0">禁止</el-radio>
       </el-form-item>
     </el-form>
     <div slot="footer" class="row justify-center">
@@ -116,7 +117,8 @@
       id: "{$v['id']}",
       title: "{$v['title']}",
       start_time: "{$v['start_time']}",
-      end_time: "{$v['end_time']}"
+      end_time: "{$v['end_time']}",
+      is_show:"{$v['is_show']}",
     })
   </script>
 </volist>
@@ -151,14 +153,15 @@
           title: '',
           start_time: '',
           end_time: '',
-          state: '1'
+          is_show: '1'
         },
         editDialog: false,
         editForm: {
+          id:'',
           title: '',
           start_time: '',
           end_time: '',
-          state: '1'
+          is_show: ''
         }
       }
     },
@@ -170,7 +173,34 @@
         this.editForm = row
         this.editDialog = true
       },
-      doEdit() {},
+      doEdit() {
+        this.$refs.editForm.validate(r => {
+          if(r){
+            DMS.ajaxPost("__CONTROLLER__/timeEdit",{
+              id:this.editForm.id,
+              info: this.editForm
+            }, res => {
+              if(res.status === 1){
+                this.$alert('添加成功！', '通知', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    this.createDialog = false
+                    window.location.reload()
+                  }
+                })
+              }else{
+                this.$alert('添加失败！失败原因：'+res.info, '通知', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    this.createDialog = false
+                    window.location.reload()
+                  }
+                })
+              }
+            })
+          }
+        })
+      },
       keywordChange(){
         this.currentPage = 1
         this.doQuery()
