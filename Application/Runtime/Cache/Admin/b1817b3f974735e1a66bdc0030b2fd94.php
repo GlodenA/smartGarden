@@ -27,6 +27,30 @@
     </head>
     <body class="overflow-hidden">
 
+<div id="LOADINGOVERLAY" v-loading.fullscreen.lock="globalLoading"></div>
+<script type="text/javascript">
+  window.LOADINGOVERLAY = new Vue({
+    el: '#LOADINGOVERLAY',
+    data(){
+      return {
+        globalLoading: false
+      }
+    },
+    methods: {
+      startLoading(){
+        this.globalLoading = true
+      },
+      endLoading(){
+        this.globalLoading = false
+      }
+    },
+    watch: {
+      globalLoading(v){
+        console.log('Loading change: ', v);
+      }
+    }
+  })
+</script>
 <link href="<?php echo C('ADMIN_JS_PATH');?>/layui/css/layui.css" rel="stylesheet">
 <div class="padding-md" id="APPLYEXCHANGE">
   <div class="smart-widget" style="margin-bottom: 1px;">

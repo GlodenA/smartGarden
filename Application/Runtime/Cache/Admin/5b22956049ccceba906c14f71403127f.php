@@ -18,15 +18,39 @@
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/layer/layer.js"></script>
       <!-- Vue, element, 间距工具类 相关 -->
-      <link rel="stylesheet" href="/Public/Admin/Css//util/flex.css">
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/Css//util/flex.css">
       <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
       <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
-      <link rel="stylesheet" href="/Public/Admin/element/index.css">
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/element/index.css">
       <script src="https://unpkg.com/element-ui/lib/index.js"></script>
       <!-- Vue, element, 间距工具类 相关 -->
     </head>
     <body class="overflow-hidden">
 
+<div id="LOADINGOVERLAY" v-loading.fullscreen.lock="globalLoading"></div>
+<script type="text/javascript">
+  window.LOADINGOVERLAY = new Vue({
+    el: '#LOADINGOVERLAY',
+    data(){
+      return {
+        globalLoading: false
+      }
+    },
+    methods: {
+      startLoading(){
+        this.globalLoading = true
+      },
+      endLoading(){
+        this.globalLoading = false
+      }
+    },
+    watch: {
+      globalLoading(v){
+        console.log('Loading change: ', v);
+      }
+    }
+  })
+</script>
 <div class="padding-md" id="WARNINGLIST">
     <div class="smart-widget" style="margin-bottom: 1px;">
         <div class="smart-widget-inner">
@@ -115,7 +139,7 @@
                             <template #default="{ row }">
                                 <el-link type="danger"
                                          :underline="false"
-                                         @click.native="window.open(`/manager.php?s=/Machine/machineOrbit/machine_id/${row.machine_imei}/searchTime/${formatedDateYmd(row.add_time)}`, '_self')"
+                                         @click.native="window.open(`/smartGarden/manager.php?s=/Machine/machineOrbit/machine_id/${row.machine_imei}/searchTime/${formatedDateYmd(row.add_time)}`, '_self')"
                                 >
                                     {{
                                     new Map([
@@ -244,7 +268,7 @@
                 return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
             },
             showEmployeeDetail(row){
-                DMS.ajaxPost('/manager.php?s=/Member/memberInfo',
+                DMS.ajaxPost('/smartGarden/manager.php?s=/Member/memberInfo',
                     {
                         "userid" : row.userid
                     }, res => {
@@ -261,7 +285,7 @@
                     "type":this.queryCondition.warningType,
                     "page":this.queryCondition.page,
                 }
-                DMS.ajaxPost('/manager.php?s=/WarningMessage/getWarningMessageList',
+                DMS.ajaxPost('/smartGarden/manager.php?s=/WarningMessage/getWarningMessageList',
                     param, res => {
                         this.tableData=res.WARNINGLIST;
                         this.totalNumber=res.totalNumber * 1;
@@ -291,7 +315,7 @@
                     "page":this.queryCondition.page,
                 }
 
-                window.open('/manager.php?s=/WarningMessage/warningExcel/keywords/'+param["keyword"]+'/type/'+param["type"]+'/time/'+param["time"]+'/position/'+param["position"]+'/parent_id/'+param["parent_id"]
+                window.open('/smartGarden/manager.php?s=/WarningMessage/warningExcel/keywords/'+param["keyword"]+'/type/'+param["type"]+'/time/'+param["time"]+'/position/'+param["position"]+'/parent_id/'+param["parent_id"]
                     ,"_self");
             }
         }
