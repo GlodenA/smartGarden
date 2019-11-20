@@ -1171,4 +1171,85 @@ class MachineController extends BaseController{
             $this->display('schedules_change');
         }
     }
+
+
+    //设备列表
+    public function getMachineList(){
+
+        //关键字
+        $keyword= I('keyword');
+        if($keyword){
+            $where['c.machine_imei|m.realname'] = array('like', '%'.$keyword.'%');
+        }
+        //设备状态
+        $machine_status = I("status");
+        if($machine_status){
+            if($machine_status == 1){
+                //在线
+                $where['c.machine_status'] = array(array("eq","Stop"),array("eq","Move"),"or");
+            }
+            if($machine_status == 2){
+                //离线
+                $where['c.machine_status'] = array("eq","Offline");
+            }
+        }
+        $where["c.is_delete"] = 0;
+
+        //职位
+        $position = I("position");
+        if($position){
+            $where["m.position"] = $position;
+        }
+        $parent_id = I("parent_id");
+        if($parent_id){
+            $whereParent["m.parent_id"] = $parent_id;
+            $wherePositon["m.userid"] = $parent_id;
+            $whereMember["_complex"] = array($whereParent,$wherePositon,'_logic'=>'or');
+            $where["_complex"] = $whereMember;
+        }
+        $count =M("Machine")->alias('c')->join("LEFT JOIN __MEMBER__ m ON c.userid = m.userid")->where($where)->count();
+        $listRows=10;
+        $firstRow = $listRows*(I("page")-1);
+
+        $machineList = M("Machine")
+            ->alias('c')
+            ->join("LEFT JOIN __MEMBER__ m ON c.userid = m.userid")
+            ->where($where)
+            ->limit($firstRow.','.$listRows)
+            ->field("c.*,m.realname,m.job_number,m.mobile,m.parent_id,m.position")
+            ->order("c.add_time desc")
+            ->select();
+        if($machineList){
+            foreach($machineList as $k=>$v){
+                $machineList[$k]['schedules_name'] = M("Schedules_setting")->where(array('schedules_id'=>$v['schedules_id']))->getField("schedules_name");
+                if($v['area_id']){
+                    $machineList[$k]['area_name'] = M('Area_map')->where(array('id'=>$v['area_id']))->getField('area_name');
+                }
+                if($v["parent_id"]>0){
+                    $machineList[$k]["parent_name"] = M("Member")->where(array("userid"=>$v["parent_id"],"is_delete"=>0))->getField("realname");
+                }else{
+                    $machineList[$k]["parent_name"] ="";
+                }
+                if($v["position"]>0){
+                    $machineList[$k]["position_name"] = M("Member_position")->where(array("id"=>$v["position"],"is_delete"=>0))->getField("name");
+                }else{
+                    $machineList[$k]["position_name"] ="";
+                }
+                if($v["machine_status"] == "Offline"){
+                    $machineList[$k]["machine_status"] = 2;
+                }elseif($v["machine_status"] == "Stop" || $v["machine_status"] == "Move"){
+                    $machineList[$k]["machine_status"] = 1;
+                }else{
+                    $machineList[$k]["machine_status"] = 3;
+                }
+            }
+        }
+
+
+        $ret["totalNumber"]= $count;
+        $ret["machineList"]= $machineList;
+        $this->ajaxReturn($ret);
+    }
+
+
 }
