@@ -6,9 +6,29 @@
     <!-- Vue, 间距工具类 相关 -->
     <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+    <style media="screen">
+      #BIGSCREEN{
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url(__ROOT__/Public/Admin/Image/bigScreen/bg-star.png);
+        background-size: cover;
+        background-position: center;
+      }
+    </style>
   </head>
   <body>
     <div id="BIGSCREEN">
+      <div class="flex justify-between items-center white">
+        <h1>
+          XX园林定位系统
+        </h1>
+      </div>
+      <p>
+        {{ today.getFullYear() }}-{{ today.getMonth() + 1 }}-{{ today.getDate() }}
+      </p>
     </div>
   </body>
   <script>
@@ -16,7 +36,7 @@
       el: '#BIGSCREEN',
       data(){
         return {
-          
+          today: new Date()
         }
       },
       methods: {

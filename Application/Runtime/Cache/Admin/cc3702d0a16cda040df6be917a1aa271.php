@@ -18,10 +18,10 @@
   <!-- <script src="<?php echo C('ADMIN_JS_PATH');?>/admin_template.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin.js"></script> -->
   <!-- Vue, element, 间距工具类 相关 -->
-  <link rel="stylesheet" href="/Public/Admin/Css//util/flex.css">
+  <link rel="stylesheet" href="/smartGarden/Public/Admin/Css//util/flex.css">
   <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
-  <link rel="stylesheet" href="/Public/Admin/element/index.css">
+  <link rel="stylesheet" href="/smartGarden/Public/Admin/element/index.css">
   <script src="https://unpkg.com/element-ui/lib/index.js"></script>
   <!-- Vue, element, 间距工具类 相关 -->
   <style>
@@ -55,7 +55,7 @@
     <header class="top-nav" id="HEADER">
       <div class="top-nav-inner">
         <div class="nav-header">
-          <img src="/Public/Admin/Image/index/logo.png" alt="">
+          <img src="/smartGarden/Public/Admin/Image/index/logo.png" alt="">
           <button type="button" class="navbar-toggle pull-left sidebar-toggle" id="sidebarToggleSM">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -63,7 +63,7 @@
           </button>
           <ul class="nav-notification pull-right">
             <li>
-              <a href="/manager.php?s=" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog fa-lg"></i></a>
+              <a href="/smartGarden/manager.php?s=" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog fa-lg"></i></a>
               <span class="badge badge-danger bounceIn">1</span>
               <ul class="dropdown-menu dropdown-sm pull-right user-dropdown">
                 <li class="user-avatar">
@@ -81,7 +81,7 @@
             </li>
           </ul>
 
-          <!-- <a href="/manager.php?s=" class="brand">
+          <!-- <a href="/smartGarden/manager.php?s=" class="brand">
 							<img src="<?php echo C('ADMIN_IMAGE_PATH');?>/cyyl_logo.png" />
 						</a> -->
         </div>
@@ -191,7 +191,7 @@ const header = new Vue({
     <div>
       <ul class="yl-side-menu">
         <li>
-          <a href="/manager.php?s=" class="flex items-center">
+          <a href="/smartGarden/manager.php?s=" class="flex items-center">
             <i class="el-icon-s-home"></i>
             <span class="ml2">首页</span>
           </a>
@@ -200,7 +200,7 @@ const header = new Vue({
         <?php if(is_array($__MENU__)): foreach($__MENU__ as $key=>$v): ?><li menu-id=<?php echo ($v['id']); ?>>
             <a class="flex justify-between items-center">
               <?php if($v['children']): else: ?>
-                href="/manager.php?s=/<?php echo ($v['c']); ?>/<?php echo ($v['a']); ?>/<?php echo ($v['data']); ?>"<?php endif; ?>
+                href="/smartGarden/manager.php?s=/<?php echo ($v['c']); ?>/<?php echo ($v['a']); ?>/<?php echo ($v['data']); ?>"<?php endif; ?>
 
               <div class="flex items-center">
                 <i class="fa fa-<?php echo ($v['icon_class']); ?> fa-lg"></i>
@@ -210,14 +210,14 @@ const header = new Vue({
             </a>
             <?php if($v['children']): ?><ul class="yl-side-menu--sub-menu">
                 <?php if(is_array($v['children'])): foreach($v['children'] as $key=>$r): ?><li>
-                    <a href="javascript:;" onclick="openItem(<?php echo ($r['id']); ?>,'/manager.php?s=/<?php echo ($r['c']); ?>/<?php echo ($r['a']); ?>/<?php echo ($r['data']); ?>')" id="menu-<?php echo ($r['id']); ?>">
+                    <a href="javascript:;" onclick="openItem(<?php echo ($r['id']); ?>,'/smartGarden/manager.php?s=/<?php echo ($r['c']); ?>/<?php echo ($r['a']); ?>/<?php echo ($r['data']); ?>')" id="menu-<?php echo ($r['id']); ?>">
                       <span><?php echo ($r['name']); ?></span>
                     </a>
                   </li><?php endforeach; endif; ?>
               </ul><?php endif; ?>
           </li><?php endforeach; endif; ?>
         <li>
-          <a href="" class="flex items-center">
+          <a href="/smartGarden/manager.php?s=/Index/bigScreen" class="flex items-center" target="_blank">
             <i class="el-icon-full-screen"></i>
             <span class="ml2">大屏展示</span>
           </a>
@@ -242,7 +242,7 @@ const header = new Vue({
 		<span class="primary-font"><i class="fa fa-home"></i> 当前位置：</span>
 		<span id="current_pos"></span>
 	</div> -->
-    <iframe name="center_frame" id="content-wrapper" src="/manager.php?s=/Index/main" frameborder="false" scrolling="auto" style="border:none;" width="100%" height="auto" frameborder="0" ></iframe>
+    <iframe name="center_frame" id="content-wrapper" src="/smartGarden/manager.php?s=/Index/main" frameborder="false" scrolling="auto" style="border:none;" width="100%" height="auto" frameborder="0" ></iframe>
 </div>
 
         </div>
@@ -300,14 +300,14 @@ const header = new Vue({
             }else{
                 Body.attr('scroll','no');
             }
-            // setInterval(function(){
-            //     getWarningMessage();
-            // },5000);
+            setInterval(function(){
+                getWarningMessage();
+            },5000);
         })
          var html = '';
         function getWarningMessage() {
             $.ajax({
-                url:'/manager.php?s=/Map/getWarningMessage',
+                url:'/smartGarden/manager.php?s=/Map/getWarningMessage',
                 data:{last_id:localStorage.getItem('last_id')},
                 dataType: 'json',
                 type:'post',
@@ -373,7 +373,7 @@ const header = new Vue({
                             }
                         }
                         $('#message-list').html(html);
-                        loadAudioFile('/Public/Admin/File/alarm.mp3');
+                        loadAudioFile('/smartGarden/Public/Admin/File/alarm.mp3');
                     }
                 }
             });
