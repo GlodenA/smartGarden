@@ -230,6 +230,8 @@ class CustomerController extends BaseController
                 session('admin_username',''.$data['username'].'');
                 session('admin_realname',''.$data['realname'].'');
                 session('admin_avatar',''.$data['avatar'].'');
+
+
             }
             $this->success("操作成功");
         }else{
