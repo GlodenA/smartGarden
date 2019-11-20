@@ -18,15 +18,39 @@
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/layer/layer.js"></script>
       <!-- Vue, element, 间距工具类 相关 -->
-      <link rel="stylesheet" href="/Public/Admin/Css//util/flex.css">
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/Css//util/flex.css">
       <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
       <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
-      <link rel="stylesheet" href="/Public/Admin/element/index.css">
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/element/index.css">
       <script src="https://unpkg.com/element-ui/lib/index.js"></script>
       <!-- Vue, element, 间距工具类 相关 -->
     </head>
     <body class="overflow-hidden">
 
+<div id="LOADINGOVERLAY" v-loading.fullscreen.lock="globalLoading"></div>
+<script type="text/javascript">
+  window.LOADINGOVERLAY = new Vue({
+    el: '#LOADINGOVERLAY',
+    data(){
+      return {
+        globalLoading: false
+      }
+    },
+    methods: {
+      startLoading(){
+        this.globalLoading = true
+      },
+      endLoading(){
+        this.globalLoading = false
+      }
+    },
+    watch: {
+      globalLoading(v){
+        console.log('Loading change: ', v);
+      }
+    }
+  })
+</script>
 <link href="<?php echo C('ADMIN_JS_PATH');?>/layui/css/layui.css" rel="stylesheet">
 <div class="padding-md" id="APPLYEXCHANGE">
   <div class="smart-widget" style="margin-bottom: 1px;">
