@@ -27,6 +27,30 @@
     </head>
     <body class="overflow-hidden">
 
+<div id="LOADINGOVERLAY" v-loading.fullscreen.lock="globalLoading"></div>
+<script type="text/javascript">
+  window.LOADINGOVERLAY = new Vue({
+    el: '#LOADINGOVERLAY',
+    data(){
+      return {
+        globalLoading: false
+      }
+    },
+    methods: {
+      startLoading(){
+        this.globalLoading = true
+      },
+      endLoading(){
+        this.globalLoading = false
+      }
+    },
+    watch: {
+      globalLoading(v){
+        console.log('Loading change: ', v);
+      }
+    }
+  })
+</script>
 <style media="screen">
   input[type=file]{
 		display: none;

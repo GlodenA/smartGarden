@@ -126,7 +126,7 @@
       doLogin(){
         this.$refs.loginForm.validate(r => {
           if(r){
-            DMS.ajaxPost("/index.php?s=/Index/login", {
+            DMS.ajaxPost("/manager.php?s=/Index/login", {
               'form-username': this.loginUser.username,
               'form-password': this.loginUser.password
             },function(ret){
