@@ -19,7 +19,7 @@ class CustomerController extends BaseController
         $this->adminDb = M('Admin');
     }
     //查询客户信息列表
-    public function customerList(){
+    public function customerAuthList(){
         $uid=I("uid");
         $username=I("username");
         //判断是否为空放进条件中
@@ -52,7 +52,79 @@ class CustomerController extends BaseController
         $this->assign('uid',$uid);
         $this->assign('username',$username);
         $this->assign('list',$list);
-        $this->display("CustomerManagement");
+        $this->display("Customer_Auth");
+    }
+    //查询客户信息列表
+    public function customerPWDList(){
+        $uid=I("uid");
+        $username=I("username");
+        //判断是否为空放进条件中
+        $where["status"]="1";
+        if($uid){
+            $where["uid"]=$uid;
+        }
+        if($username){
+            $where["username"]=$username;
+        }
+        if (session("admin_uid") != '1'){
+            $where["parent_id"]=$uid;
+        }
+        $count = $this->customerDb->where($where)->count();
+        $Page = new \Think\Page($count,5);
+        $list = $this->customerDb->limit($Page->firstRow.','.$Page->listRows)->where($where)->order('uid desc')->select();
+        foreach ($list as $key => $v) {
+            $whereGroup['id'] = $v['group_id'];
+            $list[$key]['group_name'] = $this->groupDb->where($whereGroup)->getField("title");
+        }
+        $number = $Page->parameter["p"];
+        if($number && $number > 0){
+            $number = ($Page->parameter["p"] - 1)*5;
+        }else{
+            $number = 0;
+        }
+        $this->assign('number',$number);
+        $show = $Page->show();
+        $this->assign('page',$show);
+        $this->assign('uid',$uid);
+        $this->assign('username',$username);
+        $this->assign('list',$list);
+        $this->display("Customer_PWDList");
+    }
+    //查询客户信息列表
+    public function customerList(){
+        $uid=I("uid");
+        $username=I("username");
+        //判断是否为空放进条件中
+        $where["status"]="1";
+        if($uid){
+            $where["uid"]=$uid;
+        }
+        if($username){
+            $where["username"]=$username;
+        }
+        if (session("admin_uid") != '1'){
+            $where["parent_id"]=$uid;
+        }
+        $count = $this->customerDb->where($where)->count();
+        $Page = new \Think\Page($count,10);
+        $list = $this->customerDb->limit($Page->firstRow.','.$Page->listRows)->where($where)->order('uid desc')->select();
+        foreach ($list as $key => $v) {
+            $whereGroup['id'] = $v['group_id'];
+            $list[$key]['group_name'] = $this->groupDb->where($whereGroup)->getField("title");
+        }
+        $number = $Page->parameter["p"];
+        if($number && $number > 0){
+            $number = ($Page->parameter["p"] - 1)*10;
+        }else{
+            $number = 0;
+        }
+        $this->assign('number',$number);
+        $show = $Page->show();
+        $this->assign('page',$show);
+        $this->assign('uid',$uid);
+        $this->assign('username',$username);
+        $this->assign('list',$list);
+        $this->display("Customer_List");
     }
     // 管理员信息浏览
     public function customerInfo(){
