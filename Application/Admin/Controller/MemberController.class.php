@@ -498,6 +498,7 @@ class MemberController extends BaseController
         $this->assign("menuList", $menuList);
         adminLog("查看职位列表");
         $this->display("group_list");
+
     }
 
     // 菜单添加
