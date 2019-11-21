@@ -142,10 +142,11 @@
 	<el-dialog :visible.sync="batchChangeBindDialog" title="批量换绑或者解除区域" width="480px">
 		<el-form label-width="100px">
 			<el-form-item label="关键字查询">
-				<el-input v-model="batchChangeBindDialogFormData.keyword"/>
-				<el-button type="primary">
-					查询
-				</el-button>
+				<el-input v-model="batchChangeBindDialogFormData.keyword">
+					<el-button type="primary" slot="suffix" size="small">
+						查询
+					</el-button>
+				</el-input>
 			</el-form-item>
 			<el-form-item label="解除区域">
 				<el-select style="width:100%;" v-model="batchChangeBindDialogFormData.area">

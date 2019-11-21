@@ -10,7 +10,7 @@
 <div class="padding-md" id="GROUPMANAGE">
 	<div class="smart-widget" style="margin-bottom: 1px;">
 		<div class="smart-widget-inner">
-			<div class="smart-widget-body">
+			<div class="smart-widget-body" v-show="rendered">
 				<el-breadcrumb separator="/">
 					<el-breadcrumb-item>
 						<a href="">首页</a>
@@ -163,6 +163,7 @@
 		el: '#GROUPMANAGE',
 		data() {
 			return {
+				rendered: false,
 				edit: {
 					dialog: false,
 					formData: {
@@ -335,6 +336,9 @@
 				this.doQuery()
 				// 这里进行分页查询
 			}
+		},
+		mounted(){
+			this.rendered = true
 		}
 	})
 </script>
