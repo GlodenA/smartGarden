@@ -26,15 +26,15 @@
 					<el-button icon="el-icon-plus" type="primary" @click="create.createDviceDialog = true">
 						添加设备
 					</el-button>
-					<el-form inline>
+					<el-form inline :model="queryCondition">
 						<el-form-item label="设备状态">
-							<el-select v-model="queryCondition.status" style="width:100px;">
-								<el-option v-for="(l, i) in ['全部', '在线', '离线']" :label="l" :key="i" :value="i">
+							<el-select v-model="queryCondition.status" style="width:100px;"  @change="changeStatus">
+								<el-option v-for="(l, i) in ['全部', '在线', '离线']" :label="l" :key="l" :value="i">
 								</el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item label="职位">
-							<el-select v-model="queryCondition.position" style="width:100px;">
+							<el-select v-model="queryCondition.position" style="width:100px;" @change="changePosition" >
 								<el-option label="全部" :value="0">
 								</el-option>
 								<volist name="positionList" id="pl">
@@ -44,7 +44,7 @@
 							</el-select>
 						</el-form-item>
 						<el-form-item label="管理人员">
-							<el-select v-model="queryCondition.manager" style="width:100px;">
+							<el-select v-model="queryCondition.manager" style="width:100px;" @change="changeManager">
 								<el-option label="全部" :value="0">
 								</el-option>
 								<volist name="managerList" id="pl">
@@ -57,7 +57,7 @@
 							<el-input v-model="queryCondition.keyword"/>
 						</el-form-item>
 						<el-form-item>
-							<el-button icon="el-icon-search" type="primary">
+							<el-button icon="el-icon-search" type="primary" @click="doQuery">
 								查询
 							</el-button>
 						</el-form-item>
@@ -74,10 +74,11 @@
 							{{ $index + 1 }}
 						</template>
 					</el-table-column>
-					<el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'deviceStatus'">
+					<el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'machine_status'">
 						<template #default="{ row }">
-							<el-tag v-if="row.deviceStatus === 1" type="primary">在线</el-tag>
-							<el-tag v-else type="danger">离线</el-tag>
+							<el-tag v-if="row.machine_status === 1" type="primary">在线</el-tag>
+							<el-tag v-else-if="row.machine_status === 2" type="danger">离线</el-tag>
+							<el-tag v-else type="info">未知</el-tag>
 						</template>
 					</el-table-column>
 					<el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'rowOperations'" :width="320">
@@ -130,6 +131,7 @@
 							background
 							layout="prev, pager, next"
 							:total="totalNumber"
+							:page-size="10"
 							:current-page="queryCondition.page"
 							@current-change="pageChange">
 						</el-pagination>
@@ -166,10 +168,10 @@
 		</div>
 		<el-form label-width="100px" v-if="create.type === 'handy'">
 			<el-form-item label="设备名称">
-				<el-input v-model="create.formData.deviceName"></el-input>
+				<el-input v-model="create.formData.machine_name"></el-input>
 			</el-form-item>
 			<el-form-item label="设备IMEI">
-				<el-input v-model="create.formData.emei"></el-input>
+				<el-input v-model="create.formData.machine_imei"></el-input>
 			</el-form-item>
 		</el-form>
 		<div v-else class="column items-center">
@@ -206,29 +208,8 @@
 					}
 				},
 				batchSelections: [],
-				tableData: [{
-					deviceNumber: '2983452-42930',
-					deviceName: '设备1',
-					deviceStatus: 1,
-					battery: 78,
-					workNumber: 290824,
-					principal: '张晓晨',
-					position: '维护工人',
-					manager: '王大拿',
-					area: '渭河西岸',
-					group: '保安常白'
-				}, {
-					deviceNumber: '489423948-290398',
-					deviceName: '设备2',
-					deviceStatus: 2,
-					battery: 90,
-					workNumber: 23432,
-					principal: '王安琪',
-					position: '工人组长',
-					manager: '刘璇',
-					area: '渭河东岸',
-					group: '保安常黑'
-				}],
+				tableData: [
+				],
 				queryCondition: {
 					keyword: '',
 					status: 0,
@@ -237,19 +218,19 @@
 					page: 1
 				},
 				// 分页总数据条数
-				totalNumber: 1000,
+				totalNumber: 0,
 				tableColumns: [
 					['serialNumber', '序号'],
-					['deviceNumber', '设备号'],
-					['deviceName', '设备名称'],
-					['deviceStatus', '设备状态'],
-					['battery', '电量'],
-					['workNumber', '工号'],
-					['principal', '负责人'],
-					['position', '职位'],
-					['manager', '管理人员'],
-					['area', '所属区域名称'],
-					['group', '班组'],
+					['machine_imei', '设备号'],
+					['machine_name', '设备名称'],
+					['machine_status', '设备状态'],
+					['electricity', '电量'],
+					['job_number', '工号'],
+					['realname', '负责人'],
+					['position_name', '职位'],
+					['parent_name', '管理人员'],
+					['area_name', '所属区域名称'],
+					['schedules_name', '班组'],
 					['rowOperations', '操作']
 				],
 				batchChangeBindDialog: false,
@@ -259,18 +240,20 @@
 				}
 			}
 		},
+
 		created(){
 			// 从接口获取数据
-			this.getData()
+			// this.getData();
+			this.doQuery();
 		},
 		methods: {
-			getData(){
-				DMS.ajaxPost('路径' , {
-					page: this.queryCondition.page,
-				}, res => {
-					this.tableData = res.arr
-				})
-			},
+			// getData(){
+			// 	DMS.ajaxPost('__CONTROLLER__/getMachineList',
+			// 		res => {
+			// 		this.tableData = res.machineList;
+			// 		this.totalNumber=res.totalNumber * 1;
+			// 	})
+			// },
 			/**
 			 * [pageChange 分页页数变化触发事件]
 			 * @param  {[type]} p [需要查询数据的那一页]
@@ -278,8 +261,10 @@
 			 */
 			pageChange(p){
 				// 在这里用 p 向后台ajax获取分页数据
-				this.getData()
-				console.log(`新的页码：${p}`)
+				// this.getData()
+				// console.log(`新的页码：${p}`)
+				this.queryCondition.page=p;
+				this.doQuery();
 			},
 
 			/**
@@ -288,12 +273,36 @@
 			 */
 			doQuery(){
 				// 在这里将查询条件传后台获取查询结果
+				param = {
+					"keyword":this.queryCondition.keyword,
+					"status":this.queryCondition.status,
+					"position":this.queryCondition.position,
+					"parent_id":this.queryCondition.manager,
+					"page":this.queryCondition.page,
+				}
+				DMS.ajaxPost('__CONTROLLER__/getMachineList',
+						param, res => {
+							this.tableData=res.machineList;
+							this.totalNumber=res.totalNumber * 1;
+						})
+			},
+			changePosition(e){
+				this.doQuery()
+			},
+			changeStatus(e){
+				this.doQuery()
+			},
+			changeManager(e){
+				this.doQuery()
 			}
+
+
 		},
 		computed: {
 			hasSelection(){
 				return this.batchSelections.length > 0
 			}
 		}
+
 	})
 </script>

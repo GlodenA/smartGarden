@@ -56,8 +56,19 @@
 
 	<!-- 添加职位 -->
 	<el-dialog title="添加职位" label-width="100px" :visible.sync="addDialog" width="480px">
+        <el-form :model="addFormData" :rules="nameRules">
+            <el-form-item label="">
+                <el-select v-model="addFormData.position" style="width:100%;">
+					<el-option :value="0" label="作为管理人员"></el-option>
+                    <volist name="addPositionList" id="pl">
+                        <el-option label="{$pl.name}" value="{$pl.id}">
+                        </el-option>
+                    </volist>
+                </el-select>
+            </el-form-item>
+        </el-form>
 		<el-form :model="addFormData" :rules="nameRules">
-			<el-form-item prop="name" label="名称">
+			<el-form-item prop="name" label="职位名称">
 				<el-input v-model="addFormData.name"/>
 			</el-form-item>
 		</el-form>
@@ -137,7 +148,8 @@
 				},
 				addDialog: false,
 				addFormData: {
-					name: ''
+					name: '',
+                    position: ''
 				}
 			}
 		},
