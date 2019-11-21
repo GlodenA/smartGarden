@@ -491,12 +491,25 @@ class MemberController extends BaseController
      */
     public function menuLists()
     {
+//        $tree = new \Org\Tree\Tree;
+//        $where["is_delete"] = 0;
+//        $data = M("Member_position")->where($where)->order('id desc')->select();
+//        $menuList = $tree->makeTree($data);
+//        $this->assign("menuList", $menuList);
+//        adminLog("查看职位列表");
+//        $this->display("group_list");
+
         $tree = new \Org\Tree\Tree;
         $where["is_delete"] = 0;
         $data = M("Member_position")->where($where)->order('id desc')->select();
         $menuList = $tree->makeTree($data);
         $this->assign("menuList", $menuList);
         adminLog("查看职位列表");
+
+        $where['parent_id'] = 0;
+        $positionList = M("Member_position")->where($where)->select();
+        $this->assign("addPositionList", $positionList);
+
         $this->display("group_list");
 
     }
