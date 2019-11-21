@@ -232,8 +232,8 @@ class MemberController extends BaseController
     public function memberEdit()
     {
         if (IS_POST) {
-            $userid = intval(I("userid"));
             $data = $_POST['info'];
+            $userid = $data["userid"];
             $where["userid"] = array("neq", $userid);
             $where["is_delete"] = 0;
             $where["job_number"] = $data["job_number"];
@@ -602,43 +602,11 @@ class MemberController extends BaseController
                 $fileName = $title = "离岗员工统计表";
             }
             if ($status == 4) {
-                //未上岗但有考勤
-                //先查出状态为未上岗并且有考勤的
-                $beginToday = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
-                $whereMember["m.job_status"] = 2;
-                $whereMember["a.add_time"] = array("gt", $beginToday);
-                $whereMember["m.is_delete"] = 0;
-                $whereMember["_string"] = "m.userid = a.userid";
-                $useridList = M("Member")->table("__MEMBER__ m,__ATTENDANCE__ a")->where($whereMember)->field("a.userid")->select();
-                $useridArr = array();
-                if ($useridList) {
-                    foreach ($useridList as $key => $value) {
-                        Array_push($useridArr, $value["userid"]);
-                    }
-                }
-                $where["userid"] = array('in', $useridArr);
-                $where["job_status"] = 2;
-                $fileName = $title = "未上岗但有考勤员工统计表";
+                //离职
+                $where["is_delete"] = 1;
+                $fileName = $title = "离职员工统计表";
             }
-            if ($status == 5) {
-                //未上岗且无考勤
-                //先查出状态为未上岗并且有考勤的
-                $beginToday = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
-                $whereMember["m.job_status"] = 2;
-                $whereMember["a.add_time"] = array("gt", $beginToday);
-                $whereMember["m.is_delete"] = 0;
-                $whereMember["_string"] = "m.userid = a.userid";
-                $useridList = M("Member")->table("__MEMBER__ m,__ATTENDANCE__ a")->where($whereMember)->field("a.userid")->select();
-                $useridArr = array();
-                if ($useridList) {
-                    foreach ($useridList as $key => $value) {
-                        Array_push($useridArr, $value["userid"]);
-                    }
-                }
-                $where["userid"] = array('not in', $useridArr);
-                $where["job_status"] = 2;
-                $fileName = $title = "未上岗且无考勤员工统计表";
-            }
+
         } else {
             $fileName = $title = "员工统计表";
         }
@@ -651,7 +619,10 @@ class MemberController extends BaseController
             $whereMember["_complex"] = array($whereParent, $wherePositon, '_logic' => 'or');
             $where["_complex"] = $whereMember;
         }
-        $where["is_delete"] = 0;
+        if ($status != 4) {
+        //离职
+            $where["is_delete"] = 0;
+        }
         $list = M("Member")->where($where)->field("userid,job_number,realname,mobile,machine_id,parent_id")->select();
         if ($list) {
             $headArr = array("员工号", "姓名", "手机号", "设备IMEI", "分管人员", "备注");
