@@ -249,12 +249,24 @@
 	</div>
 	<el-table style="width: 100%" id="tableData"  v-bind:data="tableData">
 		<template  v-for="({ prop, label }, i) in tableColumns">
-			<el-table-column :key="i" :prop="prop" :label="label" v-if="prop !== 'warningType'"></el-table-column>
-			<el-table-column :key="i" v-else :prop="prop" :label="label">
+			<el-table-column :key="i" :prop="prop" :label="label" v-if="prop !== 'type' && prop !== 'realname' ">
+			</el-table-column>
+			<el-table-column :key="i" :prop="prop" :label="label" v-else-if="prop == 'realname' ">
 				<template #default="{ row}">
+					<a :href=row.userinfo>
+						<el-tag >
+							{{ row.realname }}
+						</el-tag>
+					</a>
+				</template>
+			</el-table-column>
+			<el-table-column :key="i" v-else-if="prop == 'type'" :prop="prop" :label="label">
+				<template #default="{ row}">
+					<a :href=row.hrefs>
 					<el-tag type="danger">
-						{{ row.warningType }}
+						{{ row.type }}
 					</el-tag>
+					</a>
 				</template>
 			</el-table-column>
 		</template>
@@ -262,7 +274,7 @@
  <el-dialog
 	title="实时监控"
 	:visible.sync="realTimeDialog"
-	width="50%">
+	 width="50%">
 	<el-row :gutter="20">
 		<el-col :span="6" v-for="({ label, selected }, i) in realTimeMenusWithSelectedStates" class="mb2">
 			<div :class="['real-time-selector', { 'selected': selected}]" @click="() => toggleRealTimeMenuSelectedState(label, selected)">
@@ -280,6 +292,17 @@
 </el-dialog>
 </div>
 <script type="text/javascript">
+	function userInfo(userid){
+		layer.open({
+			type: 2,
+			title:"员工详情",
+			shadeClose: true,
+			shade: 0.2,
+			scrollbar: false,
+			area: ['800px', '400px'],
+			content: "__MODULE__/Member/memberInfo/userid/"+userid
+		});
+	}
 	const main = new Vue({
 		el: '#MAIN',
 		data() {
@@ -385,6 +408,8 @@
 					var option=[];
 					this.tableData=res['list_today'];
 					for(var a=0;a<res['list_today'].length;a++){
+						res['list_today'][a]['hrefs']="__MODULE__/Machine/machineOrbit/machine_id/"+res['list_today'][a]['machine_id']+"/searchTime/"+res['list_today'][a]['add_time'];
+						res['list_today'][a]['userinfo']="javascript:userInfo("+res['list_today'][a]['uid']+");";
 						//判断类型
 						switch (res['list_today'][a]['type']) {
 							case '2':
