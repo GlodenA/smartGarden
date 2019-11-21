@@ -17,10 +17,16 @@
           </el-breadcrumb>
         </div>
         <el-divider></el-divider>
-        <div class="info-line padding-md">
+        <div class="flex justify-between items-center px2 mb2">
           <el-button type="primary" icon="el-icon-plus" @click="createDialog = true">
             添加时间段
           </el-button>
+          <div class="row items-center">
+            <el-input v-model="keywords"  placeholder="请输入名称" class="mr2" ></el-input>
+            <el-button type="primary" @click="keywordChange()">
+              查询
+            </el-button>
+          </div>
         </div>
         <div class="smart-widget-inner">
           <el-table :data="tableData">
@@ -38,14 +44,19 @@
             </el-table-column>
           </el-table>
           <div class="row justify-end mt2">
-            <el-pagination background layout="prev, pager, next" :total="totalNumber" :page-size="10" :current-page="currentPage" @current-change="pageChange">
+            <el-pagination
+                    background
+                    layout="prev, pager, next"
+                    :total="totalNumber"
+                    :page-size="10"
+                    :current-page="currentPage"
+                    @current-change="pageChange">
             </el-pagination>
           </div>
         </div>
       </div>
     </div>
   </div>
-
   <!-- 编辑弹窗 -->
   <el-dialog :visible.sync="editDialog" title="编辑时间段" width="30%">
     <el-form ref="editForm" :model="editForm" label-width="80px" :rules="timeRules">
@@ -60,10 +71,11 @@
         <el-time-picker v-model="editForm.end_time" style="width:100%;" value-format="HH:mm:ss">
         </el-time-picker>
       </el-form-item>
-      <el-form-item label="状态" prop="state">
-        <el-radio v-model="editForm.state" :label="1">正常</el-radio>
-        <el-radio v-model="editForm.state" :label="2">禁止</el-radio>
+      <el-form-item label="状态" prop="is_show">
+        <el-radio v-model="editForm.is_show" label="1">正常</el-radio>
+        <el-radio v-model="editForm.is_show" label="0">禁止</el-radio>
       </el-form-item>
+
     </el-form>
     <div slot="footer" class="row justify-center">
       <el-button type="primary" plain @click="editDialog = false">取消</el-button>
@@ -85,9 +97,9 @@
         <el-time-picker v-model="newData.end_time" style="width:100%;" value-format="HH:mm:ss">
         </el-time-picker>
       </el-form-item>
-      <el-form-item label="状态" prop="state">
-        <el-radio v-model="newData.state" label="1">正常</el-radio>
-        <el-radio v-model="newData.state" label="2">禁止</el-radio>
+      <el-form-item label="状态" prop="is_show">
+        <el-radio v-model="newData.is_show" label="1">正常</el-radio>
+        <el-radio v-model="newData.is_show" label="0">禁止</el-radio>
       </el-form-item>
     </el-form>
     <div slot="footer" class="row justify-center">
@@ -105,14 +117,15 @@
       id: "{$v['id']}",
       title: "{$v['title']}",
       start_time: "{$v['start_time']}",
-      end_time: "{$v['end_time']}"
+      end_time: "{$v['end_time']}",
+      is_show:"{$v['is_show']}",
     })
   </script>
 </volist>
 <script type="text/javascript">
   const timeList = new Vue({
     el: '#TIMELIST',
-    data() {
+    data(){
       return {
         timeRules: {
           title: [{
@@ -133,55 +146,41 @@
         },
         tableData,
         createDialog: false,
-        currentPage: 1,
+        currentPage:1,
         totalNumber: 0,
+        keywords:'',
         newData: {
           title: '',
           start_time: '',
           end_time: '',
-          state: '1'
+          is_show: '1'
         },
         editDialog: false,
         editForm: {
+          id:'',
           title: '',
           start_time: '',
           end_time: '',
-          state: '1'
+          is_show: ''
         }
       }
     },
-    created() {
+    created(){
       this.doQuery();
-    },
-    mounted() {
-      console.log(this.tableData)
     },
     methods: {
       showEditDialog(row) {
         this.editForm = row
         this.editDialog = true
       },
-      doEdit() {},
-      doQuery() {
-        DMS.ajaxPost('__CONTROLLER__/getTimeList', {
-          "currentPage": this.currentPage
-        }, res => {
-          this.tableData = res.list;
-          this.totalNumber = res.totalNumber * 1;
-        })
-      },
-      pageChange(p) {
-        // window.location.href = `/smartGarden/manager.php?s=/Schedules/timeList/p/${p}.html`
-        this.currentPage = p;
-        this.doQuery();
-      },
-      doCreate() {
-        this.$refs.createForm.validate(r => {
-          if (r) {
-            DMS.ajaxPost("__CONTROLLER__/timeAdd", {
-              info: this.newData
+      doEdit() {
+        this.$refs.editForm.validate(r => {
+          if(r){
+            DMS.ajaxPost("__CONTROLLER__/timeEdit",{
+              id:this.editForm.id,
+              info: this.editForm
             }, res => {
-              if (res.status === 1) {
+              if(res.status === 1){
                 this.$alert('添加成功！', '通知', {
                   confirmButtonText: '确定',
                   callback: action => {
@@ -189,8 +188,8 @@
                     window.location.reload()
                   }
                 })
-              } else {
-                this.$alert('添加失败！', '通知', {
+              }else{
+                this.$alert('添加失败！失败原因：'+res.info, '通知', {
                   confirmButtonText: '确定',
                   callback: action => {
                     this.createDialog = false
@@ -202,23 +201,66 @@
           }
         })
       },
-      timeDelete(row) {
-        DMS.ajaxPost('__CONTROLLER__/timeDelete', {
-          "id": row.id
-        }, res => {
-          if (res.status === 1) {
-            this.$alert('删除成功！', '通知', {
-              confirmButtonText: '确定',
-              callback: action => {
-                window.location.reload()
+      keywordChange(){
+        this.currentPage = 1
+        this.doQuery()
+      },
+      doQuery(){
+        DMS.ajaxPost('__CONTROLLER__/getTimeList',
+                {"currentPage": this.currentPage,
+                  "keywords":this.keywords}, res => {
+                  this.tableData=res.list;
+                  this.totalNumber=res.totalNumber * 1;
+                })
+      },
+      pageChange(p){
+        // window.location.href = `/smartGarden/manager.php?s=/Schedules/timeList/p/${p}.html`
+        this.currentPage=p;
+        this.doQuery();
+      },
+      doCreate(){
+        this.$refs.createForm.validate(r => {
+          if(r){
+            DMS.ajaxPost("__CONTROLLER__/timeAdd",{
+              info: this.newData
+            }, res => {
+              if(res.status === 1){
+                this.$alert('添加成功！', '通知', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    this.createDialog = false
+                    window.location.reload()
+                  }
+                })
+              }else{
+                this.$alert('添加失败！失败原因：'+res.info, '通知', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    this.createDialog = false
+                    window.location.reload()
+                  }
+                })
               }
-            })
-          } else {
-            this.$alert('删除失败！', '通知', {
-              confirmButtonText: '确定',
             })
           }
         })
+      },
+      timeDelete(row){
+        DMS.ajaxPost('__CONTROLLER__/timeDelete',
+                {"id": row.id}, res => {
+                  if(res.status === 1){
+                    this.$alert('删除成功！', '通知', {
+                      confirmButtonText: '确定',
+                      callback: action => {
+                        window.location.reload()
+                      }
+                    })
+                  }else{
+                    this.$alert('删除失败！失败原因：'+res.info, '通知', {
+                      confirmButtonText: '确定',
+                    })
+                  }
+                })
       }
     }
   })

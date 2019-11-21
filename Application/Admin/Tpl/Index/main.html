@@ -85,18 +85,18 @@
   	常用菜单
   </div>
 	<el-row :gutter="20" >
-		<el-col :span="6" v-for="([icon, title, subtitle], i) in [
-			['date', '考勤记录', '今日考勤记录'],
-			['s-custom', '员工管理', '员工列表'],
-			['map-location', '设备位置', '电子栅栏'],
-			['mobile-phone', '设备管理', '设备列表']
+		<el-col :span="6" v-for="([icon, title, subtitle, menu, address], i) in [
+			['date', '考勤记录', '今日考勤记录', '__MODULE__/Attendance/attendanceList', '__MODULE__/Attendance/attendanceList/start_time/{$newTime}/end_time/{$newTime}'],
+			['s-custom', '员工管理', '员工列表', '__MODULE__/Member/memberList', '__MODULE__/Member/memberList'],
+			['map-location', '设备位置', '电子栅栏', '__MODULE__/Map/mapMachine', '__MODULE__/Map/mapAllFence'],
+			['mobile-phone', '设备管理', '设备列表', '__MODULE__/Machine/machineList', '__MODULE__/Machine/machineList']
 		]" :key="i">
 			<el-card class="panel-card" shadow="hover">
 				<div class="row items-center justify-center">
 					<i :class="[`el-icon-${icon}`, 'card-icon']"></i>
 					<div class="ml3">
-						<h4>{{ title }}</h4>
-						<p>{{ subtitle }}</p>
+						<a :href=menu><h4>{{ title }}</h4></a>
+						<a :href=address><p>{{ subtitle }}</p></a>
 					</div>
 				</div>
 			</el-card>
@@ -117,16 +117,111 @@
 			<i class="el-icon-plus"></i>
 		</el-col>
 	</el-row>
+	<!--上午-->
+	<el-row :gutter="20" class="px4 real-time-monitor flex items-stretch py2"id="am">
+		<el-col :span="6" >
+			<p>上午考勤统计</p>
+			<h1 class="m0">
+				&nbsp;
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>正常上班打卡</p>
+			<h1 class="m0">
+				{$am_t_normal_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>迟到</p>
+			<h1 class="m0">
+				{$am_late_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>旷工</p>
+			<h1 class="m0">
+				{$am_absenteeism_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>早退</p>
+			<h1 class="m0">
+				{$am_leave_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>正常下班打卡</p>
+			<h1 class="m0">
+				{$am_d_normal_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>异常情况</p>
+			<h1 class="m0">
+				{$am_abnormal_count|default=0}
+			</h1>
+		</el-col>
+
+	</el-row>
+	<!--下午-->
+	<el-row :gutter="20" class="px4 real-time-monitor flex items-stretch py2" id="pm">
+		<el-col :span="6" >
+			<p>下午考勤统计</p>
+			<h1 class="m0">
+				&nbsp;
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>正常上班打卡</p>
+			<h1 class="m0">
+				{$pm_t_normal_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>迟到</p>
+			<h1 class="m0">
+				{$pm_late_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>旷工</p>
+			<h1 class="m0">
+				{$pm_absenteeism_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>早退</p>
+			<h1 class="m0">
+                {$pm_leave_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>正常下班打卡</p>
+			<h1 class="m0">
+				{$pm_d_normal_count|default=0}
+			</h1>
+		</el-col>
+		<el-col :span="6" >
+			<p>异常情况</p>
+			<h1 class="m0">
+				{$pm_abnormal_count|default=0}
+			</h1>
+		</el-col>
+
+	</el-row>
+
 	<el-divider></el-divider>
 	<div class="flex justify-between items-center">
 		<div class="p2 bold h2">
 			异常警告
 		</div>
+		<a href="__MODULE__/WarningMessage/warningMessageList">
 		<el-button icon="el-icon-right" plain type="primary">
 			查看更多
 		</el-button>
+		</a>
 	</div>
-	<el-table :data="tableData" style="width: 100%">
+	<el-table style="width: 100%" id="tableData"  v-bind:data="tableData">
 		<template  v-for="({ prop, label }, i) in tableColumns">
 			<el-table-column :key="i" :prop="prop" :label="label" v-if="prop !== 'warningType'"></el-table-column>
 			<el-table-column :key="i" v-else :prop="prop" :label="label">
@@ -145,7 +240,7 @@
 	<el-row :gutter="20">
 		<el-col :span="6" v-for="({ label, selected }, i) in realTimeMenusWithSelectedStates" class="mb2">
 			<div :class="['real-time-selector', { 'selected': selected}]" @click="() => toggleRealTimeMenuSelectedState(label, selected)">
-				{{ label }}
+				<span :class="['real-time-selector1', { 'selected': selected}]">{{ label }}</span>
 				<div class="checked" v-show="selected">
 					<i class="el-icon-check"></i>
 				</div>
@@ -153,66 +248,37 @@
 		</el-col>
 	</el-row>
   <span slot="footer" class="flex justify-center">
-		<el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+		<el-button type="primary" @click="changeOption()">确 定</el-button>
     <el-button @click="realTimeDialog = false">重置</el-button>
   </span>
 </el-dialog>
 </div>
-
 <script type="text/javascript">
+
 	const main = new Vue({
 		el: '#MAIN',
 		data() {
 			return {
-				selectedRealTimeMenus: [
-					'当前在线设备数',
-					'迟到',
-					'旷工'
-				],
-				realTimeMenus: [
-					'总设备数',
-					'今日上线设备总数',
-					'当前在线设备数',
-					'员工总数',
-					'在岗人数',
-					'离岗人数',
-					'未上岗人数',
-					'迟到',
-					'上午考勤统计',
-					'下午考勤统计',
-					'正常上班打卡',
-					'正常下班打卡',
-					'旷工',
-					'早退',
-					'异常情况'
-				],
+				selectedRealTimeMenus: [],
+				realTimeMenus: [],
 				realTimeDialog: false,
-				tableData: Array(10).fill({
-					deviceName: 'cyyl_05007',
-					deviceNumber: '2783492374893278',
-					bindEmployee: '王建国',
-					workNumber: '1197',
-					position: '养护工人',
-					manager: '李香社（金晶大道）',
-					warningTime: '2019-11-04 13:53:42',
-					warningType: '怠工超过设定时间警告',
-				}),
+				tableData: null,
 				tableColumns: [
-					['设备名称', 'deviceName'],
-					['设备号', 'deviceNumber'],
-					['绑定员工', 'bindEmployee'],
-					['工号', 'workNumber'],
+					['设备名称', 'machine_name'],
+					['设备号', 'machine_imei'],
+					['绑定员工', 'realname'],
+					['工号', 'job_number'],
 					['职位', 'position'],
-					['管理人员', 'manager'],
-					['告警时间', 'warningTime'],
-					['告警类型', 'warningType'],
+					['管理人员', 'parent_id'],
+					['告警时间', 'add_time'],
+					['告警类型', 'type'],
 				].map(([ label, prop ]) => ({
 					label,
 					prop
 				})),
-				realTimeMonitorData: [259, 13, 31],
+				realTimeMonitorData: [],
 				realTimeMonitorColor: ['primary', 'warning', 'danger'],
-				realTimeMonitorDataLabelArr: ['当前设备在线数', '迟到', '旷工']
+				realTimeMonitorDataLabelArr: []
 			}
 		},
 		computed: {
@@ -224,6 +290,149 @@
 			}
 		},
 		methods: {
+			changeOption(){
+				var userOptions=[];
+				var list=document.getElementsByClassName("real-time-selector1 selected");
+				for(var i=0;i<list.length;i++){
+					switch (list[i].innerHTML) {
+						case "总设备数":
+							userOptions.push(1);
+							break;
+						case "今日上线设备总数":
+							userOptions.push(2);
+							break;
+						case "当前在线设备数":
+							userOptions.push(3);
+							break;
+						case "员工总数":
+							userOptions.push(4);
+							break;
+						case "在岗人数":
+							userOptions.push(5);
+							break;
+						case "离岗人数":
+							userOptions.push(6);
+							break;
+						case "未上岗人数":
+							userOptions.push(7);
+							break;
+						case "上午考勤统计":
+							userOptions.push(8);
+							break;
+						case "下午考勤统计":
+							userOptions.push(9);
+							break;
+					}
+				}
+				console.log("选中的选项"+userOptions.toString())
+
+				DMS.ajaxPost('__MODULE__/ShowOption/optionSelect' , {
+                    option_ids: userOptions.toString(),
+                }, res => {
+					if(res.status==1){
+						layer.msg(res.info,{icon: 1, time: 2000},function(){
+							window.location.reload();
+						});
+					}else{
+						layer.msg(''+res.info+'',{icon: 2, time: 2000});
+					}
+                })
+			}
+			,
+			getData(){
+				DMS.ajaxPost('__MODULE__/Index/mainPost' , {
+					page: null,
+				}, res => {
+					var option=[];
+					this.tableData=res['list_today'];
+					for(var a=0;a<res['list_today'].length;a++){
+						//判断类型
+						switch (res['list_today'][a]['type']) {
+							case '2':
+								res['list_today'][a]['type']='远离区域报警';
+								break;
+							case '3':
+								res['list_today'][a]['type']='低电量报警';
+								break;
+							case '4':
+								res['list_today'][a]['type']='迟到报警';
+								break;
+							case '5':
+								res['list_today'][a]['type']='旷工报警';
+								break;
+							case '6':
+								res['list_today'][a]['type']='早退报警';
+								break;
+							case '7':
+								res['list_today'][a]['type']='怠工报警';
+								break;
+						}
+
+					}
+
+					console.log(res['list_today'])
+					for (var a=0;a<res['options'].length;a++){
+						option.push(res['options'][a].showname);
+					}
+					this.realTimeMenus=option;//所有的option
+					//遍历一次useroption，给各种东西进行赋值
+					var userOption=[];
+					var userOptionValue=[];
+					var am=true;
+					var pm=true;
+					for (var a=0;a<res['userOptions'].length;a++){
+						switch (res['userOptions'][a]) {
+							case '1':
+								userOption.push('总设备数');
+								userOptionValue.push(res['mahcine_count']);
+								break;
+							case '2':
+								userOption.push('今日上线设备总数');
+								userOptionValue.push(res['today_mount_guard_count']);
+								break;
+							case '3':
+								userOption.push('当前在线设备数');
+								userOptionValue.push(res['mount_guard_count']);
+								break;
+							case '4':
+								userOption.push('员工总数');
+								userOptionValue.push(res['count_member']);
+								break;
+							case '5':
+								userOption.push('在岗人数');
+								userOptionValue.push(res['on_guard_count']);
+								break;
+							case '6':
+								userOption.push('离岗人数');
+								userOptionValue.push(res['out_guard_count']);
+								break;
+							case '7':
+								userOption.push('未上岗人数');
+								userOptionValue.push(res['no_guard_count']);
+								break;
+							case '8':
+								userOption.push('上午考勤统计');
+								am=false;
+								//document.getElementById("am").style.display = 'block';
+								break;
+							case '9':
+								userOption.push('下午考勤统计');
+								pm=false;
+								//document.getElementById("pm").style.display = 'block';
+								break;
+						}
+					}
+					if (am){
+						document.getElementById("am").style.display = 'none';
+					}
+					if (pm){
+						document.getElementById("pm").style.display = 'none';
+					}
+					this.selectedRealTimeMenus=userOption;//用户拥有的option的值   编辑打开的页面里面选中的选项
+					this.realTimeMonitorDataLabelArr=userOption;//用户拥有的option的值    在首页展示的选项
+					this.realTimeMonitorData=userOptionValue;//option 的值
+				})
+			},
 			toggleRealTimeMenuSelectedState(label, state){
 				if(state){
 					this.selectedRealTimeMenus.splice(this.selectedRealTimeMenus.findIndex(v => v === label), 1)
@@ -233,4 +442,7 @@
 			}
 		}
 	})
+	main.getData();
+
+
 </script>

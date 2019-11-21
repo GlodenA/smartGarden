@@ -1,3 +1,12 @@
+<style>
+	.el-checkbox{
+		display: flex;
+	}
+	.el-checkbox .el-checkbox__label{
+		white-space: normal;
+		word-break: break-word;
+	}
+</style>
 <div class="padding-md" id="GROUPMANAGE">
 	<div class="smart-widget" style="margin-bottom: 1px;">
 		<div class="smart-widget-inner">
@@ -15,41 +24,33 @@
 				</el-breadcrumb>
 				<el-divider></el-divider>
 				<div class="flex justify-between items-center px2 mb2">
-					<el-button icon="el-icon-plus" type="primary" @click="create.dialog = true">
+					<el-button icon="el-icon-plus" type="primary" @click="showCreateDialog()">
 						增加班组
 					</el-button>
 					<div class="row items-center">
-						<el-input placeholder="请输入区域名称" class="mr2"></el-input>
-						<el-button type="primary">
+						<el-input v-model="queryCondition.keyword"  placeholder="请输入区域名称" class="mr2" ></el-input>
+						<el-button type="primary" @click="keywordChange()">
 							查询
 						</el-button>
 					</div>
 				</div>
 				<el-table :data="tableData">
-					<el-table-column prop="areaName" label="区域名称"></el-table-column>
-					<el-table-column prop="addTime" label="添加时间">
+					<el-table-column prop="schedules_name" label="区域名称"></el-table-column>
+					<el-table-column prop="work_day" label="添加时间">
 						<template #default="{ row }">
-							{{ row.addTime.weekArr.join(' ') }} | {{ row.addTime.timeDuration.map(({ start, end }) => `${start}-${end}`).join(' ') }}
+							{{ row.work_day }} | {{ row.timeList.filter(({ is_delete }) => is_delete === '0').map(({ start_time, end_time }) => `${start_time}-${end_time}`).join(' ') }}
 						</template>
 					</el-table-column>
-					<el-table-column prop="status" label="状态">
+					<el-table-column prop="is_show" label="状态">
 						<template #default="{ row }">
-							<el-tag :type="row.status === 1 ? 'primary' : 'danger'">
-								{{ row.status === 1 ? '显示' : '隐藏' }}
+							<el-tag :type="row.is_show === '1' ? 'primary' : 'danger'">
+								{{ row.is_show === "1" ? '显示' : '隐藏' }}
 							</el-tag>
 						</template>
 					</el-table-column>
 					<el-table-column prop="rowOperations" label="操作">
 						<template #default="{ row }">
-							<el-button type="primary" plain size="mini" @click="() => {
-								edit.formData = {
-									name: row.areaName,
-									weeks: row.addTime.weekArr,
-									timeFields: [],
-									status: row.status
-								}
-								edit.dialog = true
-							}">
+							<el-button type="primary" plain size="mini" @click="showEditDialog(row) ">
 								编辑
 							</el-button>
 							<el-button type="danger" plain size="mini" @click="showDelDialog(row)">
@@ -59,7 +60,11 @@
 					</el-table-column>
 				</el-table>
 				<div class="flex justify-end mt4">
-					<el-pagination background layout="prev, pager, next" :total="totalNumber" :current-page="queryCondition.page" @current-change="pageChange">
+					<el-pagination background layout="prev, pager, next"
+								   :total="totalNumber"
+								   :page-size="10"
+								   :current-page="queryCondition.page"
+								   @current-change="pageChange">
 					</el-pagination>
 				</div>
 			</div>
@@ -67,26 +72,30 @@
 	</div>
 	<el-dialog :visible.sync="create.dialog" title="添加班组" width="660px">
 		<el-form label-width="120px" :model="create.formData" :rules="create.formDataRules" ref="createForm">
-			<el-form-item label="班组名称" prop="name">
-				<el-input v-model="create.formData.name"></el-input>
+			<el-form-item label="班组名称" prop="schedules_name">
+				<el-input v-model="create.formData.schedules_name"></el-input>
 			</el-form-item>
-			<el-form-item prop="weeks" label="工作日设置">
-				<el-checkbox-group v-model="create.formData.weeks" size="small">
-					<el-checkbox-button v-for="w in create.weeks" :label="w + 1" :key="">
-						{{ w }}
+			<el-form-item prop="work_day" label="工作日设置">
+				<el-checkbox-group v-model="create.formData.work_day" size="small">
+					<el-checkbox-button v-for="w in create.work_day" :label="w.id" :key="">
+						{{ w.name }}
 					</el-checkbox-button>
 				</el-checkbox-group>
 			</el-form-item>
-			<el-form-item label="时间段设置" prop="timeFields">
-				<el-checkbox-group v-model="create.formData.timeFields">
-					<el-checkbox v-for="(t, i) in create.times" :label="i" :key="t">
-						{{ t }}
-					</el-checkbox>
+			<el-form-item label="时间段设置" prop="time_id">
+				<el-checkbox-group v-model="create.formData.time_id">
+					<div class="flex flex-wrap">
+						<div style="width:50%;" v-for="(t, i) in create.times" :key="i" class="mb2">
+							<el-checkbox :label="t.id" >
+								{{ t.title }} ({{ t.start_time }}-{{ t.end_time }})
+							</el-checkbox>
+						</div>
+					</div>
 				</el-checkbox-group>
 			</el-form-item>
-			<el-form-item label="状态" prop="status">
-				<el-radio v-model="create.formData.status" :label="1">显示</el-radio>
-				<el-radio v-model="create.formData.status" :label="2">隐藏</el-radio>
+			<el-form-item label="状态" prop="is_show">
+				<el-radio v-model="create.formData.is_show" :label="1">显示</el-radio>
+				<el-radio v-model="create.formData.is_show" :label="0">隐藏</el-radio>
 			</el-form-item>
 		</el-form>
 		<div slot="footer" class=" flex justify-center">
@@ -104,27 +113,34 @@
 		</div>
 	</el-dialog>
 	<el-dialog :visible.sync="edit.dialog" title="编辑班组信息" width="660px">
-		<el-form label-width="120px" :model="create.formData" :rules="edit.formDataRules" ref="editForm">
-			<el-form-item label="班组名称" prop="name">
-				<el-input v-model="edit.formData.name"></el-input>
+		<el-form label-width="120px" :model="edit.formData" :rules="edit.formDataRules" ref="editForm">
+			<el-form-item label="班组名称" prop="schedules_name">
+				<el-input v-model="edit.formData.schedules_name"></el-input>
 			</el-form-item>
-			<el-form-item prop="weeks" label="工作日设置">
-				<el-checkbox-group v-model="edit.formData.weeks" size="small">
-					<el-checkbox-button v-for="w in create.weeks" :label="w" :key="">
-						{{ w }}
+			<el-form-item prop="work_day" label="工作日设置">
+				<el-checkbox-group v-model="edit.formData.work_day" size="small">
+					<el-checkbox-button v-for="w in edit.work_day" :label="w.id" :key="">
+							{{ w.name }}
 					</el-checkbox-button>
 				</el-checkbox-group>
 			</el-form-item>
-			<el-form-item label="时间段设置" prop="timeFields">
-				<el-checkbox-group v-model="edit.formData.timeFields">
-					<el-checkbox v-for="(t, i) in create.times" :label="i" :key="t">
-						{{ t }}
-					</el-checkbox>
+
+			<el-form-item  prop="time_id" label="时间段设置">
+				<el-checkbox-group v-model="edit.formData.time_id">
+					<div class="flex flex-wrap">
+						<div style="width:50%;" v-for="(t, i) in edit.times" :key="i" class="mb2">
+							<el-checkbox :label="t.id" >
+								{{ t.title }} ({{ t.start_time }}-{{ t.end_time }})
+							</el-checkbox>
+						</div>
+					</div>
 				</el-checkbox-group>
 			</el-form-item>
-			<el-form-item label="状态" prop="status">
-				<el-radio v-model="edit.formData.status" :label="1">显示</el-radio>
-				<el-radio v-model="edit.formData.status" :label="2">隐藏</el-radio>
+
+
+			<el-form-item label="状态" prop="is_show" >
+				<el-radio v-model="edit.formData.is_show" :label="1">显示</el-radio>
+				<el-radio v-model="edit.formData.is_show" :label="0">隐藏</el-radio>
 			</el-form-item>
 		</el-form>
 		<div slot="footer" class=" flex justify-center">
@@ -136,7 +152,7 @@
 			}">
 				重置
 			</el-button>
-			<el-button type="primary" class="ml2" @click="submitCreate">
+			<el-button type="primary" class="ml2" @click="submitEdit">
 				提交
 			</el-button>
 		</div>
@@ -150,95 +166,173 @@
 				edit: {
 					dialog: false,
 					formData: {
-						name: '',
-						weeks: [],
-						timeFields: [],
-						status: 1
+						schedules_name: '',
+						work_day: [],
+						time_id: [],
+						is_show: 1
 					},
+					times: [
+					],
+					work_day: [
+						{id:"1",name:'周一'},
+						{id:"2",name:'周二'},
+						{id:"3",name:'周三'},
+						{id:"4",name:'周四'},
+						{id:"5",name:'周五'},
+						{id:"6",name:'周六'},
+						{id:"0",name:'周日'}],
 				},
 				create: {
-					weeks: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+					work_day: [
+						{id:"1",name:'周一'},
+						{id:"2",name:'周二'},
+						{id:"3",name:'周三'},
+						{id:"4",name:'周四'},
+						{id:"5",name:'周五'},
+						{id:"6",name:'周六'},
+						{id:"0",name:'周日'}],
 					times: [
-						'冬季上午班(07:00:00-11:00:00)',
-						'冬季下午班(13:00:00-17:00:00)'
 					],
 					dialog: false,
 					formDataRules: {
 
 					},
 					formData: {
-						name: '',
-						weeks: [],
-						timeFields: [],
-						status: 1
+						schedules_name: '',
+						work_day: [],
+						time_id: [],
+						is_show: 1
 					}
 				},
-				totalNumber: 1000,
+				totalNumber: 0,
 				queryCondition: {
 					keyword: '',
 					page: 1
 				},
-				tableData: [{
-					areaName: '北海长夜',
-					addTime: {
-						weekArr: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
-						timeDuration: [{
-							start: '22:00:00',
-							end: '07:00:00'
-						}]
-					},
-					status: 1
-				}, {
-					areaName: '保安中班',
-					addTime: {
-						weekArr: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
-						timeDuration: [{
-							start: '07:30:00',
-							end: '11:30:00'
-						}, {
-							start: '13:30:00',
-							end: '17:30:00'
-						}]
-					},
-					status: 2
-				}, {
-					areaName: '秋季班',
-					addTime: {
-						weekArr: ['周一', '周二', '周三', '周四', '周五', '周六'],
-						timeDuration: [{
-							start: '07:00:00',
-							end: '11:00:00'
-						}, {
-							start: '14:00:00',
-							end: '18:00:00'
-						}]
-					},
-					status: 1
-				}]
+				tableData: []
 			}
 		},
+		created(){
+		    this.doQuery()
+		},
 		methods: {
+			doQuery(){
+				DMS.ajaxPost('__CONTROLLER__/getSchedulesList',
+						{
+							keywords :this.queryCondition.keyword,
+							page:this.queryCondition.page
+						},res=>{
+				this.tableData = res.list,
+				this.totalNumber= res.totalNumber
+			})
+			},
+			keywordChange(){
+				this.queryCondition.page = 1
+			    this.doQuery()
+			},
+			showCreateDialog(){
+
+				DMS.ajaxPost('__CONTROLLER__/getAllTimeList', {}, res=>{
+					this.create.times = res.timeList
+					this.create.dialog = true;
+				})
+			},
+			showEditDialog(row){
+
+				DMS.ajaxPost('__CONTROLLER__/getEditSchedules', {schedules_id:row.schedules_id}, res=>{
+					this.edit.times = res.list
+
+					this.edit.formData = {
+						schedules_name: row.schedules_name,
+						work_day: res.schedulesInfo.work_day,//.map(v => v * 1)
+						time_id: res.schedulesInfo.time_id,
+						is_show: row.is_show*1
+					}
+					this.edit.dialog = true;
+				})
+
+
+			},
+			submitEdit(){
+				DMS.ajaxPost("__CONTROLLER__/schedulesEdit",{
+					info: this.edit.formData
+				}, res => {
+					if(res.status === 1){
+						this.$alert('修改成功！', '通知', {
+							confirmButtonText: '确定',
+							callback: action => {
+								this.create.dialog = false
+								window.location.reload()
+							}
+						})
+					}else{
+						this.$alert('修改失败！失败原因：'+res.info, '通知', {
+							confirmButtonText: '确定',
+							callback: action => {
+								this.create.dialog = false
+							}
+						})
+					}
+				})
+			},
 			// 展示删除弹窗
 			showDelDialog(row) {
-				this.$confirm(`确认删除${ row.areaName }吗?`, '提示', {
+				this.$confirm(`确认删除${ row.schedules_name }吗?`, '提示', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
 					type: 'warning'
 				}).then(() => {
 					// 执行删除逻辑
-					this.$message({
-						type: 'success',
-						message: '删除成功!',
-						showClose: true
+					DMS.ajaxPost("__CONTROLLER__/schedulesDelete",{
+						schedules_id: row.schedules_id
+					}, res => {
+						if(res.status === 1){
+							this.$message({
+								type: 'success',
+								message: '删除成功!',
+								showClose: true
+
+							})
+							window.location.reload()
+						}else{
+							this.$message.error('删除失败！失败原因：'+res.info);
+
+						}
 					})
+
 				}).catch(() => {})
 			},
 			// 提交创建弹窗的数据
 			submitCreate() {
-
+				this.$refs.createForm.validate(r => {
+					if(r){
+						DMS.ajaxPost("__CONTROLLER__/schedulesAdd",{
+							info: this.create.formData
+						}, res => {
+							if(res.status === 1){
+								this.$alert('添加成功！', '通知', {
+									confirmButtonText: '确定',
+									callback: action => {
+										this.create.dialog = false
+										window.location.reload()
+									}
+								})
+							}else{
+								this.$alert('添加失败！失败原因：'+res.info, '通知', {
+									confirmButtonText: '确定',
+									callback: action => {
+										this.create.dialog = false
+										window.location.reload()
+									}
+								})
+							}
+						})
+					}
+				})
 			},
 			pageChange(p) {
 				this.queryCondition.page = p
+				this.doQuery()
 				// 这里进行分页查询
 			}
 		}
