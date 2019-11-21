@@ -108,10 +108,12 @@
   </div>
 	<el-row :gutter="20" class="px4 real-time-monitor flex items-stretch py2">
 		<el-col :span="6" v-for="(n, i) in realTimeMonitorData" :key="i" :class="['column', 'items-center', realTimeMonitorColor[i]]">
+			<a :href="userOptionAdd[i]">
 			<p>{{ realTimeMonitorDataLabelArr[i] }}</p>
 			<h1 class="m0">
 				{{ n }}
 			</h1>
+			</a>
 		</el-col>
 		<el-col :span="6" class="add-btn flex justify-center items-center" @click.native="realTimeDialog = true">
 			<i class="el-icon-plus"></i>
@@ -126,40 +128,52 @@
 			</h1>
 		</el-col>
 		<el-col :span="6" >
+			<a href="/manager.php?s=/Attendance/attendanceList/status/1">
 			<p>正常上班打卡</p>
 			<h1 class="m0">
 				{$am_t_normal_count|default=0}
 			</h1>
+			</a>
 		</el-col>
 		<el-col :span="6" >
+			<a href="/manager.php?s=/Attendance/attendanceList/status/2">
 			<p>迟到</p>
 			<h1 class="m0">
 				{$am_late_count|default=0}
 			</h1>
+			</a>
 		</el-col>
 		<el-col :span="6" >
+			<a href="/manager.php?s=/Attendance/attendanceList/status/3">
 			<p>旷工</p>
 			<h1 class="m0">
 				{$am_absenteeism_count|default=0}
 			</h1>
+			</a>
 		</el-col>
 		<el-col :span="6" >
+			<a href="/manager.php?s=/Attendance/attendanceList/status/4">
 			<p>早退</p>
 			<h1 class="m0">
 				{$am_leave_count|default=0}
 			</h1>
+			</a>
 		</el-col>
 		<el-col :span="6" >
+			<a href="/manager.php?s=/Attendance/attendanceList/status/5">
 			<p>正常下班打卡</p>
 			<h1 class="m0">
 				{$am_d_normal_count|default=0}
 			</h1>
+			</a>
 		</el-col>
 		<el-col :span="6" >
+			<a href="/manager.php?s=/Attendance/attendanceList/status/12">
 			<p>异常情况</p>
 			<h1 class="m0">
 				{$am_abnormal_count|default=0}
 			</h1>
+			</a>
 		</el-col>
 
 	</el-row>
@@ -172,40 +186,52 @@
 			</h1>
 		</el-col>
 		<el-col :span="6" >
+			<a href="/manager.php?s=/Attendance/attendanceList/status/6">
 			<p>正常上班打卡</p>
 			<h1 class="m0">
 				{$pm_t_normal_count|default=0}
 			</h1>
+			</a>
 		</el-col>
 		<el-col :span="6" >
+			<a href="/manager.php?s=/Attendance/attendanceList/status/7">
 			<p>迟到</p>
 			<h1 class="m0">
 				{$pm_late_count|default=0}
 			</h1>
+			</a>
 		</el-col>
 		<el-col :span="6" >
+			<a href="/manager.php?s=/Attendance/attendanceList/status/8">
 			<p>旷工</p>
 			<h1 class="m0">
 				{$pm_absenteeism_count|default=0}
 			</h1>
+			</a>
 		</el-col>
 		<el-col :span="6" >
+			<a href="/manager.php?s=/Attendance/attendanceList/status/9">
 			<p>早退</p>
 			<h1 class="m0">
                 {$pm_leave_count|default=0}
 			</h1>
+			</a>
 		</el-col>
 		<el-col :span="6" >
+			<a href="/manager.php?s=/Attendance/attendanceList/status/10">
 			<p>正常下班打卡</p>
 			<h1 class="m0">
 				{$pm_d_normal_count|default=0}
 			</h1>
+			</a>
 		</el-col>
 		<el-col :span="6" >
+			<a href="/manager.php?s=/Attendance/attendanceList/status/13">
 			<p>异常情况</p>
 			<h1 class="m0">
 				{$pm_abnormal_count|default=0}
 			</h1>
+			</a>
 		</el-col>
 
 	</el-row>
@@ -249,12 +275,11 @@
 	</el-row>
   <span slot="footer" class="flex justify-center">
 		<el-button type="primary" @click="changeOption()">确 定</el-button>
-    <el-button @click="realTimeDialog = false">重置</el-button>
+    <el-button @click="resetOption()">重置</el-button>
   </span>
 </el-dialog>
 </div>
 <script type="text/javascript">
-
 	const main = new Vue({
 		el: '#MAIN',
 		data() {
@@ -278,7 +303,8 @@
 				})),
 				realTimeMonitorData: [],
 				realTimeMonitorColor: ['primary', 'warning', 'danger'],
-				realTimeMonitorDataLabelArr: []
+				realTimeMonitorDataLabelArr: [],
+				userOptionAdd:[]
 			}
 		},
 		computed: {
@@ -290,6 +316,20 @@
 			}
 		},
 		methods: {
+			resetOption(){
+				DMS.ajaxPost('__MODULE__/ShowOption/optionSelect' , {
+					option_ids: '1,2,3,4,5',
+				}, res => {
+					if(res.status==1){
+						layer.msg(res.info,{icon: 1, time: 2000},function(){
+							window.location.reload();
+						});
+					}else{
+						layer.msg(''+res.info+'',{icon: 2, time: 2000});
+					}
+				})
+			}
+			,
 			changeOption(){
 				var userOptions=[];
 				var list=document.getElementsByClassName("real-time-selector1 selected");
@@ -324,7 +364,6 @@
 							break;
 					}
 				}
-				console.log("选中的选项"+userOptions.toString())
 
 				DMS.ajaxPost('__MODULE__/ShowOption/optionSelect' , {
                     option_ids: userOptions.toString(),
@@ -369,54 +408,65 @@
 						}
 
 					}
-
-					console.log(res['list_today'])
+					var userOptionAddress=[];
 					for (var a=0;a<res['options'].length;a++){
 						option.push(res['options'][a].showname);
+						userOptionAddress.push(res['options'][a].address);
 					}
+					this.userOptionAdd=userOptionAddress;
 					this.realTimeMenus=option;//所有的option
 					//遍历一次useroption，给各种东西进行赋值
 					var userOption=[];
 					var userOptionValue=[];
+					var userOption2=[];
 					var am=true;
 					var pm=true;
 					for (var a=0;a<res['userOptions'].length;a++){
 						switch (res['userOptions'][a]) {
 							case '1':
 								userOption.push('总设备数');
+								userOption2.push('总设备数');
 								userOptionValue.push(res['mahcine_count']);
 								break;
 							case '2':
 								userOption.push('今日上线设备总数');
+								userOption2.push('今日上线设备总数');
 								userOptionValue.push(res['today_mount_guard_count']);
 								break;
 							case '3':
 								userOption.push('当前在线设备数');
+								userOption2.push('当前在线设备数');
 								userOptionValue.push(res['mount_guard_count']);
 								break;
 							case '4':
 								userOption.push('员工总数');
+								userOption2.push('员工总数');
 								userOptionValue.push(res['count_member']);
 								break;
 							case '5':
 								userOption.push('在岗人数');
+								userOption2.push('在岗人数');
 								userOptionValue.push(res['on_guard_count']);
 								break;
 							case '6':
 								userOption.push('离岗人数');
+								userOption2.push('离岗人数');
 								userOptionValue.push(res['out_guard_count']);
 								break;
 							case '7':
 								userOption.push('未上岗人数');
+								userOption2.push('未上岗人数');
 								userOptionValue.push(res['no_guard_count']);
 								break;
 							case '8':
 								userOption.push('上午考勤统计');
+								userOption2.push('上午考勤统计');
 								am=false;
 								//document.getElementById("am").style.display = 'block';
 								break;
 							case '9':
 								userOption.push('下午考勤统计');
+								userOption2.push('下午考勤统计');
 								pm=false;
 								//document.getElementById("pm").style.display = 'block';
 								break;
@@ -429,7 +479,7 @@
 						document.getElementById("pm").style.display = 'none';
 					}
 					this.selectedRealTimeMenus=userOption;//用户拥有的option的值   编辑打开的页面里面选中的选项
-					this.realTimeMonitorDataLabelArr=userOption;//用户拥有的option的值    在首页展示的选项
+					this.realTimeMonitorDataLabelArr=userOption2;//用户拥有的option的值    在首页展示的选项
 					this.realTimeMonitorData=userOptionValue;//option 的值
 				})
 			},
@@ -443,6 +493,5 @@
 		}
 	})
 	main.getData();
-
 
 </script>
