@@ -124,7 +124,7 @@ class CustomerController extends BaseController
         $this->assign('uid',$uid);
         $this->assign('username',$username);
         $this->assign('list',$list);
-        $this->display("Customer_List");
+        $this->display("customer_List");
     }
     // 管理员信息浏览
     public function customerInfo(){
