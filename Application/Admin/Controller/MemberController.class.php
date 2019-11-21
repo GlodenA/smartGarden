@@ -288,6 +288,35 @@ class MemberController extends BaseController
         $this->display("member_info");
     }
 
+    // 浏览员工信息
+    public function memberInfo2()
+    {
+        $where['userid'] = I("userid");
+        $memberInfo = M('Member')->where($where)->find();
+        if ($memberInfo["parent_id"] > 0) {
+            $memberInfo["parent_name"] = M("Member")->where(array("userid" => $memberInfo["parent_id"], "is_delete" => 0))->getField("realname");
+        } else {
+            $memberInfo["parent_name"] = "";
+        }
+        if($memberInfo["sex"]==1){
+            $memberInfo["sex"]="男";
+        }else{
+            $memberInfo["sex"]=="女";
+        }
+        if($memberInfo["position"] > 0){
+            $memberInfo["position"] = M("Member_position")->where(array("id" => $memberInfo["position"], "is_delete" => 0))->getField("name");
+        }
+        if($memberInfo["job_status"]==1){
+            $memberInfo["job_status"]="在岗";
+        }else if ($memberInfo["job_status"]==2){
+            $memberInfo["job_status"]="未上岗";
+        }else if ($memberInfo["job_status"]==0){
+            $memberInfo["job_status"]="离岗";
+        }
+        $this->ajaxReturn($memberInfo);
+        adminLog("查看用户" . $memberInfo["userid"] . "详情");
+        //$this->display("member_info");
+    }
     /**
      * 员工删除
      */

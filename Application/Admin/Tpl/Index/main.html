@@ -253,11 +253,9 @@
 			</el-table-column>
 			<el-table-column :key="i" :prop="prop" :label="label" v-else-if="prop == 'realname' ">
 				<template #default="{ row}">
-					<a :href=row.userinfo>
-						<el-tag >
+						<span @click="showEmployeeDetail(row)" style="cursor:pointer;">
 							{{ row.realname }}
-						</el-tag>
-					</a>
+						</span>
 				</template>
 			</el-table-column>
 			<el-table-column :key="i" v-else-if="prop == 'type'" :prop="prop" :label="label">
@@ -290,6 +288,21 @@
     <el-button @click="resetOption()">重置</el-button>
   </span>
 </el-dialog>
+	<el-dialog :visible.sync="employeeDetail.dialog" title="员工详情" width="480px">
+		<el-form :model="employeeDetail.formData" label-width="100px">
+			<el-form-item :label="l" v-for="([l, f]) in [
+        ['姓名', 'realname'],
+        ['员工号', 'job_number'],
+        ['手机号', 'mobile'],
+        ['职位', 'position'],
+        ['管理人员', 'parent_name'],
+        ['性别', 'sex'],
+        ['状态', 'job_status']
+      ]">
+				<el-input v-model="employeeDetail.formData[f]" disabled/>
+			</el-form-item>
+		</el-form>
+	</el-dialog>
 </div>
 <script type="text/javascript">
 	function userInfo(userid){
@@ -327,7 +340,19 @@
 				realTimeMonitorData: [],
 				realTimeMonitorColor: ['primary', 'warning', 'danger'],
 				realTimeMonitorDataLabelArr: [],
-				userOptionAdd:[]
+				userOptionAdd:[],
+				employeeDetail:{
+					dialog: false,
+					formData: {
+						realname: '',
+						job_number: '',
+						mobile: '',
+						position: '',
+						parent_name: '',
+						sex: '',
+						job_status: ''
+					}
+				}
 			}
 		},
 		computed: {
@@ -339,6 +364,16 @@
 			}
 		},
 		methods: {
+			showEmployeeDetail(row){
+				this.employeeDetail.dialog = true;
+				DMS.ajaxPost('__MODULE__/Member/memberInfo2',
+						{
+							"userid" : row.uid
+						}, res => {
+							this.employeeDetail.formData = res;
+						})
+
+			},
 			resetOption(){
 				DMS.ajaxPost('__MODULE__/ShowOption/optionSelect' , {
 					option_ids: '1,2,3,4,5',
