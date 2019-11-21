@@ -43,17 +43,23 @@
       endLoading(){
         this.globalLoading = false
       }
-    },
-    watch: {
-      globalLoading(v){
-        console.log('Loading change: ', v);
-      }
     }
   })
 </script>
 <style media="screen">
     input[type=file] {
         display: none;
+    }
+
+    .detail-value,
+    .detail-label {
+        font-size: 16px;
+    }
+
+    .detail-label {
+        width: 120px;
+        text-align: right;
+        font-weight: bold;
     }
 </style>
 <div class="padding-md" id="MEMBERLIST">
@@ -144,12 +150,11 @@
                             ['4', '离职'],
                             ]).get(row.job_status)
                             }}
-<<<<<<< HEAD
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" width="380">
-            <template #default="{ row }">
-              <el-link :underline="false" type="primary" @click="() => {
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作" width="380">
+                        <template #default="{ row }">
+                            <el-link :underline="false" type="primary" @click="() => {
                                 detailRow =  [
                                   ['姓名', 'realname'],
                                   ['员工号', 'job_number'],
@@ -164,51 +169,25 @@
                                   formatter
                                 }))
                                 detailDialog = true
-                              }">详情</el-link>
-              <el-link :underline="false" type="primary" @click="() => {
+                              }">详情
+                            </el-link>
+                            <el-link :underline="false" type="primary" @click="() => {
                                 Object.keys(editFormData).forEach(f => {
                                   editFormData[f] = row[f]
                                 })
                                 editDialog = true
-                              }">编辑</el-link>
-              <el-link :underline="false" type="danger" @click="deleteMember(row)">删除</el-link>
-              <el-link :underline="false" type="primary" @click="() => {
+                              }">编辑
+                            </el-link>
+                            <el-link :underline="false" type="danger" @click="deleteMember(row)">删除</el-link>
+                            <el-link :underline="false" type="primary" @click="() => {
                                 Object.keys(bindDeviceFormData).forEach(f => {
                                   if(f in row){
                                     bindDeviceFormData[f] = row[f]
                                   }
                                 })
                                 bindDeviceDialog = true
-                              }">绑定设备</el-link>
-              <el-link :underline="false" type="primary">解绑设备</el-link>
-              <el-link :underline="false" type="primary">员工轨迹</el-link>
-              <el-link :underline="false" type="primary">所属区域</el-link>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="flex justify-between items-center mt3">
-          <div>
-            <el-button :disabled="!hasSelection" type="danger" icon="el-icon-delete" @click="membersDelete">
-              批量删除
-            </el-button>
-            <el-button :disabled="!hasSelection" type="danger" icon="el-icon-sort" class="mx2" @click="exchangeManagerBatchDialog = true">
-              批量切换管理人员
-            </el-button>
-            <el-button icon="el-icon-download" @click="window.open('/smartGarden/manager.php?s=/Member/memberExcel')">
-              导出
-            </el-button>
-          </div>
-          <el-pagination background layout="prev, pager, next" :total="totalNumber" :current-page="queryCondition.page" @current-change="pageChange">
-          </el-pagination>
-=======
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="操作" width="380">
-                        <template #default="{ row }">
-                            <el-link :underline="false" type="primary">详情</el-link>
-                            <el-link :underline="false" type="primary">编辑</el-link>
-                            <el-link :underline="false" type="danger" @click="deleteMember(row)">删除</el-link>
-                            <el-link :underline="false" type="primary">绑定设备</el-link>
+                              }">绑定设备
+                            </el-link>
                             <el-link :underline="false" type="primary">解绑设备</el-link>
                             <el-link :underline="false" type="primary">员工轨迹</el-link>
                             <el-link :underline="false" type="primary">所属区域</el-link>
@@ -220,77 +199,23 @@
                         <el-button :disabled="!hasSelection" type="danger" icon="el-icon-delete" @click="membersDelete">
                             批量删除
                         </el-button>
-                        <el-button :disabled="!hasSelection" type="danger" icon="el-icon-sort" class="mx2">
+                        <el-button :disabled="!hasSelection" type="danger" icon="el-icon-sort" class="mx2"
+                                   @click="exchangeManagerBatchDialog = true">
                             批量切换管理人员
                         </el-button>
-                        <el-button icon="el-icon-download" @click="window.open('/manager.php?s=/Member/memberExcel')">
+                        <el-button icon="el-icon-download" @click="exportExcel">
                             导出
                         </el-button>
                     </div>
-                    <el-pagination
-                            background
-                            layout="prev, pager, next"
-                            :total="totalNumber"
-                            :current-page="queryCondition.page"
-                            @current-change="pageChange">
+                    <el-pagination background layout="prev, pager, next" :total="totalNumber"
+                                   :current-page="queryCondition.page" @current-change="pageChange">
                     </el-pagination>
                 </div>
             </div>
->>>>>>> 3fcbb1a0a0dc484f435a669beea4e3edce33f11f
         </div>
     </div>
-<<<<<<< HEAD
-  </el-dialog>
 
-  <!-- 绑定设备 -->
-  <el-dialog :visible.sync="bindDeviceDialog" title="绑定设备" width="480px">
-    <el-form :model="bindDeviceFormData" label-width="100px">
-      <el-divider content-position="left">用户信息</el-divider>
-      <el-form-item :label="l" :key="f" v-for="([f, l]) in [
-        ['realname', '姓名'],
-        ['job_number', '员工号'],
-        ['mobile', '手机号']
-      ]">
-        <el-input v-model="bindDeviceFormData[f]" disabled></el-input>
-      </el-form-item>
-      <el-divider content-position="left">设备IMEI</el-divider>
-        <el-row :gutter="10">
-          <el-col :span="18">
-            <el-form-item label="设备IMEI">
-              <el-input v-model="bindDeviceFormData.imei"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-con :span="6">
-            <el-button type="primary" icon="el-icon-search">
-              查询
-            </el-button>
-          </el-con>
-        </el-row>
-    </el-form>
-    <div slot="footer" class="flex justify-center">
-      <el-button type="primary">
-        提交
-      </el-button>
-    </div>
-  </el-dialog>
-
-  <!-- 批量切换管理人员 -->
-  <el-dialog :visible.sync="exchangeManagerBatchDialog" title="批量解除管理人员" width="480px">
-    <el-form label-width="100px">
-      <el-form-item label="经理选择">
-        <el-select v-model="exchangeManagerBatchFormData.id">
-          <el-option label="解除管理人员" :value="-1"></el-option>
-          <?php if(is_array($managerList)): $i = 0; $__LIST__ = $managerList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["realname"]); ?>" value="<?php echo ($pl["userid"]); ?>"></el-option><?php endforeach; endif; else: echo "" ;endif; ?>
-        </el-select>
-      </el-form-item>
-    </el-form>
-    <div slot="footer" class="flex justify-center">
-      <el-button type="primary">
-        提交
-      </el-button>
-    </div>  
-  </el-dialog>
-=======
+    <!-- 添加 -->
     <el-dialog :visible.sync="create.dialog" title="添加员工" width="480px">
         <div class="flex justify-center">
             <el-radio-group v-model="create.type" style="margin-bottom: 30px;">
@@ -321,10 +246,7 @@
         </el-form>
         <div v-else class="column items-center">
             <el-link href="/Public/Admin/File/01.xlsx" type="primary" class="mb3">下载批量带入模板</el-link>
-            <el-upload
-                    drag
-                    action=""
-                    :before-upload="beforeUpload">
+            <el-upload drag action="" :before-upload="beforeUpload">
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
             </el-upload>
@@ -335,7 +257,110 @@
             </el-button>
         </div>
     </el-dialog>
->>>>>>> 3fcbb1a0a0dc484f435a669beea4e3edce33f11f
+
+    <!-- 详情 -->
+    <el-dialog :visible.sync="detailDialog" title="员工详情" width="480px">
+        <el-table border :show-header="false" :data="detailRow">
+            <el-table-column prop="label"></el-table-column>
+            <el-table-column prop="value">
+                <template #default="{ row }">
+                    <template v-if="row.field === 'job_status'">
+                        <el-tag :type="new Map([['1', 'primary'], ['0', 'danger'], ['2', 'warning'], ['4', 'info']]).get(row.value)">
+                            {{ statusMap.get(row.value) }}
+                        </el-tag>
+                    </template>
+                    <template v-else>
+                        {{ row.formatter(row.value) }}
+                    </template>
+                </template>
+            </el-table-column>
+        </el-table>
+    </el-dialog>
+
+    <!-- 编辑 -->
+    <el-dialog :visible.sync="editDialog" title="编辑员工信息" width="480px">
+        <el-form :model="editFormData" rules="create.formRules" label-width="100px">
+            <el-form-item label="职位">
+                <el-select v-model="editFormData.position" style="width:100%;">
+                    <?php if(is_array($positionList)): $i = 0; $__LIST__ = $positionList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["name"]); ?>" value="<?php echo ($pl["id"]); ?>">
+                        </el-option><?php endforeach; endif; else: echo "" ;endif; ?>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="管理人员">
+                <el-select v-model="editFormData.parent_name" style="width:100%;">
+                    <?php if(is_array($managerList)): $i = 0; $__LIST__ = $managerList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["realname"]); ?>" value="<?php echo ($pl["userid"]); ?>">
+                        </el-option><?php endforeach; endif; else: echo "" ;endif; ?>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="姓名">
+                <el-input v-model="editFormData.realname"></el-input>
+            </el-form-item>
+            <el-form-item label="手机号">
+                <el-input v-model="editFormData.mobile"></el-input>
+            </el-form-item>
+            <el-form-item label="员工号">
+                <el-input v-model="editFormData.job_number"></el-input>
+            </el-form-item>
+            <el-form-item label="性别">
+                <el-radio v-model="editFormData.sex" label="1">男</el-radio>
+                <el-radio v-model="editFormData.sex" label="2">女</el-radio>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="flex justify-center">
+            <el-button type="primary" @click="memberEdit">
+                提交
+            </el-button>
+        </div>
+    </el-dialog>
+
+    <!-- 绑定设备 -->
+    <el-dialog :visible.sync="bindDeviceDialog" title="绑定设备" width="480px">
+        <el-form :model="bindDeviceFormData" label-width="100px">
+            <el-divider content-position="left">用户信息</el-divider>
+            <el-form-item :label="l" :key="f" v-for="([f, l]) in [
+        ['realname', '姓名'],
+        ['job_number', '员工号'],
+        ['mobile', '手机号']
+      ]">
+                <el-input v-model="bindDeviceFormData[f]" disabled></el-input>
+            </el-form-item>
+            <el-divider content-position="left">设备IMEI</el-divider>
+            <el-row :gutter="10">
+                <el-col :span="18">
+                    <el-form-item label="设备IMEI">
+                        <el-input v-model="bindDeviceFormData.imei"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-con :span="6">
+                    <el-button type="primary" icon="el-icon-search">
+                        查询
+                    </el-button>
+                </el-con>
+            </el-row>
+        </el-form>
+        <div slot="footer" class="flex justify-center">
+            <el-button type="primary">
+                提交
+            </el-button>
+        </div>
+    </el-dialog>
+
+    <!-- 批量切换管理人员 -->
+    <el-dialog :visible.sync="exchangeManagerBatchDialog" title="批量解除管理人员" width="480px">
+        <el-form label-width="100px">
+            <el-form-item label="经理选择">
+                <el-select v-model="exchangeManagerBatchFormData.id">
+                    <el-option label="解除管理人员" :value="-1"></el-option>
+                    <?php if(is_array($managerList)): $i = 0; $__LIST__ = $managerList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["realname"]); ?>" value="<?php echo ($pl["userid"]); ?>"></el-option><?php endforeach; endif; else: echo "" ;endif; ?>
+                </el-select>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="flex justify-center">
+            <el-button type="primary" @click="membersManagerChange">
+                提交
+            </el-button>
+        </div>
+    </el-dialog>
 </div>
 <script>
     let positionList = []
@@ -351,6 +376,12 @@
         el: '#MEMBERLIST',
         data() {
             return {
+                statusMap: new Map([
+                    ['1', '在岗'],
+                    ['0', '离岗'],
+                    ['2', '未上岗'],
+                    ['4', '离职'],
+                ]),
                 positionList,
                 tableSelections: [],
                 tableData: [{
@@ -394,6 +425,29 @@
                         job_number: '',
                         sex: 0
                     }
+                },
+                detailRow: [],
+                detailDialog: false,
+                editDialog: false,
+                editFormData: {
+                    userid:'',
+                    position: '',
+                    parent_name: '',
+                    realname: '',
+                    mobile: '',
+                    job_number: '',
+                    sex: ''
+                },
+                bindDeviceDialog: false,
+                bindDeviceFormData: {
+                    realname: '',
+                    mobile: '',
+                    job_number: '',
+                    imei: ''
+                },
+                exchangeManagerBatchDialog: false,
+                exchangeManagerBatchFormData: {
+                    id: -1
                 }
             }
         },
@@ -402,96 +456,6 @@
                 return this.tableSelections.length > 0
             }
         },
-<<<<<<< HEAD
-        detailRow: [],
-        detailDialog: false,
-        editDialog: false,
-        editFormData: {
-          position: '',
-          parent_name: '',
-          realname: '',
-          mobile: '',
-          job_number: '',
-          sex: ''
-        },
-        bindDeviceDialog: false,
-        bindDeviceFormData: {
-          realname: '',
-          mobile: '',
-          job_number: '',
-          imei: ''
-        },
-        exchangeManagerBatchDialog: false,
-        exchangeManagerBatchFormData: {
-          id: -1
-        }
-      }
-    },
-    computed: {
-      hasSelection() {
-        return this.tableSelections.length > 0
-      }
-    },
-    created() {
-      this.doQuery();
-    },
-    computed: {
-      hasSelection() {
-        return this.tableSelections.length > 0
-      }
-    },
-    methods: {
-      membersDelete() {
-        console.log(this.tableSelections.map(row => row.userid).join(','));
-        DMS.ajaxPost('/smartGarden/manager.php?s=/Member/membersDelete', {
-          "userid": this.tableSelections.map(row => row.userid).join(',')
-        }, res => {
-          if (res.status === 1) {
-            this.$message({
-              message: res.info,
-              type: 'success'
-            });
-            window.location.reload();
-          } else {
-            this.$message({
-              message: res.info,
-              type: 'error'
-            });
-          }
-        })
-      },
-      beforeUpload(f) {
-        if (!new RegExp(/(xls)|(xlsx)/i).test(f.name)) {
-          this.$alert('只能上传xlsx文件')
-          return false
-        }
-        this.create.formData.file = f
-        return false
-      },
-      showLeaveDialog(row) {
-        // 从接口查询离岗详情并赋值给this.edit.leaveFormData
-        DMS.ajaxPost("/smartGarden/manager.php?s=/Member/leaveInfo", {
-          userid: row.userid,
-          add_time: row.add_time,
-        }, ret => {
-          this.testArr = ret.leaveInfo
-        })
-        this.edit.leaveDialog = true
-      },
-      getPositionLabel(v) {
-        let p = positionList.find(p => p.value === v)
-        if (!p) {
-          return '管理人员'
-        }
-        return p.label
-      },
-      pageChange(p) {
-        this.queryCondition.page = p;
-        this.doQuery();
-      },
-      doQuery() {
-        // 在这里将查询条件传后台获取查询结果
-=======
         created() {
             this.doQuery();
         },
@@ -501,9 +465,26 @@
             }
         },
         methods: {
+            membersDelete() {
+                console.log(this.tableSelections.map(row => row.userid).join(','));
+                DMS.ajaxPost('/manager.php?s=/Member/membersDelete', {
+                    "userid": this.tableSelections.map(row => row.userid).join(',')
+                }, res => {
+                    if (res.status === 1) {
+                        this.$message({
+                            message: res.info,
+                            type: 'success'
+                        });
+                        window.location.reload();
+                    } else {
+                        this.$message({
+                            message: res.info,
+                            type: 'error'
+                        });
+                    }
+                })
+            },
             beforeUpload(f) {
->>>>>>> 3fcbb1a0a0dc484f435a669beea4e3edce33f11f
-
                 if (!new RegExp(/(xls)|(xlsx)/i).test(f.name)) {
                     this.$alert('只能上传xlsx文件')
                     return false
@@ -633,23 +614,23 @@
                         }
                     })
             },
-            membersDelete(){
+            membersDelete() {
                 console.log(this.tableSelections.map(row => row.userid).join(','));
-                DMS.ajaxPost('/manager.php?s=/Member/membersDelete',{"userid":this.tableSelections.map(row => row.userid).join(',')},res => {
-                        if (res.status === 1) {
-                            this.$message({
-                                message: res.info,
-                                type: 'success'
-                            });
-                            window.location.reload();
-                        }
-                        else {
-                            this.$message({
-                                message: res.info,
-                                type: 'error'
-                            });
-                        }
-                    })
+                DMS.ajaxPost('/manager.php?s=/Member/membersDelete', {"userid": this.tableSelections.map(row => row.userid).join(',')}, res => {
+                    if (res.status === 1) {
+                        this.$message({
+                            message: res.info,
+                            type: 'success'
+                        });
+                        window.location.reload();
+                    }
+                    else {
+                        this.$message({
+                            message: res.info,
+                            type: 'error'
+                        });
+                    }
+                })
             },
             changePosition(e) {
                 this.queryCondition.page = 1
@@ -663,6 +644,66 @@
                 this.queryCondition.page = 1
                 this.doQuery()
             },
+            exportExcel() {
+                param = {
+                    "keywords": this.queryCondition.keywords,
+                    "status": this.queryCondition.status,
+                    "position": this.queryCondition.position,
+                    "parent_id": this.queryCondition.manager,
+                }
+                window.open('/manager.php?s=/Member/memberExcel' + '/parent_id/' + param["parent_id"] + '/keywords/' + param["keywords"] + '/status/' + param["status"] + '/position/' + param["position"]
+                    , "_self");
+                console.log('/manager.php?s=/Member/memberExcel' + '/parent_id/' + param["parent_id"] + '/keywords/' + param["keywords"] + '/status/' + param["status"] + '/position/' + param["position"]);
+            },
+            membersManagerChange() {
+                param = {
+                    "userids":this.tableSelections.map(row => row.userid).join(','),
+                    "parent_id": this.exchangeManagerBatchFormData.id
+                }
+                console.log(param);
+                DMS.ajaxPost('/manager.php?s=/Member/membersManagerChange',param, res => {
+                    if (res.status === 1) {
+                        this.$message({
+                            message: res.info,
+                            type: 'success'
+                        });
+                        window.location.reload();
+                    }
+                    else {
+                        this.$message({
+                            message: res.info,
+                            type: 'error'
+                        });
+                    }
+                })
+            },
+            memberEdit(){
+                param = {
+                    "userid":this.editFormData.userid,
+                    "parent_id": this.editFormData.parent_name,
+                    "mobile":this.editFormData.mobile,
+                    "realname":this.editFormData.realname,
+                    "job_number":this.editFormData.job_number,
+                    "position":this.editFormData.position,
+                    "sex":this.editFormData.sex,
+                }
+                console.log(param);
+                DMS.ajaxPost('/manager.php?s=/Member/memberEdit',{"info":param,"userid":param.userid}, res => {
+                    if (res.status === 1) {
+                        this.$message({
+                            message: res.info,
+                            type: 'success'
+                        });
+                        window.location.reload();
+                    }
+                    else {
+                        this.$message({
+                            message: res.info,
+                            type: 'error'
+                        });
+                    }
+                })
+            }
         }
     })
 </script>
