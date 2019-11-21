@@ -43,18 +43,24 @@
       endLoading(){
         this.globalLoading = false
       }
-    },
-    watch: {
-      globalLoading(v){
-        console.log('Loading change: ', v);
-      }
     }
   })
 </script>
 <style media="screen">
-    input[type=file] {
-        display: none;
-    }
+  input[type=file] {
+    display: none;
+  }
+
+  .detail-value,
+  .detail-label {
+    font-size: 16px;
+  }
+
+  .detail-label {
+    width: 120px;
+    text-align: right;
+    font-weight: bold;
+  }
 </style>
 <div class="padding-md" id="MEMBERLIST">
     <div class="smart-widget" style="margin-bottom: 1px;">
@@ -144,87 +150,156 @@
                             ['4', '离职'],
                             ]).get(row.job_status)
                             }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="操作" width="380">
-                        <template #default="{ row }">
-                            <el-link :underline="false" type="primary">详情</el-link>
-                            <el-link :underline="false" type="primary">编辑</el-link>
-                            <el-link :underline="false" type="danger" @click="deleteMember(row)">删除</el-link>
-                            <el-link :underline="false" type="primary">绑定设备</el-link>
-                            <el-link :underline="false" type="primary">解绑设备</el-link>
-                            <el-link :underline="false" type="primary">员工轨迹</el-link>
-                            <el-link :underline="false" type="primary">所属区域</el-link>
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <div class="flex justify-between items-center mt3">
-                    <div>
-                        <el-button :disabled="!hasSelection" type="danger" icon="el-icon-delete" @click="membersDelete">
-                            批量删除
-                        </el-button>
-                        <el-button :disabled="!hasSelection" type="danger" icon="el-icon-sort" class="mx2">
-                            批量切换管理人员
-                        </el-button>
-                        <el-button icon="el-icon-download" @click="window.open('/manager.php?s=/Member/memberExcel')">
-                            导出
-                        </el-button>
-                    </div>
-                    <el-pagination
-                            background
-                            layout="prev, pager, next"
-                            :total="totalNumber"
-                            :current-page="queryCondition.page"
-                            @current-change="pageChange">
-                    </el-pagination>
-                </div>
-            </div>
-        </div>
-    </div>
-    <el-dialog :visible.sync="create.dialog" title="添加员工" width="480px">
-        <div class="flex justify-center">
-            <el-radio-group v-model="create.type" style="margin-bottom: 30px;">
-                <el-radio-button label="handy">手动添加</el-radio-button>
-                <el-radio-button label="batch">批量添加</el-radio-button>
-            </el-radio-group>
-        </div>
-        <el-form label-width="100px" v-if="create.type === 'handy'" :model="create.formData" :rules="create.formRules">
-            <el-form-item label="职位">
-                <el-select v-model="create.formData.position" style="width:100%;">
-                    <?php if(is_array($positionList)): $i = 0; $__LIST__ = $positionList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["name"]); ?>" value="<?php echo ($pl["id"]); ?>">
-                        </el-option><?php endforeach; endif; else: echo "" ;endif; ?>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="姓名">
-                <el-input v-model="create.formData.realname"></el-input>
-            </el-form-item>
-            <el-form-item label="手机号">
-                <el-input v-model="create.formData.mobile"></el-input>
-            </el-form-item>
-            <el-form-item label="员工号">
-                <el-input v-model="create.formData.job_number"></el-input>
-            </el-form-item>
-            <el-form-item label="性别">
-                <el-radio v-model="create.formData.sex" :label="1">男</el-radio>
-                <el-radio v-model="create.formData.sex" :label="2">女</el-radio>
-            </el-form-item>
-        </el-form>
-        <div v-else class="column items-center">
-            <el-link href="/Public/Admin/File/01.xlsx" type="primary" class="mb3">下载批量带入模板</el-link>
-            <el-upload
-                    drag
-                    action=""
-                    :before-upload="beforeUpload">
-                <i class="el-icon-upload"></i>
-                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            </el-upload>
-        </div>
-        <div class="row justify-center" slot="footer">
-            <el-button type="primary" @click="addMember">
-                提交
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="380">
+            <template #default="{ row }">
+              <el-link :underline="false" type="primary" @click="() => {
+                                detailRow =  [
+                                  ['姓名', 'realname'],
+                                  ['员工号', 'job_number'],
+                                  ['手机号码', 'mobile'],
+                                  ['职位', 'position'],
+                                  ['性别', 'sex', v => v === '1' ? '男' : '女'],
+                                  ['状态', 'job_status'],
+                                ].map(([label, field, formatter = v => v]) => ({
+                                  label,
+                                  field,
+                                  value: row[field],
+                                  formatter
+                                }))
+                                detailDialog = true
+                              }">详情</el-link>
+              <el-link :underline="false" type="primary" @click="() => {
+                                Object.keys(editFormData).forEach(f => {
+                                  editFormData[f] = row[f]
+                                })
+                                editDialog = true
+                              }">编辑</el-link>
+              <el-link :underline="false" type="danger" @click="deleteMember(row)">删除</el-link>
+              <el-link :underline="false" type="primary">绑定设备</el-link>
+              <el-link :underline="false" type="primary">解绑设备</el-link>
+              <el-link :underline="false" type="primary">员工轨迹</el-link>
+              <el-link :underline="false" type="primary">所属区域</el-link>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="flex justify-between items-center mt3">
+          <div>
+            <el-button :disabled="!hasSelection" type="danger" icon="el-icon-delete" @click="membersDelete">
+              批量删除
             </el-button>
+            <el-button :disabled="!hasSelection" type="danger" icon="el-icon-sort" class="mx2">
+              批量切换管理人员
+            </el-button>
+            <el-button icon="el-icon-download" @click="exportExcel">
+              导出
+            </el-button>
+          </div>
+          <el-pagination background layout="prev, pager, next" :total="totalNumber" :current-page="queryCondition.page" @current-change="pageChange">
+          </el-pagination>
         </div>
-    </el-dialog>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加 -->
+  <el-dialog :visible.sync="create.dialog" title="添加员工" width="480px">
+    <div class="flex justify-center">
+      <el-radio-group v-model="create.type" style="margin-bottom: 30px;">
+        <el-radio-button label="handy">手动添加</el-radio-button>
+        <el-radio-button label="batch">批量添加</el-radio-button>
+      </el-radio-group>
+    </div>
+    <el-form label-width="100px" v-if="create.type === 'handy'" :model="create.formData" :rules="create.formRules">
+      <el-form-item label="职位">
+        <el-select v-model="create.formData.position" style="width:100%;">
+          <?php if(is_array($positionList)): $i = 0; $__LIST__ = $positionList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["name"]); ?>" value="<?php echo ($pl["id"]); ?>">
+            </el-option><?php endforeach; endif; else: echo "" ;endif; ?>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="姓名">
+        <el-input v-model="create.formData.realname"></el-input>
+      </el-form-item>
+      <el-form-item label="手机号">
+        <el-input v-model="create.formData.mobile"></el-input>
+      </el-form-item>
+      <el-form-item label="员工号">
+        <el-input v-model="create.formData.job_number"></el-input>
+      </el-form-item>
+      <el-form-item label="性别">
+        <el-radio v-model="create.formData.sex" :label="1">男</el-radio>
+        <el-radio v-model="create.formData.sex" :label="2">女</el-radio>
+      </el-form-item>
+    </el-form>
+    <div v-else class="column items-center">
+      <el-link href="/Public/Admin/File/01.xlsx" type="primary" class="mb3">下载批量带入模板</el-link>
+      <el-upload drag action="" :before-upload="beforeUpload">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+      </el-upload>
+    </div>
+    <div class="row justify-center" slot="footer">
+      <el-button type="primary" @click="addMember">
+        提交
+      </el-button>
+    </div>
+  </el-dialog>
+
+  <!-- 详情 -->
+  <el-dialog :visible.sync="detailDialog" title="员工详情" width="480px">
+    <el-table border :show-header="false" :data="detailRow">
+      <el-table-column prop="label"></el-table-column>
+      <el-table-column prop="value">
+        <template #default="{ row }">
+          <template v-if="row.field === 'job_status'">
+            <el-tag :type="new Map([['1', 'primary'], ['0', 'danger'], ['2', 'warning'], ['4', 'info']]).get(row.value)">
+              {{ statusMap.get(row.value) }}
+            </el-tag>
+          </template>
+          <template v-else>
+            {{ row.formatter(row.value) }}
+          </template>
+        </template>
+      </el-table-column>
+    </el-table>
+  </el-dialog>
+
+  <!-- 编辑 -->
+  <el-dialog :visible.sync="editDialog" title="编辑员工信息" width="480px">
+    <el-form :model="editFormData" rules="create.formRules" label-width="100px">
+      <el-form-item label="职位">
+        <el-select v-model="editFormData.position" style="width:100%;">
+          <?php if(is_array($positionList)): $i = 0; $__LIST__ = $positionList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["name"]); ?>" value="<?php echo ($pl["id"]); ?>">
+            </el-option><?php endforeach; endif; else: echo "" ;endif; ?>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="管理人员">
+        <el-select v-model="editFormData.parent_name" style="width:100%;">
+          <?php if(is_array($managerList)): $i = 0; $__LIST__ = $managerList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["realname"]); ?>" value="<?php echo ($pl["userid"]); ?>">
+            </el-option><?php endforeach; endif; else: echo "" ;endif; ?>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="姓名">
+        <el-input v-model="editFormData.realname"></el-input>
+      </el-form-item>
+      <el-form-item label="手机号">
+        <el-input v-model="editFormData.mobile"></el-input>
+      </el-form-item>
+      <el-form-item label="员工号">
+        <el-input v-model="editFormData.job_number"></el-input>
+      </el-form-item>
+      <el-form-item label="性别">
+        <el-radio v-model="editFormData.sex" label="1">男</el-radio>
+        <el-radio v-model="editFormData.sex" label="2">女</el-radio>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="flex justify-center">
+      <el-button type="primary">
+        提交
+      </el-button>
+    </div>
+  </el-dialog>
 </div>
 <script>
     let positionList = []
@@ -236,102 +311,137 @@
         })
     </script><?php endforeach; endif; else: echo "" ;endif; ?>
 <script type="text/javascript">
-    const MEMBERLIST = new Vue({
-        el: '#MEMBERLIST',
-        data() {
-            return {
-                positionList,
-                tableSelections: [],
-                tableData: [{
-                    userid: '',
-                    realname: '',
-                    sxe: 0,
-                    position: '',
-                    mobile: '',
-                    job_number: '',
-                    parent_name: '',
-                    machine_imei: '',
-                    job_status: 0
-                }],
-                totalNumber: 1000,
-                queryCondition: {
-                    position: 0,
-                    manager: 0,
-                    status: 0,
-                    keywords: '',
-                    parent_id: '',
-                    page: 1
-                },
-                tableColumns: [
-                    ['姓名', 'realname'],
-                    ['性别', 'sex'],
-                    ['职位', 'position'],
-                    ['手机号码', 'mobile'],
-                    ['员工号', 'job_number'],
-                    ['管理人员', 'parent_name'],
-                    ['设备IMEI', 'machine_imei'],
-                ],
-                create: {
-                    dialog: false,
-                    type: 'handy',
-                    formRules: {},
-                    formData: {
-                        file: null,
-                        position: '',
-                        realname: '',
-                        mobile: '',
-                        job_number: '',
-                        sex: 0
-                    }
-                }
-            }
+  const MEMBERLIST = new Vue({
+    el: '#MEMBERLIST',
+    data() {
+      return {
+        statusMap: new Map([
+          ['1', '在岗'],
+          ['0', '离岗'],
+          ['2', '未上岗'],
+          ['4', '离职'],
+        ]),
+        positionList,
+        tableSelections: [],
+        tableData: [{
+          userid: '',
+          realname: '',
+          sxe: 0,
+          position: '',
+          mobile: '',
+          job_number: '',
+          parent_name: '',
+          machine_imei: '',
+          job_status: 0
+        }],
+        totalNumber: 1000,
+        queryCondition: {
+          position: 0,
+          manager: 0,
+          status: 0,
+          keywords: '',
+          parent_id: '',
+          page: 1
         },
-        computed: {
-            hasSelection() {
-                return this.tableSelections.length > 0
-            }
+        tableColumns: [
+          ['姓名', 'realname'],
+          ['性别', 'sex'],
+          ['职位', 'position'],
+          ['手机号码', 'mobile'],
+          ['员工号', 'job_number'],
+          ['管理人员', 'parent_name'],
+          ['设备IMEI', 'machine_imei'],
+        ],
+        create: {
+          dialog: false,
+          type: 'handy',
+          formRules: {},
+          formData: {
+            file: null,
+            position: '',
+            realname: '',
+            mobile: '',
+            job_number: '',
+            sex: 0
+          }
         },
-        created() {
-            this.doQuery();
-        },
-        computed: {
-            hasSelection() {
-                return this.tableSelections.length > 0
-            }
-        },
-        methods: {
-            beforeUpload(f) {
-
-                if (!new RegExp(/(xls)|(xlsx)/i).test(f.name)) {
-                    this.$alert('只能上传xlsx文件')
-                    return false
-                }
-                this.create.formData.file = f
-                return false
-            },
-            showLeaveDialog(row) {
-                // 从接口查询离岗详情并赋值给this.edit.leaveFormData
-                DMS.ajaxPost("/manager.php?s=/Member/leaveInfo", {
-                    userid: row.userid,
-                    add_time: row.add_time,
-                }, ret => {
-                    this.testArr = ret.leaveInfo
-                })
-                this.edit.leaveDialog = true
-            },
-            getPositionLabel(v) {
-                let p = positionList.find(p => p.value === v)
-                if (!p) {
-                    return '管理人员'
-                }
-                return p.label
-            },
-            pageChange(p) {
-                this.queryCondition.page = p;
-                this.doQuery();
-            },
-            doQuery() {
-                // 在这里将查询条件传后台获取查询结果
+        detailRow: [],
+        detailDialog: false,
+        editDialog: false,
+        editFormData: {
+          position: '',
+          parent_name: '',
+          realname: '',
+          mobile: '',
+          job_number: '',
+          sex: ''
+        }
+      }
+    },
+    computed: {
+      hasSelection() {
+        return this.tableSelections.length > 0
+      }
+    },
+    created() {
+      this.doQuery();
+    },
+    computed: {
+      hasSelection() {
+        return this.tableSelections.length > 0
+      }
+    },
+    methods: {
+      membersDelete() {
+        console.log(this.tableSelections.map(row => row.userid).join(','));
+        DMS.ajaxPost('/manager.php?s=/Member/membersDelete', {
+          "userid": this.tableSelections.map(row => row.userid).join(',')
+        }, res => {
+          if (res.status === 1) {
+            this.$message({
+              message: res.info,
+              type: 'success'
+            });
+            window.location.reload();
+          } else {
+            this.$message({
+              message: res.info,
+              type: 'error'
+            });
+          }
+        })
+      },
+      beforeUpload(f) {
+        if (!new RegExp(/(xls)|(xlsx)/i).test(f.name)) {
+          this.$alert('只能上传xlsx文件')
+          return false
+        }
+        this.create.formData.file = f
+        return false
+      },
+      showLeaveDialog(row) {
+        // 从接口查询离岗详情并赋值给this.edit.leaveFormData
+        DMS.ajaxPost("/manager.php?s=/Member/leaveInfo", {
+          userid: row.userid,
+          add_time: row.add_time,
+        }, ret => {
+          this.testArr = ret.leaveInfo
+        })
+        this.edit.leaveDialog = true
+      },
+      getPositionLabel(v) {
+        let p = positionList.find(p => p.value === v)
+        if (!p) {
+          return '管理人员'
+        }
+        return p.label
+      },
+      pageChange(p) {
+        this.queryCondition.page = p;
+        this.doQuery();
+      },
+      doQuery() {
+        // 在这里将查询条件传后台获取查询结果
 
                 param = {
                     "keywords": this.queryCondition.keywords,
@@ -461,6 +571,17 @@
                 this.queryCondition.page = 1
                 this.doQuery()
             },
+            exportExcel(){
+                param = {
+                    "keywords":this.queryCondition.keywords,
+                    "status":this.queryCondition.status,
+                    "position":this.queryCondition.position,
+                    "parent_id":this.queryCondition.manager,
+                }
+                window.open('/manager.php?s=/Member/memberExcel'+'/parent_id/'+param["parent_id"]+'/keywords/'+param["keywords"]+'/status/'+param["status"]+'/position/'+param["position"]
+                    ,"_self");
+                console.log('/manager.php?s=/Member/memberExcel'+'/parent_id/'+param["parent_id"]+'/keywords/'+param["keywords"]+'/status/'+param["status"]+'/position/'+param["position"]);
+            }
         }
     })
 </script>
