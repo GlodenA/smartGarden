@@ -160,7 +160,7 @@
                 </el-table>
                 <div class="flex justify-between items-center mt3">
                     <div>
-                        <el-button :disabled="!hasSelection" type="danger" icon="el-icon-delete">
+                        <el-button :disabled="!hasSelection" type="danger" icon="el-icon-delete" @click="membersDelete">
                             批量删除
                         </el-button>
                         <el-button :disabled="!hasSelection" type="danger" icon="el-icon-sort" class="mx2">
@@ -416,6 +416,24 @@
                 DMS.ajaxPost('/manager.php?s=/Member/memberDelete',
                     {"usersid": row.userid}
                     , res => {
+                        if (res.status === 1) {
+                            this.$message({
+                                message: res.info,
+                                type: 'success'
+                            });
+                            window.location.reload();
+                        }
+                        else {
+                            this.$message({
+                                message: res.info,
+                                type: 'error'
+                            });
+                        }
+                    })
+            },
+            membersDelete(){
+                console.log(this.tableSelections.map(row => row.userid).join(','));
+                DMS.ajaxPost('/manager.php?s=/Member/membersDelete',{"userid":this.tableSelections.map(row => row.userid).join(',')},res => {
                         if (res.status === 1) {
                             this.$message({
                                 message: res.info,

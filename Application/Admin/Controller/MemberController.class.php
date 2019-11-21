@@ -308,7 +308,7 @@ class MemberController extends BaseController
     public function membersDelete()
     {
         if (IS_POST) {
-            $userids = explode(",", $_POST['userids']);
+            $userids = explode(",", $_POST['userid']);
             $data['is_delete'] = 1;
             $data["update_time"] = time();
             foreach ($userids as $key => $v) {
