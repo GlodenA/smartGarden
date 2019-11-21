@@ -78,7 +78,7 @@
                     </el-button>
                     <el-form inline>
                         <el-form-item label="职位">
-                            <el-select v-model="queryCondition.position" style="width:100px;">
+                            <el-select v-model="queryCondition.position" style="width:100px;" @change="changePosition">
                                 <el-option label="全部" :value="0">
                                 </el-option>
                                 <?php if(is_array($positionList)): $i = 0; $__LIST__ = $positionList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["name"]); ?>" value="<?php echo ($pl["id"]); ?>">
@@ -86,7 +86,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="管理人员">
-                            <el-select v-model="queryCondition.manager" style="width:100px;">
+                            <el-select v-model="queryCondition.manager" style="width:100px;" @change="changeManager">
                                 <el-option label="全部" :value="0">
                                 </el-option>
                                 <?php if(is_array($managerList)): $i = 0; $__LIST__ = $managerList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["realname"]); ?>" value="<?php echo ($pl["userid"]); ?>">
@@ -94,7 +94,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="员工状态">
-                            <el-select v-model="queryCondition.status" style="width:100px;">
+                            <el-select v-model="queryCondition.status" style="width:100px;" @change="changeStatus">
                                 <el-option v-for="(s, i) in ['全部', '在岗', '未上岗', '离岗','离职']" :label="s" :value="i"
                                            :key="s">
                                 </el-option>
@@ -137,12 +137,12 @@
                     <el-table-column prop="job_status" label="状态">
                         <template #default="{ row }">
                             {{
-                                new Map([
-                                    ['1', '在岗'],
-                                    ['0', '离岗'],
-                                    ['2', '未上岗'],
-                                    ['4', '离职'],
-                                ]).get(row.job_status)
+                            new Map([
+                            ['1', '在岗'],
+                            ['0', '离岗'],
+                            ['2', '未上岗'],
+                            ['4', '离职'],
+                            ]).get(row.job_status)
                             }}
                         </template>
                     </el-table-column>
@@ -160,7 +160,7 @@
                 </el-table>
                 <div class="flex justify-between items-center mt3">
                     <div>
-                        <el-button :disabled="!hasSelection" type="danger" icon="el-icon-delete">
+                        <el-button :disabled="!hasSelection" type="danger" icon="el-icon-delete" @click="membersDelete">
                             批量删除
                         </el-button>
                         <el-button :disabled="!hasSelection" type="danger" icon="el-icon-sort" class="mx2">
@@ -214,7 +214,7 @@
             <el-upload
                     drag
                     action=""
-                :before-upload="beforeUpload">
+                    :before-upload="beforeUpload">
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
             </el-upload>
@@ -236,209 +236,233 @@
         })
     </script><?php endforeach; endif; else: echo "" ;endif; ?>
 <script type="text/javascript">
-  const MEMBERLIST = new Vue({
-      el: '#MEMBERLIST',
-      data() {
-          return {
-              positionList,
-              tableSelections: [],
-              tableData: [{
-                  userid: '',
-                  realname: '',
-                  sxe: 0,
-                  position: '',
-                  mobile: '',
-                  job_number: '',
-                  parent_name: '',
-                  machine_imei: '',
-                  job_status: 0
-              }],
-              totalNumber: 1000,
-              queryCondition: {
-                  position: 0,
-                  manager: 0,
-                  status: 0,
-                  keywords: '',
-                  parent_id:'',
-                  page: 1
-              },
-              tableColumns: [
-                  ['姓名', 'realname'],
-                  ['性别', 'sex'],
-                  ['职位', 'position'],
-                  ['手机号码', 'mobile'],
-                  ['员工号', 'job_number'],
-                  ['管理人员', 'parent_name'],
-                  ['设备IMEI', 'machine_imei'],
-              ],
-              create: {
-                  dialog: false,
-                  type: 'handy',
-                  formRules: {},
-                  formData: {
-                      file: null,
-                      position: '',
-                      realname: '',
-                      mobile: '',
-                      job_number: '',
-                      sex: 0
-                  }
-              }
-          }
-      },
-      computed: {
-          hasSelection() {
-              return this.tableSelections.length > 0
-          }
-      },
-      created() {
-          this.doQuery();
-      },
-      computed: {
-          hasSelection() {
-              return this.tableSelections.length > 0
-          }
-      },
-      methods: {
-          beforeUpload(f){
+    const MEMBERLIST = new Vue({
+        el: '#MEMBERLIST',
+        data() {
+            return {
+                positionList,
+                tableSelections: [],
+                tableData: [{
+                    userid: '',
+                    realname: '',
+                    sxe: 0,
+                    position: '',
+                    mobile: '',
+                    job_number: '',
+                    parent_name: '',
+                    machine_imei: '',
+                    job_status: 0
+                }],
+                totalNumber: 1000,
+                queryCondition: {
+                    position: 0,
+                    manager: 0,
+                    status: 0,
+                    keywords: '',
+                    parent_id: '',
+                    page: 1
+                },
+                tableColumns: [
+                    ['姓名', 'realname'],
+                    ['性别', 'sex'],
+                    ['职位', 'position'],
+                    ['手机号码', 'mobile'],
+                    ['员工号', 'job_number'],
+                    ['管理人员', 'parent_name'],
+                    ['设备IMEI', 'machine_imei'],
+                ],
+                create: {
+                    dialog: false,
+                    type: 'handy',
+                    formRules: {},
+                    formData: {
+                        file: null,
+                        position: '',
+                        realname: '',
+                        mobile: '',
+                        job_number: '',
+                        sex: 0
+                    }
+                }
+            }
+        },
+        computed: {
+            hasSelection() {
+                return this.tableSelections.length > 0
+            }
+        },
+        created() {
+            this.doQuery();
+        },
+        computed: {
+            hasSelection() {
+                return this.tableSelections.length > 0
+            }
+        },
+        methods: {
+            beforeUpload(f) {
 
-              if (!new RegExp(/(xls)|(xlsx)/i).test(f.name)) {
-                  this.$alert('只能上传xlsx文件')
-                  return false
-              }
-              this.create.formData.file = f
-              return false
-          },
-          showLeaveDialog(row){
-              // 从接口查询离岗详情并赋值给this.edit.leaveFormData
-              DMS.ajaxPost("/manager.php?s=/Member/leaveInfo",{
-                  userid: row.userid,
-                  add_time: row.add_time,
-              },ret => {
-                  this.testArr=ret.leaveInfo
-          })
-              this.edit.leaveDialog = true
-          },
-          getPositionLabel(v){
-              let p = positionList.find(p => p.value === v)
-              if(!p){
-                  return '管理人员'
-              }
-              return p.label
-          },
-          pageChange(p) {
-              this.queryCondition.page = p;
-              this.doQuery();
-          },
-          doQuery() {
-              // 在这里将查询条件传后台获取查询结果
+                if (!new RegExp(/(xls)|(xlsx)/i).test(f.name)) {
+                    this.$alert('只能上传xlsx文件')
+                    return false
+                }
+                this.create.formData.file = f
+                return false
+            },
+            showLeaveDialog(row) {
+                // 从接口查询离岗详情并赋值给this.edit.leaveFormData
+                DMS.ajaxPost("/manager.php?s=/Member/leaveInfo", {
+                    userid: row.userid,
+                    add_time: row.add_time,
+                }, ret => {
+                    this.testArr = ret.leaveInfo
+                })
+                this.edit.leaveDialog = true
+            },
+            getPositionLabel(v) {
+                let p = positionList.find(p => p.value === v)
+                if (!p) {
+                    return '管理人员'
+                }
+                return p.label
+            },
+            pageChange(p) {
+                this.queryCondition.page = p;
+                this.doQuery();
+            },
+            doQuery() {
+                // 在这里将查询条件传后台获取查询结果
 
-              param = {
-                  "keywords": this.queryCondition.keywords,
-                  "status": this.queryCondition.status,
-                  "position": this.queryCondition.position,
-                  "parent_id": this.queryCondition.manager,
-                  "page": this.queryCondition.page,
-              }
-              DMS.ajaxPost('/manager.php?s=/Member/getMemberList',
-                  param, res => {
-                  this.tableData = res.MEMBERLIST;
-              this.totalNumber = res.totalNumber * 1;
-          })
-          },
-          addMember() {
-              // 在这里将查询条件传后台获取查询结果
-              if(this.create.type === 'batch'){
-                  let fd = new FormData()
-                  fd.append('file', this.create.formData.file)
-                  $.ajax({
-                      url: '/util.php?m=Attachment&c=Index&a=excelUpload',
-                      data: fd,
-                      type:'post',
-                      data: fd,
-                      contentType: false,
-                      processData: false,
-                      success: res => {
-                          console.log(res.file.savename)
-                          DMS.ajaxPost("/manager.php?s=/Member/importFile",{"filename":res.file.savename},function(ret){
-                              if(ret.status==1){
-                                  DMS.success(ret.info,1000,function(){
-                                      submitStatus = true;
-                                      if(ret.url){
-                                          window.location.reload();
-                                      }else{
-                                          window.location.reload();
-                                      }
-                                  })
-                              }else{
-                                  DMS.error(''+ret.info+'',0,function(){
-                                      submitStatus = true;
-                                      window.location.reload();
-                                  })
-                              }
-                          })
-                      }
-                  })
-                  return
-              }
-              param = {
-                  "position":this.create.formData.position,
-                  "realname":this.create.formData.realname,
-                  "mobile":this.create.formData.mobile,
-                  "job_number":this.create.formData.job_number,
-                  "sex":this.create.formData.sex
-              }
-              console.log(param);
-              DMS.ajaxPost('/manager.php?s=/Member/memberAdd',
-                  param, res => {
-                  if(res){
-                      this.$message({
-                          message: '员工添加成功',
-                          type: 'success'
-                      });
-                      window.location.reload();
-                  }
-                  else{
-                      this.$message({
-                      message: '员工添加失败，请检查信息',
-                      type: 'error'
-                  });
-              window.location.reload();
-                  }
-          })
-          },
-          deleteMember(row){
-              console.log(row.userid);
-              DMS.ajaxPost('/manager.php?s=/Member/memberDelete',
-                  {"usersid":row.userid}
-                  , res => {
-                  if(res){
-                      this.$message({
-                          message: '员工删除成功',
-                          type: 'success'
-                      });
-                      window.location.reload();
-                  }
-                  else{
-                      this.$message({
-                      message: '员工删除失败',
-                      type: 'error'
-                  });
-              window.location.reload();
-          }
-          })
-          },
-          changePosition(e) {
-              this.doQuery()
-          },
-          changeStatus(e) {
-              this.doQuery()
-          },
-          changeManager(e) {
-              this.doQuery()
-          },
-      }
-  })
+                param = {
+                    "keywords": this.queryCondition.keywords,
+                    "status": this.queryCondition.status,
+                    "position": this.queryCondition.position,
+                    "parent_id": this.queryCondition.manager,
+                    "page": this.queryCondition.page,
+                }
+                DMS.ajaxPost('/manager.php?s=/Member/getMemberList',
+                    param, res => {
+                        this.tableData = res.MEMBERLIST;
+                        this.totalNumber = res.totalNumber * 1;
+                    })
+            },
+            addMember() {
+                // 在这里将查询条件传后台获取查询结果
+                if (this.create.type === 'batch') {
+                    let fd = new FormData()
+                    fd.append('file', this.create.formData.file)
+                    $.ajax({
+                        url: '/util.php?m=Attachment&c=Index&a=excelUpload',
+                        data: fd,
+                        type: 'post',
+                        data: fd,
+                        contentType: false,
+                        processData: false,
+                        success: res => {
+                            console.log(res.file.savename)
+                            DMS.ajaxPost("/manager.php?s=/Member/importFile", {"filename": res.path}, function (ret) {
+                                if (ret.status == 1) {
+                                    DMS.success(ret.info, 1000, function () {
+                                        submitStatus = true;
+                                        if (ret.url) {
+                                            window.location.reload();
+                                        } else {
+                                            window.location.reload();
+                                        }
+                                    })
+                                } else {
+                                    DMS.error('' + ret.info + '', 0, function () {
+                                        submitStatus = true;
+                                        window.location.reload();
+                                    })
+                                }
+                            })
+                        }
+                    })
+                    return
+                }
+                else {
+                    param = {
+                        "position": this.create.formData.position,
+                        "realname": this.create.formData.realname,
+                        "mobile": this.create.formData.mobile,
+                        "job_number": this.create.formData.job_number,
+                        "sex": this.create.formData.sex
+                    }
+                    DMS.ajaxPost('/manager.php?s=/Member/memberAdd',
+                        param, res => {
+                            if (res.status === 1) {
+                                this.$alert(res.info, '通知', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        this.create.dialog = false
+                                        window.location.reload()
+                                    }
+                                })
+                            }
+                            else {
+                                this.$alert(res.info, '通知', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        this.create.dialog = false
+                                    }
+                                })
+                            }
+                        })
+                }
+            },
+            deleteMember(row) {
+
+                DMS.ajaxPost('/manager.php?s=/Member/memberDelete',
+                    {"usersid": row.userid}
+                    , res => {
+                        if (res.status === 1) {
+                            this.$message({
+                                message: res.info,
+                                type: 'success'
+                            });
+                            window.location.reload();
+                        }
+                        else {
+                            this.$message({
+                                message: res.info,
+                                type: 'error'
+                            });
+                        }
+                    })
+            },
+            membersDelete(){
+                console.log(this.tableSelections.map(row => row.userid).join(','));
+                DMS.ajaxPost('/manager.php?s=/Member/membersDelete',{"userid":this.tableSelections.map(row => row.userid).join(',')},res => {
+                        if (res.status === 1) {
+                            this.$message({
+                                message: res.info,
+                                type: 'success'
+                            });
+                            window.location.reload();
+                        }
+                        else {
+                            this.$message({
+                                message: res.info,
+                                type: 'error'
+                            });
+                        }
+                    })
+            },
+            changePosition(e) {
+                this.queryCondition.page = 1
+                this.doQuery()
+            },
+            changeStatus(e) {
+                this.queryCondition.page = 1
+                this.doQuery()
+            },
+            changeManager(e) {
+                this.queryCondition.page = 1
+                this.doQuery()
+            },
+        }
+    })
 </script>
 
             <!-- <footer class="footer">

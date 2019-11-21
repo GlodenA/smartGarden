@@ -18,22 +18,22 @@
     <![endif]-->
 
     <!-- Favicon and touch icons -->
-    <!-- <link rel="shortcut icon" href="/smartGarden/Public/Admin/ico/favicon.png"> -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/smartGarden/Public/Admin/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/smartGarden/Public/Admin/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/smartGarden/Public/Admin/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="/smartGarden/Public/Admin/ico/apple-touch-icon-57-precomposed.png">
+    <!-- <link rel="shortcut icon" href="/Public/Admin/ico/favicon.png"> -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/Public/Admin/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/Public/Admin/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/Public/Admin/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="/Public/Admin/ico/apple-touch-icon-57-precomposed.png">
 
-    <link rel="stylesheet" href="/smartGarden/Public/Admin/Css//util/flex.css">
+    <link rel="stylesheet" href="/Public/Admin/Css//util/flex.css">
     <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
     <!-- 引入样式 -->
-    <link rel="stylesheet" href="/smartGarden/Public/Admin/element/index.css">
+    <link rel="stylesheet" href="/Public/Admin/element/index.css">
     <!-- 引入组件库 -->
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <style media="screen">
       #app{
-        background-image: url(/smartGarden/Public/Admin/login/loginBg.png);
+        background-image: url(/Public/Admin/login/loginBg.png);
         background-position: center;
         background-size: cover;
         position: fixed;
@@ -68,12 +68,12 @@
 <body>
   <div id="app">
     <div class="page-title row items-center">
-      <img src="/smartGarden/Public/Admin/login/logo.svg" alt="">
+      <img src="/Public/Admin/login/logo.svg" alt="">
       <h2>智慧园林后台管理</h2>
     </div>
     <div class="row justify-center items-center" style="height:100%;">
       <div>
-        <img src="/smartGarden/Public/Admin/login/pic01.png" alt="">
+        <img src="/Public/Admin/login/pic01.png" alt="">
       </div>
       <el-card style="width: 380px;" class="ml4 p3 pt3">
         <div class="login-title row">
@@ -126,7 +126,7 @@
       doLogin(){
         this.$refs.loginForm.validate(r => {
           if(r){
-            DMS.ajaxPost("/smartGarden/manager.php?s=/Index/login", {
+            DMS.ajaxPost("/manager.php?s=/Index/login", {
               'form-username': this.loginUser.username,
               'form-password': this.loginUser.password
             },function(ret){

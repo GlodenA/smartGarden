@@ -161,19 +161,16 @@ class MemberController extends BaseController
             $whereJ['is_delete'] = 0;
             $isIn2 = M('Member')->where($whereJ)->find();
             if ($isIn2) {
-//                $this->error('员工号已存在');
-                return false;
+                $this->error('员工号已存在');
             }
             if (!$data['mobile'] && !$data['realname'] && !$data['job_number']) {
-//                $this->error('操作失败');
-                return false;
+                $this->error('操作失败');
             } else {
                 $result = M("Member")->data($data)->add();
                 if ($result) {
+                    $this->success("新增员工,id为" . $result);
                     adminLog("新增员工,id为" . $result);
-                    return true;
                 } else {
-                    return false;
                     $this->error('操作失败');
                 }
             }
@@ -311,7 +308,7 @@ class MemberController extends BaseController
     public function membersDelete()
     {
         if (IS_POST) {
-            $userids = explode(",", $_POST['userids']);
+            $userids = explode(",", $_POST['userid']);
             $data['is_delete'] = 1;
             $data["update_time"] = time();
             foreach ($userids as $key => $v) {
@@ -424,7 +421,7 @@ class MemberController extends BaseController
 
     public function importFile()
     {
-        $file_name = './' . I("filename");
+        $file_name = I("filename");
         $extension = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
         vendor("PHPExcel.PHPExcel");
         if ($extension == 'xls') {
@@ -998,6 +995,7 @@ class MemberController extends BaseController
 //            $number = 0;
 //        }
         $ret["totalNumber"] = $count;
+        $ret["MEMBERLIST"] = $list;
         $ret["MEMBERLIST"] = $list;
         $this.$this->ajaxReturn($ret);
     }
