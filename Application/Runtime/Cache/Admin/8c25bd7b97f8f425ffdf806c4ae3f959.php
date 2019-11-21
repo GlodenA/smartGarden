@@ -166,7 +166,7 @@
                         <el-button :disabled="!hasSelection" type="danger" icon="el-icon-sort" class="mx2">
                             批量切换管理人员
                         </el-button>
-                        <el-button icon="el-icon-download" @click="exportExcel">
+                        <el-button icon="el-icon-download" @click="window.open('/manager.php?s=/Member/memberExcel')">
                             导出
                         </el-button>
                     </div>
@@ -461,17 +461,6 @@
                 this.queryCondition.page = 1
                 this.doQuery()
             },
-            exportExcel(){
-                param = {
-                    "keywords":this.queryCondition.keywords,
-                    "status":this.queryCondition.status,
-                    "position":this.queryCondition.position,
-                    "parent_id":this.queryCondition.manager,
-                }
-                window.open('/manager.php?s=/Member/memberExcel'+'/parent_id/'+param["parent_id"]+'/keywords/'+param["keywords"]+'/status/'+param["status"]+'/position/'+param["position"]
-                    ,"_self");
-                console.log('/manager.php?s=/Member/memberExcel'+'/parent_id/'+param["parent_id"]+'/keywords/'+param["keywords"]+'/status/'+param["status"]+'/position/'+param["position"])
-            }
         }
     })
 </script>
