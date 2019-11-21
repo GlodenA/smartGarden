@@ -155,7 +155,7 @@
             <el-button :disabled="!hasSelection" type="danger" icon="el-icon-sort" class="mx2" @click="exchangeManagerBatchDialog = true">
               批量切换管理人员
             </el-button>
-            <el-button icon="el-icon-download" @click="window.open('__CONTROLLER__/memberExcel')">
+            <el-button icon="el-icon-download" @click="exportExcel">
               导出
             </el-button>
           </div>
@@ -613,7 +613,7 @@
                 }
                 window.open('__CONTROLLER__/memberExcel'+'/parent_id/'+param["parent_id"]+'/keywords/'+param["keywords"]+'/status/'+param["status"]+'/position/'+param["position"]
                     ,"_self");
-                console.log('__CONTROLLER__/memberExcel'+'/parent_id/'+param["parent_id"]+'/keywords/'+param["keywords"]+'/status/'+param["status"]+'/position/'+param["position"])
+                console.log('__CONTROLLER__/memberExcel'+'/parent_id/'+param["parent_id"]+'/keywords/'+param["keywords"]+'/status/'+param["status"]+'/position/'+param["position"]);
             }
         }
     })
