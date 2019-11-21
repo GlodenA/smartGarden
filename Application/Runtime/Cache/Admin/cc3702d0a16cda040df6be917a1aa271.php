@@ -300,9 +300,9 @@ const header = new Vue({
             }else{
                 Body.attr('scroll','no');
             }
-            // setInterval(function(){
-            //     getWarningMessage();
-            // },5000);
+            setInterval(function(){
+                getWarningMessage();
+            },5000);
         })
          var html = '';
         function getWarningMessage() {

@@ -1,5 +1,5 @@
 <style media="screen">
-	.text-indent{
+	.text-indent {
 		text-indent: 1em;
 	}
 </style>
@@ -8,20 +8,20 @@
 		<div class="smart-widget-inner">
 			<div class="smart-widget-body">
 				<el-breadcrumb separator="/">
-          <el-breadcrumb-item>
-            <a href="">首页</a>
-          </el-breadcrumb-item>
-          <el-breadcrumb-item>
-            员工管理
-          </el-breadcrumb-item>
-          <el-breadcrumb-item>
-            员工职位
-          </el-breadcrumb-item>
-        </el-breadcrumb>
-        <el-divider></el-divider>
+					<el-breadcrumb-item>
+						<a href="">首页</a>
+					</el-breadcrumb-item>
+					<el-breadcrumb-item>
+						员工管理
+					</el-breadcrumb-item>
+					<el-breadcrumb-item>
+						员工职位
+					</el-breadcrumb-item>
+				</el-breadcrumb>
+				<el-divider></el-divider>
 				<div class="">
 					<el-button icon="el-icon-plus" type="primary" @click="addDialog = true">
-						添加职位
+						添加管理职位
 					</el-button>
 				</div>
 				<el-table :data="tableData">
@@ -39,8 +39,14 @@
 								添加下级
 							</el-button>
 							<el-button type="primary" size="mini" @click="() => {
-								editFormData.name = row.name
-								editDialog = true
+								if(row.isChild){
+									editDialog = true
+									editFormData.name = row.name
+									editFormData.position = row.parentId
+									return
+								}
+								editManageFormData.name = row.name
+								editManagerDialog = true
 							}">
 								编辑
 							</el-button>
@@ -54,11 +60,16 @@
 		</div>
 	</div>
 
-	<!-- 添加职位 -->
-	<el-dialog title="添加职位" label-width="100px" :visible.sync="addDialog" width="480px">
-		<el-form :model="addFormData" :rules="nameRules">
-			<el-form-item prop="name" label="名称">
-				<el-input v-model="addFormData.name"/>
+	<!-- 添加管理职位 -->
+	<el-dialog title="添加管理职位" :visible.sync="addDialog" width="480px">
+		<el-form :model="addFormData" label-width="100px"  :rules="nameRules">
+			<el-form-item label="">
+				<el-select v-model="addFormData.position" style="width:100%;" disabled>
+					<el-option :value="0" label="作为管理人员"></el-option>
+				</el-select>
+			</el-form-item>
+			<el-form-item prop="name" label="职位名称">
+				<el-input v-model="addFormData.name" />
 			</el-form-item>
 		</el-form>
 		<div slot="footer" class="flex justify-center">
@@ -69,10 +80,38 @@
 	</el-dialog>
 
 	<!-- 添加下级 -->
-	<el-dialog title="添加下级" label-width="100px" :visible.sync="addChildDialog" width="480px">
-		<el-form :model="addChildFormData" :rules="nameRules">
+	<el-dialog title="添加下级" :visible.sync="addChildDialog" width="480px">
+		<el-form :model="addChildFormData" label-width="100px" :rules="nameRules">
+			<el-form-item label="">
+				<el-select v-model="addChildFormData.position" style="width:100%;" disabled>
+					<volist name="addPositionList" id="pl">
+						<el-option label="{$pl.name}" value="{$pl.id}">
+						</el-option>
+					</volist>
+				</el-select>
+			</el-form-item>
 			<el-form-item prop="name" label="名称">
-				<el-input v-model="addChildFormData.name"/>
+				<el-input v-model="addChildFormData.name" />
+			</el-form-item>
+		</el-form>
+		<div slot="footer" class="flex justify-center">
+			<el-button type="primary">
+				提交
+			</el-button>
+		</div>
+	</el-dialog>
+
+
+	<!-- 编辑管理人员信息 -->
+	<el-dialog title="编辑管理人员信息" :visible.sync="editManagerDialog" width="480px">
+		<el-form :model="editManageFormData" label-width="100px" :rules="nameRules">
+			<el-form-item label="">
+				<el-select v-model="editManageFormData.position" style="width:100%;" disabled>
+					<el-option :value="0" label="作为管理人员"></el-option>
+				</el-select>
+			</el-form-item>
+			<el-form-item prop="name" label="名称">
+				<el-input v-model="editManageFormData.name" />
 			</el-form-item>
 		</el-form>
 		<div slot="footer" class="flex justify-center">
@@ -83,10 +122,19 @@
 	</el-dialog>
 
 	<!-- 编辑职位信息 -->
-	<el-dialog title="编辑职位信息" label-width="100px" :visible.sync="editDialog" width="480px">
-		<el-form :model="editFormData" :rules="nameRules">
+	<el-dialog title="编辑职位信息" :visible.sync="editDialog" width="480px">
+		<el-form :model="editFormData" label-width="100px" :rules="nameRules">
+			<el-form-item label="">
+				<el-select v-model="editFormData.position" style="width:100%;">
+					<el-option :value="0" label="作为管理人员"></el-option>
+					<volist name="addPositionList" id="pl">
+						<el-option label="{$pl.name}" value="{$pl.id}">
+						</el-option>
+					</volist>
+				</el-select>
+			</el-form-item>
 			<el-form-item prop="name" label="名称">
-				<el-input v-model="editFormData.name"/>
+				<el-input v-model="editFormData.name" />
 			</el-form-item>
 		</el-form>
 		<div slot="footer" class="flex justify-center">
@@ -111,6 +159,7 @@
 			tableData.push({
 				id: "{$r['id']}",
 				name: "{$r['name']}",
+				parentId: "{$r[parent_id]}",
 				isChild: true
 			})
 		</script>
@@ -119,17 +168,20 @@
 <script type="text/javascript">
 	const GROUPLIST = new Vue({
 		el: '#GROUPLIST',
-		data(){
+		data() {
 			return {
 				nameRules: {
-					name: [
-						{ required: true, message: '请输入名称！', trigger: 'blur' }
-					]
+					name: [{
+						required: true,
+						message: '请输入名称！',
+						trigger: 'blur'
+					}]
 				},
 				tableData,
 				addChildDialog: false,
 				addChildFormData: {
-					name: ''
+					name: '',
+					position: ''
 				},
 				editDialog: false,
 				editFormData: {
@@ -137,28 +189,34 @@
 				},
 				addDialog: false,
 				addFormData: {
-					name: ''
-				}
+					name: '',
+					position: 0
+				},
+				editManagerDialog: false,
+				editManageFormData: {
+				    name: '',
+                    position: 0
+                }
 			}
 		},
-		mounted(){
-		},
+		mounted() {},
 		methods: {
-			addChild(row){
+			addChild(row) {
+			    this.addChildFormData.position = row.id
 				this.addChildDialog = true
 			},
-			askDel(row){
+			askDel(row) {
 				this.$confirm('确认删除吗?', '提示', {
-				 confirmButtonText: '确定',
-				 cancelButtonText: '取消',
-				 type: 'warning'
-			 }).then(() => {
-				 this.$message({
-					 type: 'success',
-					 showClose: true,
-					 message: '删除成功!'
-				 })
-			 }).catch(() => {})
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					this.$message({
+						type: 'success',
+						showClose: true,
+						message: '删除成功!'
+					})
+				}).catch(() => {})
 			}
 		}
 	})

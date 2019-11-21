@@ -79,8 +79,9 @@
       color: #ccc;
     }
 
-    #BIGSCREEN .left .chart-box #employee-chart{
-      height: 300px;
+    #BIGSCREEN .left .chart-box .legend-item .dot {
+      width: 16px;
+      height: 16px;
     }
 
     #BIGSCREEN .middle {
@@ -123,9 +124,24 @@
           <div class="text-white mt4 text-bold">
             在岗情况占比
           </div>
-          <canvas
-            id="employee-chart"
-          ></canvas>
+          <div class="flex flex-column items-center">
+            <canvas
+              id="employee-chart"
+              heght="160px"
+              width="160px"
+              style="width:160px;height:160px;"
+            ></canvas>
+            <div>
+              <div class="legend-item flex items-center mt2" v-for="(c, i) in backgroundColor" :key="c">
+                <div class="dot" :style="{
+                  backgroundColor: c
+                }"></div>
+                <div class="ml2">
+                  {{ labels[i] }}：{{ chartData[i] }}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="middle">
@@ -143,6 +159,11 @@
     el: '#BIGSCREEN',
     data() {
       return {
+        backgroundColor: ['#D3AE2C', '#D63548', '#A4D831', '#0573EA'],
+        labels: [
+          '迟到', '旷工', '早退', '正常'
+        ],
+        chartData: [2, 3, 5, 7],
         today: new Date(),
         bigData: [
           [
@@ -172,24 +193,35 @@
             ]
           ]
         ],
-        chartData: {
-    			legend: false,
-    			tooltips: false,
-    			elements: {
-    				arc: {
-    					backgroundColor: ['#D3AE2C', '#D63548', '#A4D831', '#0573EA'],
-    				}
-    			}
-    		}
       }
     },
     mounted(){
-  		var chart = new Chart('chart-0', {
+  		const chart = new Chart('employee-chart', {
   			type: 'pie',
-  			data: data,
-  			options: options
+  			data: {
+          datasets: [
+            {
+              borderWidth: 0,
+              data: this.chartData
+            },
+            {
+              data: []
+            }
+          ],
+          labels: this.labels
+        },
+  			options: {
+    			legend: false,
+    			tooltips: {
+            mode: 'nearest'
+          },
+    			elements: {
+    				arc: {
+    					backgroundColor: this.backgroundColor,
+    				}
+    			}
+    		}
   		});
-
     },
     methods: {
 
