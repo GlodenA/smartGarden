@@ -756,7 +756,7 @@ class AttendanceController extends BaseController {
             $where["leave_start_time"] = array("gt", $timeStr);
             $data["remark"] = I("remark");
             if (M("Leave")->where($where)->find()) {
-//                $this->error("当前员工已请假");
+                $this->error("当前员工已请假");
             } else {
                 if (I("type") == 2)
                     $data["leave_type"] = "休假";
@@ -773,9 +773,9 @@ class AttendanceController extends BaseController {
                     else
                         $attendanceData["remark"] = "请假";
                     M("Attendance")->add($attendanceData);
-//                    $this->success("提交成功");
+                    $this->success("提交成功");
                 } else {
-//                    $this->error("提交失败");
+                    $this->error("提交失败");
                 }
             }
         } else {
@@ -869,19 +869,19 @@ class AttendanceController extends BaseController {
     public function shiftDuty()
     {
         if (IS_POST) {
-            $info = I("info");
             $data["add_time"] = time();
-            $data["shift_start_time"] = strtotime($info["start_time"]);
-            $data["shift_end_time"] = strtotime($info["end_time"]);
-            $where["userid"] = $data["userid"] = $info["userid"];
+            $data["shift_start_time"] = strtotime(I("date")[0]);
+            $data["shift_end_time"] = strtotime(I("date")[1]);
+            $where["userid"] = $data["userid"] = I("userid");
             $where["is_delete"] = 0;
-            $where_shift["Shift_userid"] = $data["Shift_userid"] = $info["Shift_userid"];
+            $where_shift["Shift_userid"] = $data["Shift_userid"] = I("shift_userid");
             $where_shift["is_delete"] = $data["is_delete"] = 0;
-            $time = substr($info["start_time"], 0, 10) . " 00:00:00";
+            $time = substr(I("date")[0], 0, 10) . " 00:00:00";
             $timeStr = strtotime($time);
             $where["shift_start_time"] = array("gt", $timeStr);
             $where_shift["shift_start_time"] = array("gt", $timeStr);
             $data["uid"] = session("admin_uid");
+            $data["remark"]=I("remark");
             if (M("shift_duty")->where($where)->find()) {
                 $this->error("申请员工已申请换班或已替班");
             }
@@ -891,8 +891,8 @@ class AttendanceController extends BaseController {
             else {
                 $result = M("shift_duty")->add($data);
                 if ($result) {
-                    $attendanceData["machine_id"] = $info["machine_id"];
-                    $attendanceData["userid"] = $info["userid"];
+                    $attendanceData["machine_id"] = I("machine_id");
+                    $attendanceData["userid"] = I("userid");
                     $attendanceData["leave_id"] = $result;
                     $attendanceData["add_time"] = $attendanceData["update_time"] = $data["shift_start_time"];
                     $attendanceData["remark"] = "换班";

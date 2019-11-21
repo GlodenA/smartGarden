@@ -18,15 +18,39 @@
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/layer/layer.js"></script>
       <!-- Vue, element, 间距工具类 相关 -->
-      <link rel="stylesheet" href="/smartGarden/Public/Admin/Css//util/flex.css">
+      <link rel="stylesheet" href="/Public/Admin/Css//util/flex.css">
       <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
       <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
-      <link rel="stylesheet" href="/smartGarden/Public/Admin/element/index.css">
+      <link rel="stylesheet" href="/Public/Admin/element/index.css">
       <script src="https://unpkg.com/element-ui/lib/index.js"></script>
       <!-- Vue, element, 间距工具类 相关 -->
     </head>
     <body class="overflow-hidden">
 
+<div id="LOADINGOVERLAY" v-loading.fullscreen.lock="globalLoading"></div>
+<script type="text/javascript">
+  window.LOADINGOVERLAY = new Vue({
+    el: '#LOADINGOVERLAY',
+    data(){
+      return {
+        globalLoading: false
+      }
+    },
+    methods: {
+      startLoading(){
+        this.globalLoading = true
+      },
+      endLoading(){
+        this.globalLoading = false
+      }
+    },
+    watch: {
+      globalLoading(v){
+        console.log('Loading change: ', v);
+      }
+    }
+  })
+</script>
 <link href="<?php echo C('ADMIN_JS_PATH');?>/layui/css/layui.css" rel="stylesheet">
 <div class="padding-md" id="APPLYEXCHANGE">
   <div class="smart-widget" style="margin-bottom: 1px;">
@@ -54,7 +78,6 @@
             applicant: [
               { required: true, message: '请输入申请人！', trigger: 'blur' },
             ],
-
             time: [
               { required: true, message: '请选择时间！', trigger: 'blur' },
             ],
@@ -143,11 +166,20 @@
             // 这里代表表单验证通过，即将提交数据到后台
               console.log('提交数据至后台')
 
-              DMS.ajaxPost('/smartGarden/manager.php?s=/Attendance/leaveApply',info,ref =>{
-                  this.$message({
-                  message: '请假成功',
-                  type: 'success'
-              });
+              DMS.ajaxPost('/manager.php?s=/Attendance/leaveApply',info,ref =>{
+                  if(ref.status === 1){
+                      this.$message({
+                          message: ref.info,
+                          type: 'success'
+                      });
+                      window.location.reload();
+                  }
+                  else
+                      this.$message({
+                          message: ref.info,
+                          type: 'error'
+                      });
+                  window.location.reload();
               })
           }
         })
@@ -164,7 +196,7 @@
               });
               return;
           }
-          DMS.ajaxPost("/smartGarden/manager.php?s=/Attendance/getMemberInfo",param,ret =>{
+          DMS.ajaxPost("/manager.php?s=/Attendance/getMemberInfo",param,ret =>{
               if(ret.status==1){
               if(ret.data.machine_id > 0){
                   this.applyInfo.job_number = ret.data.job_number;
