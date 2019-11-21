@@ -4,51 +4,94 @@ namespace Admin\Controller;
 class SchedulesController extends BaseController {
 	//排班列表
 	public function schedulesList(){
-		$keywords = I('keywords');
+//		$keywords = I('keywords');
+//        if($keywords){
+//            $where['schedules_name'] = array('like',"%".$keywords."%");
+//            $this->assign("keywords",$keywords);
+//        }
+//		$where['is_delete'] = 0;
+//		$count = M("Schedules_setting")->where($where)->count();
+//        $Page = new \Think\Page($count,20);
+//        $list = M("Schedules_setting")->limit($Page->firstRow.','.$Page->listRows)->where($where)->order('schedules_id desc')->select();
+//        if($list){
+//            $work_day = '';
+//        	foreach($list as $k=>$v){
+//	        	$list[$k]['work_day'] = explode(",",$v['work_day']);
+//	        	foreach ($list[$k]['work_day']as $kkk => $vvv) {
+//	        		if($vvv == 1){
+//	        			$work_day = $work_day."周一";
+//	        		}elseif($vvv == 2){
+//	        			$work_day = $work_day." 周二";
+//	        		}elseif($vvv == 3){
+//	        			$work_day = $work_day." 周三";
+//	        		}elseif($vvv == 4){
+//	        			$work_day = $work_day." 周四";
+//	        		}elseif($vvv == 5){
+//	        			$work_day = $work_day." 周五";
+//	        		}elseif($vvv == 6){
+//	        			$work_day = $work_day." 周六";
+//	        		}elseif($vvv == 0){
+//	        			$work_day = $work_day." 周日";
+//	        		}
+//	        	}
+//	        	$list[$k]['work_day'] = $work_day;
+//	        	$work_day = '';
+//	        	$list[$k]['time_id'] = explode(",",$v['time_id']);
+//	        	foreach ($list[$k]['time_id']as $kk => $vv) {
+//	        		$list[$k]['timeList'][] = M("Schedules_time")->where(array('is_delete'=>0,'id'=>$vv))->find();
+//	        	}
+//	        }
+//        }
+//        $show = $Page->show();
+//        $this->assign('page',$show);
+        $this->assign('list','');
+		$this->display('schedules_list');
+	}
+    public function getSchedulesList(){
+        $keywords = I('keywords');
         if($keywords){
             $where['schedules_name'] = array('like',"%".$keywords."%");
             $this->assign("keywords",$keywords);
         }
-		$where['is_delete'] = 0;
-		$count = M("Schedules_setting")->where($where)->count();
-        $Page = new \Think\Page($count,20);
-        $list = M("Schedules_setting")->limit($Page->firstRow.','.$Page->listRows)->where($where)->order('schedules_id desc')->select();
-        // var_dump($list);die;
+
+        $where['is_delete'] = 0;
+        $count = M("Schedules_setting")->where($where)->count();
+        $listRows=10;
+        $firstRow = $listRows*(I("page")-1);
+        $list = M("Schedules_setting")->limit($firstRow.','.$listRows)->where($where)->order('schedules_id desc')->select();
         if($list){
             $work_day = '';
-        	foreach($list as $k=>$v){
-	        	$list[$k]['work_day'] = explode(",",$v['work_day']);
-	        	foreach ($list[$k]['work_day']as $kkk => $vvv) {
-	        		if($vvv == 1){
-	        			$work_day = $work_day."周一";
-	        		}elseif($vvv == 2){
-	        			$work_day = $work_day." 周二";
-	        		}elseif($vvv == 3){
-	        			$work_day = $work_day." 周三";
-	        		}elseif($vvv == 4){
-	        			$work_day = $work_day." 周四";
-	        		}elseif($vvv == 5){
-	        			$work_day = $work_day." 周五";
-	        		}elseif($vvv == 6){
-	        			$work_day = $work_day." 周六";
-	        		}elseif($vvv == 0){
-	        			$work_day = $work_day." 周日";
-	        		}
-	        	}
-	        	$list[$k]['work_day'] = $work_day;
-	        	$work_day = '';
-	        	$list[$k]['time_id'] = explode(",",$v['time_id']);
-	        	foreach ($list[$k]['time_id']as $kk => $vv) {
-	        		$list[$k]['timeList'][] = M("Schedules_time")->where(array('is_delete'=>0,'id'=>$vv))->find();
-	        	}
-	        }
+            foreach($list as $k=>$v){
+                $list[$k]['work_day'] = explode(",",$v['work_day']);
+                foreach ($list[$k]['work_day']as $kkk => $vvv) {
+                    if($vvv == 1){
+                        $work_day = $work_day."周一";
+                    }elseif($vvv == 2){
+                        $work_day = $work_day." 周二";
+                    }elseif($vvv == 3){
+                        $work_day = $work_day." 周三";
+                    }elseif($vvv == 4){
+                        $work_day = $work_day." 周四";
+                    }elseif($vvv == 5){
+                        $work_day = $work_day." 周五";
+                    }elseif($vvv == 6){
+                        $work_day = $work_day." 周六";
+                    }elseif($vvv == 0){
+                        $work_day = $work_day." 周日";
+                    }
+                }
+                $list[$k]['work_day'] = $work_day;
+                $work_day = '';
+                $list[$k]['time_id'] = explode(",",$v['time_id']);
+                foreach ($list[$k]['time_id']as $kk => $vv) {
+                    $list[$k]['timeList'][] = M("Schedules_time")->where(array('is_delete'=>0,'id'=>$vv))->find();
+                }
+            }
         }
-//        var_dump($list[0]);die;
-        $show = $Page->show();
-        $this->assign('page',$show);
-        $this->assign('list',$list);
-		$this->display('schedules_list');
-	}
+        $ret["totalNumber"]=$count;
+        $ret["list"] = $list;
+        $this->ajaxReturn($ret);
+    }
 
 	//班组添加
 	public function schedulesAdd(){
@@ -74,7 +117,31 @@ class SchedulesController extends BaseController {
             $this->display("schedules_add");
         }
 	}
-	//编辑班组
+	public function getAllTimeList(){
+        $whereTime['is_delete'] = 0;
+        $whereTime['is_show'] = 1;
+        $timeList = M("Schedules_time")->where($whereTime)->order('id asc')->select();
+        $ret["timeList"]=$timeList;
+        $this->ajaxReturn($ret);
+    }
+    //获取编辑班组信息
+    public function getEditSchedules(){
+        $schedules_id = I('schedules_id');
+        $where['schedules_id'] = $schedules_id;
+        $schedulesInfo = M('Schedules_setting')->where($where)->find();
+        $schedulesInfo['work_day'] = explode(',',$schedulesInfo['work_day']);
+        $schedulesInfo['time_id'] = explode(',',$schedulesInfo['time_id']);
+        // var_dump($schedulesInfo);die;
+        //$this->assign($schedulesInfo);
+        $whereTime['is_delete'] = 0;
+        $whereTime['is_show'] = 1;
+        $timeList = M("Schedules_time")->where($whereTime)->order('id asc')->select();
+        $ret["schedulesInfo"] = $schedulesInfo;
+        $ret["list"] = $timeList;
+        $this->ajaxReturn($ret);
+
+    }
+    //编辑班组
 	public function schedulesEdit(){
 		if(IS_POST){
 			$schedules_id = I('schedules_id');
@@ -107,6 +174,7 @@ class SchedulesController extends BaseController {
             $this->display("schedules_edit");
         }
 	}
+
 
 	//删除班组
 	public function schedulesDelete(){
