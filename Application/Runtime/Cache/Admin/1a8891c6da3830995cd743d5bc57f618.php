@@ -43,11 +43,6 @@
       endLoading(){
         this.globalLoading = false
       }
-    },
-    watch: {
-      globalLoading(v){
-        console.log('Loading change: ', v);
-      }
     }
   })
 </script>

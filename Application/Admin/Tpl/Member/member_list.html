@@ -132,7 +132,14 @@
                                 editDialog = true
                               }">编辑</el-link>
               <el-link :underline="false" type="danger" @click="deleteMember(row)">删除</el-link>
-              <el-link :underline="false" type="primary">绑定设备</el-link>
+              <el-link :underline="false" type="primary" @click="() => {
+                                Object.keys(bindDeviceFormData).forEach(f => {
+                                  if(f in row){
+                                    bindDeviceFormData[f] = row[f]
+                                  }
+                                })
+                                bindDeviceDialog = true
+                              }">绑定设备</el-link>
               <el-link :underline="false" type="primary">解绑设备</el-link>
               <el-link :underline="false" type="primary">员工轨迹</el-link>
               <el-link :underline="false" type="primary">所属区域</el-link>
@@ -144,7 +151,7 @@
             <el-button :disabled="!hasSelection" type="danger" icon="el-icon-delete" @click="membersDelete">
               批量删除
             </el-button>
-            <el-button :disabled="!hasSelection" type="danger" icon="el-icon-sort" class="mx2">
+            <el-button :disabled="!hasSelection" type="danger" icon="el-icon-sort" class="mx2" @click="exchangeManagerBatchDialog = true">
               批量切换管理人员
             </el-button>
             <el-button icon="el-icon-download" @click="window.open('__CONTROLLER__/memberExcel')">
@@ -261,6 +268,57 @@
       </el-button>
     </div>
   </el-dialog>
+
+  <!-- 绑定设备 -->
+  <el-dialog :visible.sync="bindDeviceDialog" title="绑定设备" width="480px">
+    <el-form :model="bindDeviceFormData" label-width="100px">
+      <el-divider content-position="left">用户信息</el-divider>
+      <el-form-item :label="l" :key="f" v-for="([f, l]) in [
+        ['realname', '姓名'],
+        ['job_number', '员工号'],
+        ['mobile', '手机号']
+      ]">
+        <el-input v-model="bindDeviceFormData[f]" disabled></el-input>
+      </el-form-item>
+      <el-divider content-position="left">设备IMEI</el-divider>
+        <el-row :gutter="10">
+          <el-col :span="18">
+            <el-form-item label="设备IMEI">
+              <el-input v-model="bindDeviceFormData.imei"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-con :span="6">
+            <el-button type="primary" icon="el-icon-search">
+              查询
+            </el-button>
+          </el-con>
+        </el-row>
+    </el-form>
+    <div slot="footer" class="flex justify-center">
+      <el-button type="primary">
+        提交
+      </el-button>
+    </div>
+  </el-dialog>
+
+  <!-- 批量切换管理人员 -->
+  <el-dialog :visible.sync="exchangeManagerBatchDialog" title="批量解除管理人员" width="480px">
+    <el-form label-width="100px">
+      <el-form-item label="经理选择">
+        <el-select v-model="exchangeManagerBatchFormData.id">
+          <el-option label="解除管理人员" :value="-1"></el-option>
+          <volist name="managerList" id="pl">
+            <el-option label="{$pl.realname}" value="{$pl.userid}"></el-option>
+          </volist>
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="flex justify-center">
+      <el-button type="primary">
+        提交
+      </el-button>
+    </div>  
+  </el-dialog>
 </div>
 <script>
   let positionList = []
@@ -338,6 +396,17 @@
           mobile: '',
           job_number: '',
           sex: ''
+        },
+        bindDeviceDialog: false,
+        bindDeviceFormData: {
+          realname: '',
+          mobile: '',
+          job_number: '',
+          imei: ''
+        },
+        exchangeManagerBatchDialog: false,
+        exchangeManagerBatchFormData: {
+          id: -1
         }
       }
     },
