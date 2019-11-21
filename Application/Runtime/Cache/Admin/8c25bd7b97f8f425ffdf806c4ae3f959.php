@@ -57,7 +57,7 @@
   }
 
   .detail-value,
-  .detail-label{
+  .detail-label {
     font-size: 16px;
   }
 
@@ -68,86 +68,85 @@
   }
 </style>
 <div class="padding-md" id="MEMBERLIST">
-    <div class="smart-widget" style="margin-bottom: 1px;">
-        <div class="smart-widget-inner">
-            <div class="smart-widget-body">
-                <el-breadcrumb separator="/">
-                    <el-breadcrumb-item>
-                        <a href="">首页</a>
-                    </el-breadcrumb-item>
-                    <el-breadcrumb-item>
-                        员工管理
-                    </el-breadcrumb-item>
-                    <el-breadcrumb-item>
-                        员工列表
-                    </el-breadcrumb-item>
-                </el-breadcrumb>
-                <el-divider></el-divider>
-                <div class="flex justify-between items-center">
-                    <el-button icon="el-icon-plus" type="primary" @click="create.dialog = true">
-                        员工添加
-                    </el-button>
-                    <el-form inline>
-                        <el-form-item label="职位">
-                            <el-select v-model="queryCondition.position" style="width:100px;" @change="changePosition">
-                                <el-option label="全部" :value="0">
-                                </el-option>
-                                <?php if(is_array($positionList)): $i = 0; $__LIST__ = $positionList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["name"]); ?>" value="<?php echo ($pl["id"]); ?>">
-                                    </el-option><?php endforeach; endif; else: echo "" ;endif; ?>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="管理人员">
-                            <el-select v-model="queryCondition.manager" style="width:100px;" @change="changeManager">
-                                <el-option label="全部" :value="0">
-                                </el-option>
-                                <?php if(is_array($managerList)): $i = 0; $__LIST__ = $managerList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["realname"]); ?>" value="<?php echo ($pl["userid"]); ?>">
-                                    </el-option><?php endforeach; endif; else: echo "" ;endif; ?>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="员工状态">
-                            <el-select v-model="queryCondition.status" style="width:100px;" @change="changeStatus">
-                                <el-option v-for="(s, i) in ['全部', '在岗', '未上岗', '离岗','离职']" :label="s" :value="i"
-                                           :key="s">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="关键字">
-                            <el-input v-model="queryCondition.keywords"></el-input>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button icon="el-icon-search" type="primary" @click="doQuery">查询</el-button>
-                        </el-form-item>
-                    </el-form>
-                </div>
-                <el-table :data="tableData" @selection-change="s => tableSelections = s">
-                    <el-table-column type="selection" width="55"></el-table-column>
-                    <template v-for="([label, prop], i) in tableColumns">
-                        <el-table-column :key="prop" :prop="prop" :label="label">
-                            <template v-if="prop === 'job_status'" #default="{ row }">
-                                <el-tag v-if="row[prop] === 1" type="primary">
-                                    在岗
-                                </el-tag>
-                                <el-tag v-else-if="row[prop] === 2" type="warning">
-                                    未上岗
-                                </el-tag>
-                                <el-tag v-else-if="row[prop] === 0" type="danger">
-                                    离岗
-                                </el-tag>
-                                <el-tag v-else-if="row[prop] === 4" type="danger">
-                                    离职
-                                </el-tag>
-                            </template>
-                            <template v-else-if="prop === 'sex'" #default="{ row }">
-                                {{ row[prop] * 1 === 1 ? '男' : '女' }}
-                            </template>
-                            <template #default="{ row }" v-else-if="prop === 'position'">
-                                {{ getPositionLabel(row[prop]) }}
-                            </template>
-                        </el-table-column>
-                    </template>
-                    <el-table-column prop="job_status" label="状态">
-                        <template #default="{ row }">
-                            {{
+  <div class="smart-widget" style="margin-bottom: 1px;">
+    <div class="smart-widget-inner">
+      <div class="smart-widget-body">
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item>
+            <a href="">首页</a>
+          </el-breadcrumb-item>
+          <el-breadcrumb-item>
+            员工管理
+          </el-breadcrumb-item>
+          <el-breadcrumb-item>
+            员工列表
+          </el-breadcrumb-item>
+        </el-breadcrumb>
+        <el-divider></el-divider>
+        <div class="flex justify-between items-center">
+          <el-button icon="el-icon-plus" type="primary" @click="create.dialog = true">
+            员工添加
+          </el-button>
+          <el-form inline>
+            <el-form-item label="职位">
+              <el-select v-model="queryCondition.position" style="width:100px;" @change="changePosition">
+                <el-option label="全部" :value="0">
+                </el-option>
+                <?php if(is_array($positionList)): $i = 0; $__LIST__ = $positionList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["name"]); ?>" value="<?php echo ($pl["id"]); ?>">
+                  </el-option><?php endforeach; endif; else: echo "" ;endif; ?>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="管理人员">
+              <el-select v-model="queryCondition.manager" style="width:100px;" @change="changeManager">
+                <el-option label="全部" :value="0">
+                </el-option>
+                <?php if(is_array($managerList)): $i = 0; $__LIST__ = $managerList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["realname"]); ?>" value="<?php echo ($pl["userid"]); ?>">
+                  </el-option><?php endforeach; endif; else: echo "" ;endif; ?>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="员工状态">
+              <el-select v-model="queryCondition.status" style="width:100px;" @change="changeStatus">
+                <el-option v-for="(s, i) in ['全部', '在岗', '未上岗', '离岗','离职']" :label="s" :value="i" :key="s">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="关键字">
+              <el-input v-model="queryCondition.keywords"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button icon="el-icon-search" type="primary" @click="doQuery">查询</el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+        <el-table :data="tableData" @selection-change="s => tableSelections = s">
+          <el-table-column type="selection" width="55"></el-table-column>
+          <template v-for="([label, prop], i) in tableColumns">
+            <el-table-column :key="prop" :prop="prop" :label="label">
+              <template v-if="prop === 'job_status'" #default="{ row }">
+                <el-tag v-if="row[prop] === 1" type="primary">
+                  在岗
+                </el-tag>
+                <el-tag v-else-if="row[prop] === 2" type="warning">
+                  未上岗
+                </el-tag>
+                <el-tag v-else-if="row[prop] === 0" type="danger">
+                  离岗
+                </el-tag>
+                <el-tag v-else-if="row[prop] === 4" type="danger">
+                  离职
+                </el-tag>
+              </template>
+              <template v-else-if="prop === 'sex'" #default="{ row }">
+                {{ row[prop] * 1 === 1 ? '男' : '女' }}
+              </template>
+              <template #default="{ row }" v-else-if="prop === 'position'">
+                {{ getPositionLabel(row[prop]) }}
+              </template>
+            </el-table-column>
+          </template>
+          <el-table-column prop="job_status" label="状态">
+            <template #default="{ row }">
+              {{
                             new Map([
                             ['1', '在岗'],
                             ['0', '离岗'],
@@ -155,11 +154,11 @@
                             ['4', '离职'],
                             ]).get(row.job_status)
                             }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="操作" width="380">
-                        <template #default="{ row }">
-                            <el-link :underline="false" type="primary" @click="() => {
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="380">
+            <template #default="{ row }">
+              <el-link :underline="false" type="primary" @click="() => {
                                 detailRow =  [
                                   ['姓名', 'realname'],
                                   ['员工号', 'job_number'],
@@ -175,86 +174,33 @@
                                 }))
                                 detailDialog = true
                               }">详情</el-link>
-                            <el-link :underline="false" type="primary">编辑</el-link>
-                            <el-link :underline="false" type="danger" @click="deleteMember(row)">删除</el-link>
-                            <el-link :underline="false" type="primary">绑定设备</el-link>
-                            <el-link :underline="false" type="primary">解绑设备</el-link>
-                            <el-link :underline="false" type="primary">员工轨迹</el-link>
-                            <el-link :underline="false" type="primary">所属区域</el-link>
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <div class="flex justify-between items-center mt3">
-                    <div>
-                        <el-button :disabled="!hasSelection" type="danger" icon="el-icon-delete" @click="membersDelete">
-                            批量删除
-                        </el-button>
-                        <el-button :disabled="!hasSelection" type="danger" icon="el-icon-sort" class="mx2">
-                            批量切换管理人员
-                        </el-button>
-                        <el-button icon="el-icon-download" @click="window.open('/smartGarden/manager.php?s=/Member/memberExcel')">
-                            导出
-                        </el-button>
-                    </div>
-                    <el-pagination
-                            background
-                            layout="prev, pager, next"
-                            :total="totalNumber"
-                            :current-page="queryCondition.page"
-                            @current-change="pageChange">
-                    </el-pagination>
-                </div>
-            </div>
+              <el-link :underline="false" type="primary">编辑</el-link>
+              <el-link :underline="false" type="danger" @click="deleteMember(row)">删除</el-link>
+              <el-link :underline="false" type="primary">绑定设备</el-link>
+              <el-link :underline="false" type="primary">解绑设备</el-link>
+              <el-link :underline="false" type="primary">员工轨迹</el-link>
+              <el-link :underline="false" type="primary">所属区域</el-link>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="flex justify-between items-center mt3">
+          <div>
+            <el-button :disabled="!hasSelection" type="danger" icon="el-icon-delete" @click="membersDelete">
+              批量删除
+            </el-button>
+            <el-button :disabled="!hasSelection" type="danger" icon="el-icon-sort" class="mx2">
+              批量切换管理人员
+            </el-button>
+            <el-button icon="el-icon-download" @click="window.open('/smartGarden/manager.php?s=/Member/memberExcel')">
+              导出
+            </el-button>
+          </div>
+          <el-pagination background layout="prev, pager, next" :total="totalNumber" :current-page="queryCondition.page" @current-change="pageChange">
+          </el-pagination>
         </div>
+      </div>
     </div>
-    <el-dialog :visible.sync="create.dialog" title="添加员工" width="480px">
-        <div class="flex justify-center">
-            <el-radio-group v-model="create.type" style="margin-bottom: 30px;">
-                <el-radio-button label="handy">手动添加</el-radio-button>
-                <el-radio-button label="batch">批量添加</el-radio-button>
-            </el-radio-group>
-        </div>
-        <el-form label-width="100px" v-if="create.type === 'handy'" :model="create.formData" :rules="create.formRules">
-            <el-form-item label="职位">
-              <el-select v-model="queryCondition.position" style="width:100px;">
-                <el-option label="全部" :value="0">
-                </el-option>
-                <?php if(is_array($positionList)): $i = 0; $__LIST__ = $positionList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["name"]); ?>" value="<?php echo ($pl["id"]); ?>">
-                  </el-option><?php endforeach; endif; else: echo "" ;endif; ?>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="管理人员">
-              <el-select v-model="queryCondition.manager" style="width:100px;">
-                <el-option label="全部" :value="0">
-                </el-option>
-                <?php if(is_array($managerList)): $i = 0; $__LIST__ = $managerList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["realname"]); ?>" value="<?php echo ($pl["userid"]); ?>">
-                  </el-option><?php endforeach; endif; else: echo "" ;endif; ?>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="员工状态">
-              <el-select v-model="queryCondition.status" style="width:100px;">
-                <el-option v-for="(s, i) in ['全部', '在岗', '未上岗', '离岗','离职']" :label="s" :value="i" :key="s">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="关键字">
-              <el-input v-model="queryCondition.keywords"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button icon="el-icon-search" type="primary" @click="doQuery">查询</el-button>
-            </el-form-item>
-        </el-form>
-        <div v-else class="column items-center">
-            <el-link href="/smartGarden/Public/Admin/File/01.xlsx" type="primary" class="mb3">下载批量带入模板</el-link>
-            <el-upload
-                    drag
-                    action=""
-                    :before-upload="beforeUpload">
-                <i class="el-icon-upload"></i>
-                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            </el-upload>
-        </div>
-      </el-dialog>
+  </div>
 
   <!-- 添加 -->
   <el-dialog :visible.sync="create.dialog" title="添加员工" width="480px">
@@ -424,9 +370,24 @@
       }
     },
     methods: {
-      // 批量删除
-      membersDelete(){
-
+      membersDelete() {
+        console.log(this.tableSelections.map(row => row.userid).join(','));
+        DMS.ajaxPost('/smartGarden/manager.php?s=/Member/membersDelete', {
+          "userid": this.tableSelections.map(row => row.userid).join(',')
+        }, res => {
+          if (res.status === 1) {
+            this.$message({
+              message: res.info,
+              type: 'success'
+            });
+            window.location.reload();
+          } else {
+            this.$message({
+              message: res.info,
+              type: 'error'
+            });
+          }
+        })
       },
       beforeUpload(f) {
         if (!new RegExp(/(xls)|(xlsx)/i).test(f.name)) {
