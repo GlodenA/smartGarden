@@ -756,7 +756,7 @@ class AttendanceController extends BaseController {
             $where["leave_start_time"] = array("gt", $timeStr);
             $data["remark"] = I("remark");
             if (M("Leave")->where($where)->find()) {
-//                $this->error("当前员工已请假");
+                $this->error("当前员工已请假");
             } else {
                 if (I("type") == 2)
                     $data["leave_type"] = "休假";
@@ -773,9 +773,9 @@ class AttendanceController extends BaseController {
                     else
                         $attendanceData["remark"] = "请假";
                     M("Attendance")->add($attendanceData);
-//                    $this->success("提交成功");
+                    $this->success("提交成功");
                 } else {
-//                    $this->error("提交失败");
+                    $this->error("提交失败");
                 }
             }
         } else {
