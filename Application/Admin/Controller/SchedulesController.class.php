@@ -81,11 +81,18 @@ class SchedulesController extends BaseController {
                     }
                 }
                 $list[$k]['work_day'] = $work_day;
-                $work_day = '';
+
                 $list[$k]['time_id'] = explode(",",$v['time_id']);
                 foreach ($list[$k]['time_id']as $kk => $vv) {
-                    $list[$k]['timeList'][] = M("Schedules_time")->where(array('is_delete'=>0,'id'=>$vv))->find();
+                    $time =  M("Schedules_time")->where(array('is_delete'=>0,'id'=>$vv))->find();
+                    $list[$k]['timeList'][] =$time ;
+                    if($time){
+                        $work_day.="|".$time["start_time"]."-".$time["end_time"]." ";
+                    }
                 }
+
+                $list[$k]['work_name']=$work_day ;
+                $work_day = '';
             }
         }
         $ret["totalNumber"]=$count;
@@ -121,6 +128,11 @@ class SchedulesController extends BaseController {
         $whereTime['is_delete'] = 0;
         $whereTime['is_show'] = 1;
         $timeList = M("Schedules_time")->where($whereTime)->order('id asc')->select();
+        foreach ($timeList as $kk => $vv) {
+
+            $work_name=$vv["title"]."(".$vv["start_time"]."-".$vv["end_time"].")";
+            $timeList[$kk]['work_name'] =$work_name ;
+        }
         $ret["timeList"]=$timeList;
         $this->ajaxReturn($ret);
     }
@@ -136,6 +148,11 @@ class SchedulesController extends BaseController {
         $whereTime['is_delete'] = 0;
         $whereTime['is_show'] = 1;
         $timeList = M("Schedules_time")->where($whereTime)->order('id asc')->select();
+        foreach ($timeList as $kk => $vv) {
+
+            $work_name=$vv["title"]."(".$vv["start_time"]."-".$vv["end_time"].")";
+            $timeList[$kk]['work_name'] =$work_name ;
+        }
         $ret["schedulesInfo"] = $schedulesInfo;
         $ret["list"] = $timeList;
         $this->ajaxReturn($ret);

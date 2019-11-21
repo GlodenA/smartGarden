@@ -19,7 +19,7 @@
 <div class="padding-md" id="AREALIST">
 	<div class="smart-widget" style="margin-bottom: 1px;">
 		<div class="smart-widget-inner">
-			<div class="smart-widget-body">
+			<div class="smart-widget-body" v-show="rendered">
 				<el-breadcrumb separator="/">
 					<el-breadcrumb-item>
 						<a href="">首页</a>
@@ -86,7 +86,7 @@
 			</el-form>
 		</div>
 		<baidu-map style="width:100%;height:300px;" :center="create.mapData.center"
-			:zoom="create.mapData.zoom" :scroll-wheel-zoom="true"
+			:zoom="create.mapData.zoom" :scroll-wheel-zoom="true" :dragging="create.moveStatus"
 			@click="({ point }) => {
 				if(create.editStatus){
 					points.push(point)
@@ -146,6 +146,7 @@
 		el: '#AREALIST',
 		data() {
 			return {
+				rendered: false,
 				mapEditable: true,
 				mlnglat:[],
 				points: [],
@@ -199,7 +200,6 @@
 					BMap,
 					map
 				]
-				this.map.disableDragging(!this.create.moveStatus)
 			},
 			drawChange(){
                   if(this.create.editStatus){
@@ -211,11 +211,6 @@
 			},
 			moveChange(){
 				this.create.moveStatus = !this.create.moveStatus
-				if(this.create.moveStatus){
-					this.map.enableDragging()
-					return
-				}
-				this.map.disableDragging()
 			},
 			addMap(){
 				this.create.title='区域添加'
@@ -239,11 +234,12 @@
 				}))
 				this.create.operType=false
 				this.create.dialog=true
+
 			},
 			showDetailMap(row){
 				this.create.title='区域详情'
 				this.mapEditable = false
-				this.create.moveStatus=false
+				this.create.moveStatus=true
 				this.create.editStatus=false
 				this.create.formData.area_name = row.area_name
 				this.points = row.coordinate.map(({ lat, lon }) => ({
@@ -371,6 +367,10 @@
 				this.queryCondition.page = 1
 				this.doQuery()
 			},
+
 		},
+		mounted(){
+			this.rendered = true
+		}
 	})
 </script>

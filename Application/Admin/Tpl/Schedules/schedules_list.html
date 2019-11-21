@@ -36,10 +36,8 @@
 				</div>
 				<el-table :data="tableData">
 					<el-table-column prop="schedules_name" label="区域名称"></el-table-column>
-					<el-table-column prop="work_day" label="添加时间">
-						<template #default="{ row }">
-							{{ row.work_day }} | {{ row.timeList.filter(({ is_delete }) => is_delete === '0').map(({ start_time, end_time }) => `${start_time}-${end_time}`).join(' ') }}
-						</template>
+					<el-table-column prop="work_name" label="添加时间">
+
 					</el-table-column>
 					<el-table-column prop="is_show" label="状态">
 						<template #default="{ row }">
@@ -87,7 +85,7 @@
 					<div class="flex flex-wrap">
 						<div style="width:50%;" v-for="(t, i) in create.times" :key="i" class="mb2">
 							<el-checkbox :label="t.id" >
-								{{ t.title }} ({{ t.start_time }}-{{ t.end_time }})
+								{{ t.work_name }}
 							</el-checkbox>
 						</div>
 					</div>
@@ -130,7 +128,7 @@
 					<div class="flex flex-wrap">
 						<div style="width:50%;" v-for="(t, i) in edit.times" :key="i" class="mb2">
 							<el-checkbox :label="t.id" >
-								{{ t.title }} ({{ t.start_time }}-{{ t.end_time }})
+								{{ t.work_name }}
 							</el-checkbox>
 						</div>
 					</div>
