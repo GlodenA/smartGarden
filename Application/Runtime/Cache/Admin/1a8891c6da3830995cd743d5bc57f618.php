@@ -18,10 +18,10 @@
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/layer/layer.js"></script>
       <!-- Vue, element, 间距工具类 相关 -->
-      <link rel="stylesheet" href="/Public/Admin/Css//util/flex.css">
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/Css//util/flex.css">
       <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
       <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
-      <link rel="stylesheet" href="/Public/Admin/element/index.css">
+      <link rel="stylesheet" href="/smartGarden/Public/Admin/element/index.css">
       <script src="https://unpkg.com/element-ui/lib/index.js"></script>
       <!-- Vue, element, 间距工具类 相关 -->
     </head>
@@ -52,7 +52,7 @@
   })
 </script>
 <style media="screen">
-	.text-indent{
+	.text-indent {
 		text-indent: 1em;
 	}
 </style>
@@ -61,17 +61,17 @@
 		<div class="smart-widget-inner">
 			<div class="smart-widget-body">
 				<el-breadcrumb separator="/">
-          <el-breadcrumb-item>
-            <a href="">首页</a>
-          </el-breadcrumb-item>
-          <el-breadcrumb-item>
-            员工管理
-          </el-breadcrumb-item>
-          <el-breadcrumb-item>
-            员工职位
-          </el-breadcrumb-item>
-        </el-breadcrumb>
-        <el-divider></el-divider>
+					<el-breadcrumb-item>
+						<a href="">首页</a>
+					</el-breadcrumb-item>
+					<el-breadcrumb-item>
+						员工管理
+					</el-breadcrumb-item>
+					<el-breadcrumb-item>
+						员工职位
+					</el-breadcrumb-item>
+				</el-breadcrumb>
+				<el-divider></el-divider>
 				<div class="">
 					<el-button icon="el-icon-plus" type="primary" @click="addDialog = true">
 						添加职位
@@ -108,10 +108,17 @@
 	</div>
 
 	<!-- 添加职位 -->
-	<el-dialog title="添加职位" label-width="100px" :visible.sync="addDialog" width="480px">
-		<el-form :model="addFormData" :rules="nameRules">
-			<el-form-item prop="name" label="名称">
-				<el-input v-model="addFormData.name"/>
+	<el-dialog title="添加职位" :visible.sync="addDialog" width="480px">
+		<el-form :model="addFormData" label-width="100px"  :rules="nameRules">
+			<el-form-item label="">
+				<el-select v-model="addFormData.position" style="width:100%;">
+					<el-option :value="0" label="作为管理人员"></el-option>
+					<?php if(is_array($addPositionList)): $i = 0; $__LIST__ = $addPositionList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["name"]); ?>" value="<?php echo ($pl["id"]); ?>">
+						</el-option><?php endforeach; endif; else: echo "" ;endif; ?>
+				</el-select>
+			</el-form-item>
+			<el-form-item prop="name" label="职位名称">
+				<el-input v-model="addFormData.name" />
 			</el-form-item>
 		</el-form>
 		<div slot="footer" class="flex justify-center">
@@ -122,10 +129,10 @@
 	</el-dialog>
 
 	<!-- 添加下级 -->
-	<el-dialog title="添加下级" label-width="100px" :visible.sync="addChildDialog" width="480px">
-		<el-form :model="addChildFormData" :rules="nameRules">
+	<el-dialog title="添加下级" :visible.sync="addChildDialog" width="480px">
+		<el-form :model="addChildFormData" label-width="100px" :rules="nameRules">
 			<el-form-item prop="name" label="名称">
-				<el-input v-model="addChildFormData.name"/>
+				<el-input v-model="addChildFormData.name" />
 			</el-form-item>
 		</el-form>
 		<div slot="footer" class="flex justify-center">
@@ -136,10 +143,10 @@
 	</el-dialog>
 
 	<!-- 编辑职位信息 -->
-	<el-dialog title="编辑职位信息" label-width="100px" :visible.sync="editDialog" width="480px">
-		<el-form :model="editFormData" :rules="nameRules">
+	<el-dialog title="编辑职位信息" :visible.sync="editDialog" width="480px">
+		<el-form :model="editFormData" label-width="100px" :rules="nameRules">
 			<el-form-item prop="name" label="名称">
-				<el-input v-model="editFormData.name"/>
+				<el-input v-model="editFormData.name" />
 			</el-form-item>
 		</el-form>
 		<div slot="footer" class="flex justify-center">
@@ -168,12 +175,14 @@
 <script type="text/javascript">
 	const GROUPLIST = new Vue({
 		el: '#GROUPLIST',
-		data(){
+		data() {
 			return {
 				nameRules: {
-					name: [
-						{ required: true, message: '请输入名称！', trigger: 'blur' }
-					]
+					name: [{
+						required: true,
+						message: '请输入名称！',
+						trigger: 'blur'
+					}]
 				},
 				tableData,
 				addChildDialog: false,
@@ -186,28 +195,28 @@
 				},
 				addDialog: false,
 				addFormData: {
-					name: ''
+					name: '',
+					position: ''
 				}
 			}
 		},
-		mounted(){
-		},
+		mounted() {},
 		methods: {
-			addChild(row){
+			addChild(row) {
 				this.addChildDialog = true
 			},
-			askDel(row){
+			askDel(row) {
 				this.$confirm('确认删除吗?', '提示', {
-				 confirmButtonText: '确定',
-				 cancelButtonText: '取消',
-				 type: 'warning'
-			 }).then(() => {
-				 this.$message({
-					 type: 'success',
-					 showClose: true,
-					 message: '删除成功!'
-				 })
-			 }).catch(() => {})
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					this.$message({
+						type: 'success',
+						showClose: true,
+						message: '删除成功!'
+					})
+				}).catch(() => {})
 			}
 		}
 	})
