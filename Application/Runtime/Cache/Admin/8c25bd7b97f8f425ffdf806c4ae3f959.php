@@ -213,7 +213,8 @@
             <el-link href="/Public/Admin/File/01.xlsx" type="primary" class="mb3">下载批量带入模板</el-link>
             <el-upload
                     drag
-                    action="">
+                    action=""
+                :before-upload="beforeUpload">
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
             </el-upload>
@@ -275,6 +276,7 @@
                   type: 'handy',
                   formRules: {},
                   formData: {
+                      file: null,
                       position: '',
                       realname: '',
                       mobile: '',
@@ -298,6 +300,15 @@
           }
       },
       methods: {
+          beforeUpload(f){
+
+              if (!new RegExp(/(xls)|(xlsx)/i).test(f.name)) {
+                  this.$alert('只能上传xlsx文件')
+                  return false
+              }
+              this.create.formData.file = f
+              return false
+          },
           showLeaveDialog(row){
               // 从接口查询离岗详情并赋值给this.edit.leaveFormData
               DMS.ajaxPost("/manager.php?s=/Member/leaveInfo",{
@@ -337,7 +348,39 @@
           },
           addMember() {
               // 在这里将查询条件传后台获取查询结果
-
+              if(this.create.type === 'batch'){
+                  let fd = new FormData()
+                  fd.append('file', this.create.formData.file)
+                  $.ajax({
+                      url: '/util.php?m=Attachment&c=Index&a=excelUpload',
+                      data: fd,
+                      type:'post',
+                      data: fd,
+                      contentType: false,
+                      processData: false,
+                      success: res => {
+                          console.log(res.file.savename)
+                          DMS.ajaxPost("/manager.php?s=/Member/importFile",{"filename":res.file.savename},function(ret){
+                              if(ret.status==1){
+                                  DMS.success(ret.info,1000,function(){
+                                      submitStatus = true;
+                                      if(ret.url){
+                                          window.location.reload();
+                                      }else{
+                                          window.location.reload();
+                                      }
+                                  })
+                              }else{
+                                  DMS.error(''+ret.info+'',0,function(){
+                                      submitStatus = true;
+                                      window.location.reload();
+                                  })
+                              }
+                          })
+                      }
+                  })
+                  return
+              }
               param = {
                   "position":this.create.formData.position,
                   "realname":this.create.formData.realname,
