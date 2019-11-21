@@ -43,11 +43,6 @@
       endLoading(){
         this.globalLoading = false
       }
-    },
-    watch: {
-      globalLoading(v){
-        console.log('Loading change: ', v);
-      }
     }
   })
 </script>
@@ -174,7 +169,12 @@
                                 }))
                                 detailDialog = true
                               }">详情</el-link>
-              <el-link :underline="false" type="primary">编辑</el-link>
+              <el-link :underline="false" type="primary" @click="() => {
+                                Object.keys(editFormData).forEach(f => {
+                                  editFormData[f] = row[f]
+                                })
+                                editDialog = true
+                              }">编辑</el-link>
               <el-link :underline="false" type="danger" @click="deleteMember(row)">删除</el-link>
               <el-link :underline="false" type="primary">绑定设备</el-link>
               <el-link :underline="false" type="primary">解绑设备</el-link>
@@ -266,16 +266,38 @@
 
   <!-- 编辑 -->
   <el-dialog :visible.sync="editDialog" title="编辑员工信息" width="480px">
-    <el-form :model="editFormData" rules="{
-
-    }">
-      <el-from-item label="职位">
+    <el-form :model="editFormData" rules="create.formRules" label-width="100px">
+      <el-form-item label="职位">
         <el-select v-model="editFormData.position" style="width:100%;">
           <?php if(is_array($positionList)): $i = 0; $__LIST__ = $positionList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["name"]); ?>" value="<?php echo ($pl["id"]); ?>">
             </el-option><?php endforeach; endif; else: echo "" ;endif; ?>
         </el-select>
-      </el-from-item>
+      </el-form-item>
+      <el-form-item label="管理人员">
+        <el-select v-model="editFormData.parent_name" style="width:100%;">
+          <?php if(is_array($managerList)): $i = 0; $__LIST__ = $managerList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$pl): $mod = ($i % 2 );++$i;?><el-option label="<?php echo ($pl["realname"]); ?>" value="<?php echo ($pl["userid"]); ?>">
+            </el-option><?php endforeach; endif; else: echo "" ;endif; ?>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="姓名">
+        <el-input v-model="editFormData.realname"></el-input>
+      </el-form-item>
+      <el-form-item label="手机号">
+        <el-input v-model="editFormData.mobile"></el-input>
+      </el-form-item>
+      <el-form-item label="员工号">
+        <el-input v-model="editFormData.job_number"></el-input>
+      </el-form-item>
+      <el-form-item label="性别">
+        <el-radio v-model="editFormData.sex" label="1">男</el-radio>
+        <el-radio v-model="editFormData.sex" label="2">女</el-radio>
+      </el-form-item>
     </el-form>
+    <div slot="footer" class="flex justify-center">
+      <el-button type="primary">
+        提交
+      </el-button>
+    </div>
   </el-dialog>
 </div>
 <script>
@@ -292,7 +314,6 @@
     el: '#MEMBERLIST',
     data() {
       return {
-
         statusMap: new Map([
           ['1', '在岗'],
           ['0', '离岗'],
