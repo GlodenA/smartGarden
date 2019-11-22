@@ -86,11 +86,11 @@
 							<el-link :underline="false" type="primary" @click="devicePosition.dialog = true">
 								设备位置
 							</el-link>
-							<el-link :underline="false" type="primary">
+							<el-link :underline="false" type="primary" @click="deviceTrack.dialog = true">
 								设备轨迹
 							</el-link>
 							<el-link :underline="false" type="primary">
-								划分区域
+								绑定区域
 							</el-link>
 							<el-link :underline="false" type="primary">
 								所属区域
@@ -191,10 +191,19 @@
 		</div>
 	</el-dialog>
 	<el-dialog :visible.sync="devicePosition.dialog" title="设备位置" width="620px">
-		<baidu-map style="width:100%;height:400px;" :center="devicePosition.mapData.center" :zoom="devicePosition.mapData.zoom">
+		<baidu-map style="width:100%;height:400px;" :center="mapData.center" :zoom="mapData.zoom">
 			<bm-marker :position="devicePosition.pos" animation="BMAP_ANIMATION_BOUNCE">
 	    </bm-marker>
 		</baidu-map>
+	</el-dialog>
+	<el-dialog :visible.sync="deviceTrack.dialog" title="设备轨迹" width="620px">
+		<baidu-map style="width:100%;height:400px;" :center="mapData.center" :zoom="mapData.zoom">
+			<bm-polyline :path="deviceTrack.points" stroke-color="blue" :stroke-opacity="0.5" :stroke-weight="2"></bm-polyline>
+		</baidu-map>
+	</el-dialog>
+	<el-dialog :visible.sync="bindArea.dialog" title="绑定区域" width="620px">
+		<el-select>
+		</el-select>
 	</el-dialog>
 </div>
 <script src="https://unpkg.com/vue-baidu-map"></script>
@@ -206,6 +215,13 @@
 		el: '#MACHINELIST',
 		data(){
 			return {
+				mapData: {
+					center: {
+						lng: 116.404,
+						lat: 39.915
+					},
+					zoom: 15
+				},
 				create: {
 					createDviceDialog: false,
 					type: 'handy',
@@ -221,6 +237,7 @@
 				batchSelections: [],
 				tableData: [
 				],
+				// 查询条件
 				queryCondition: {
 					keyword: '',
 					status: 0,
@@ -249,10 +266,9 @@
 					keyword: '',
 					area: '',
 				},
+				// 设备位置相关
 				devicePosition: {
 					dialog: false,
-					BMap: null,
-					map: null,
 					mapData: {
 						center: {
 							lng: 116.404,
@@ -264,8 +280,19 @@
 						lng: 116.404,
 						lat: 39.915
 					}
+				},
+				// 设备轨迹相关
+				deviceTrack: {
+					dialog: false,
+					points: [
+		        {lng: 116.404, lat: 39.915},
+		        {lng: 116.405, lat: 39.920},
+		        {lng: 116.423493, lat: 39.907445}
+		      ]
+				},
+				bindArea: {
+					dialog: false,
 				}
-
 			}
 		},
 

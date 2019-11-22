@@ -54,7 +54,7 @@
 					</el-table-column>
 					<el-table-column label="操作">
 						<template #default="{ row }">
-							<el-link type="primary">设备绑定列表</el-link>
+							<el-link type="primary" @click="showBindDeviceDialog(row)">设备绑定列表</el-link>
 							<el-link type="primary" class="mx2" @click="showDetailMap(row)">详情</el-link>
 							<el-link type="primary" class="mx2" @click="editMap(row)">编辑</el-link>
 							<el-link type="danger" @click="deleteMap(row)">删除</el-link>
@@ -136,6 +136,58 @@
 			</el-button>
 		</div>
 	</el-dialog>
+
+	<el-dialog :visible.sync="bindDevice.dialog" title="绑定设备" width="850px">
+		<div>
+			<el-button type="primary" icon="el-icon-plus" @click="bindDevice.add.dialog = true">
+				添加设备
+			</el-button>
+		</div>
+		<el-table :data="bindDevice.tableData">
+			<el-table-column prop="deviceNumber" label="设备号" show-overflow-tooltip></el-table-column>
+			<el-table-column prop="name" label="设备名称"></el-table-column>
+			<el-table-column prop="centerNumber" label="中心号码"></el-table-column>
+			<el-table-column prop="status" label="设备状态"></el-table-column>
+			<el-table-column prop="job_number" label="工号"></el-table-column>
+			<el-table-column prop="parent_name" label="负责人"></el-table-column>
+			<el-table-column label="操作">
+				<template #default="{ row }">
+					<el-button type="danger" size="mini">
+						解绑设备
+					</el-button>
+				</template>
+			</el-table-column>
+		</el-table>
+	</el-dialog>
+
+	<el-dialog :visible.sync="bindDevice.add.dialog" title="添加绑定设备" width="560px">
+		<el-form label-width="100px">
+			<el-form-item label="区域名称">
+				<el-input v-model="bindDevice.targetArea.area_name" disabled></el-input>
+			</el-form-item>
+			<el-form-item label="设备IMEI">
+				<el-input v-model="bindDevice.add.deviceIMEI">
+					<el-button slot="suffix" type="primary" size="small">
+						查询
+					</el-button>
+				</el-input>
+			</el-form-item>
+			<div class="">
+				<el-divider content-position="left">设备情况</el-divider>
+				<el-form-item label="设备名称">
+					<el-input disabled v-model="bindDevice.add.name"></el-input>
+				</el-form-item>
+				<el-form-item label="状态">
+					<el-input disabled v-model="bindDevice.add.status"></el-input>
+				</el-form-item>
+			</div>
+		</el-form>
+		<div class="flex justify-end" slot="footer">
+			<el-button type="primary">
+				绑定
+			</el-button>
+		</div>
+	</el-dialog>
 </div>
 <script src="https://unpkg.com/vue-baidu-map"></script>
 <script type="text/javascript">
@@ -183,6 +235,29 @@
 				},
 				tableData: [
 				],
+				bindDevice: {
+					targetArea: {
+						area_name: '',
+						id: ''
+					},
+					add: {
+						dialog: false,
+						deviceIMEI: '',
+						deviceInfo: {
+							name: '设备1293',
+							status: '该设备暂未绑定'
+						}
+					},
+					dialog: false,
+					tableData: [{
+						deviceNumber: '092384209384092',
+						name: '设备3982',
+						centerNumber: '013120',
+						status: 1,
+						job_number: '9812',
+						parent_name: '马喜忠'
+					}]
+				}
 			}
 		},
 		created(){
@@ -367,7 +442,12 @@
 				this.queryCondition.page = 1
 				this.doQuery()
 			},
-
+			showBindDeviceDialog(row){
+				Object.keys(this.bindDevice.targetArea).forEach(f => {
+					this.bindDevice.targetArea[f] = row[f]
+				})
+				this.bindDevice.dialog = true
+			}
 		},
 		mounted(){
 			this.rendered = true
