@@ -35,30 +35,32 @@
           </el-button>
           <el-form inline>
             <el-form-item label="客户ID">
-              <el-input v-model="queryCondition.client_id"></el-input>
+              <el-input v-model="queryCondition.uid"></el-input>
             </el-form-item>
             <el-form-item label="客户名称">
-              <el-input v-model="queryCondition.client_name"></el-input>
+              <el-input v-model="queryCondition.username"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary">
+              <el-button type="primary" @click="doQuery">
                 查询
               </el-button>
             </el-form-item>
           </el-form>
         </div>
         <el-table :data="tableData">
-          <el-table-column prop="id" label="客户ID"></el-table-column>
-          <el-table-column prop="name" label="客户名称"></el-table-column>
-          <el-table-column prop="authority_id" label="客户权限">
+          <el-table-column prop="uid" label="客户ID"></el-table-column>
+          <el-table-column prop="username" label="客户名称"></el-table-column>
+          <el-table-column prop="group_name" label="客户权限">
             <template #default="{ row }">
-              {{ authorities.find(({ id }) => id === row.authority_id).name }}
+              {{row.group_name}}
             </template>
           </el-table-column>
           <el-table-column label="操作">
             <template #default="{ row }">
               <el-button type="primary" size="mini" @click="() => {
-                editAuthorityFormData.authority_id = row.authority_id
+                editAuthorityFormData.authority_id = row.group_name
+                editAuthorityFormData.uid=row.uid
+                editAuthorityFormData.parent_id=row.parent_id
                 editAuthorityDialog = true
               }">
                 修改权限
@@ -74,7 +76,7 @@
             background
             layout="prev, pager, next"
             :total="totalNumber"
-            :page-size="10"
+            :page-size="5"
             :current-page="queryCondition.page"
             @current-change="pageChange">
           </el-pagination>
@@ -118,13 +120,13 @@
     <el-form label-width="100px" :model="editAuthorityFormData">
       <el-form-item label="客户权限">
         <el-select v-model="editAuthorityFormData.authority_id" style="width:100%;">
-          <el-option :label="name" v-for="({ id, name }) in authorities" :key="name" :value="id">
+          <el-option :label="name" v-for="({ id, name }) in authorities" :key="name" :value="name">
           </el-option>
         </el-select>
       </el-form-item>
     </el-form>
     <div slot="footer" class="flex justify-center">
-      <el-button type="primary" class="ml3">
+      <el-button type="primary" class="ml3" @click="changeAuth()">
         提交
       </el-button>
     </div>
@@ -136,10 +138,7 @@
     data() {
       return {
         // 权限列表，需要从数据库读取，这里是假数据
-        authorities: Array(5).fill(-1).map((_, id) => ({
-          id,
-          name: `权限${id + 1}`
-        })),
+        authorities:[],
         editAuthorityDialog: false,
         editAuthorityFormData: {
           authority_id: ''
@@ -150,32 +149,54 @@
           logo: '',
           authority_id: ''
         },
-        totalNumber: 1000,
+        totalNumber: 0,
         queryCondition: {
-          client_id: '',
-          client_name: '',
+          uid: '',
+          username: '',
           page: 1
         },
-        tableData: [{
-          id: '92910129',
-          name: 'sds1929',
-          authority_id: 0
-        }, {
-          id: '12412431',
-          name: 'abd1239',
-          authority_id: 1
-        }]
+        tableData: []
       }
     },
-    mounted() {
-      console.log(this.authorities);
-    },
     computed: {},
-    created() {},
+    created() {
+      //this.doQuery()
+    },
 
     methods: {
+      changeAuth(id){
+        param = {
+          "uid":this.editAuthorityFormData.uid,
+          "parent_id":this.editAuthorityFormData.parent_id,
+          "group_id":this.editAuthorityFormData.authority_id,
+        }
+        DMS.ajaxPost('__CONTROLLER__/authEdit',param, res => {
+          this.$message({
+            type: 'success',
+            message: '修改成功!',
+            showClose: true
+          });
+          window.location.reload();
+        })
+      },
+      doQuery(){
+          // 在这里将查询条件传后台获取查询结果
+          param = {
+            "username":this.queryCondition.username,
+            "uid":this.queryCondition.uid,
+            "page":this.queryCondition.page,
+          }
+          DMS.ajaxPost('__CONTROLLER__/getcustomerAuthList',param, res => {
+            this.authorities=res.AuthList;
+            this.tableData=res.customerlist;
+            this.totalNumber=res.totalNumber * 1;
+
+          })
+
+      },
       pageChange(p){
-        this.queryCondition.page = p
+        this.queryCondition.page = p;
+        this.doQuery();
       },
       beforeUpload(f){
         // f 是文件
@@ -187,15 +208,21 @@
            confirmButtonText: '确定',
            type: 'warning'
          }).then(() => {
-           // 执行删除逻辑
-           this.$message({
-            type: 'success',
-            message: '删除成功!',
-            showClose: true
+          DMS.ajaxPost('__MODULE__/Customer/customerDelete',{uid:row.uid}, res => {
+            // 执行删除逻辑
+              this.$message({
+                type: 'success',
+                message: '删除成功!',
+                showClose: true
+              });
+            this.doQuery();
           });
          }).catch(() => {
+
          });
       }
     }
   })
+  attendenceList.doQuery();
+
 </script>
