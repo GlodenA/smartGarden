@@ -1,0 +1,76 @@
+<div class="padding-md">
+	<div class="smart-widget widget-dark-blue">
+		<div class="smart-widget-header">
+            <a href="javascript:groupAdd()" class="btn btn-sm btn-info">
+                <i class="fa fa-plus"></i>增加管理组
+            </a>
+		</div>
+		<div class="smart-widget-inner">
+			<div class="smart-widget-body">
+				<table class="table table-striped table-bordered" id="dataTable">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>名称</th>
+							<th>描述</th>
+							<th>状态</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<foreach name="list" item="v">
+						<tr id="data-{$v['id']}">
+							<td>#{$v['id']}</td>
+							<td>{$v['title']}</td>
+							<td>{$v['description']}</td>
+							<td>
+								<if condition="$v['status'] eq 1">
+								<span class="label label-success">正常</span>
+								<else />
+								<span class="label label-danger">禁止</span>
+								</if>
+							</td>
+							<td>
+								<a href="javascript:groupEdit({$v['id']},'{$v['title']}');"><i class="fa fa-pencil-square-o m-right-xs"></i>编辑</a>
+								<!--<a href="__CONTROLLER__/groupSettingRule/groupId/{$v['id']}" style="color: #32c5cd;"><i class="fa fa-cog gear"></i>权限设置</a>-->
+								<a href="__CONTROLLER__/groupSettingMenu/groupId/{$v['id']}" style="color:#00a65a;"><i class="fa fa-cog gear"></i>菜单设置</a>
+								<a href="javascript:groupDelete({$v['id']});"style="color: #f03939;"><i class="fa fa-trash-o m-right-xs"></i>删除</a>
+							</td>
+						</tr>
+						</foreach>
+					</tbody>
+				</table>
+				<div class="content text-right">
+					<ul class="pagination">{$page}</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	function openPage(url){
+		DMS.openPage(url);
+	}
+	function showInfo(uid){
+		DMS.ajax("管理员详情","__CONTROLLER__/adminInfo/uid/"+uid);
+	}
+	function groupAdd(){
+		DMS.ajaxShow("增加管理组","__MODULE__/Group/groupAdd");
+	}
+	function groupEdit(id,title){
+		DMS.ajaxShow("编辑管理组 - "+title,"__CONTROLLER__/groupEdit/id/"+id);
+	}
+	function groupDelete(id){
+		DMS.dialog("确定要删除当前管理组吗?",function(){
+			DMS.ajaxPost("__CONTROLLER__/groupDelete",{id:id},function(ret){
+				if(ret.status==1){
+                	DMS.success(ret.info,0,function(){
+                		$("#data-"+id).remove();
+					});
+                }else{
+                	DMS.error(ret.info,0);
+                }
+			})
+		});
+	}
+</script>

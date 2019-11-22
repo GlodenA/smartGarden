@@ -20,7 +20,7 @@ class CustomerController extends BaseController
     }
     //查询客户信息列表
     public function customerAuthList(){
-        $uid=I("uid");
+        /*$uid=I("uid");
         $username=I("username");
         //判断是否为空放进条件中
         $where["status"]="1";
@@ -34,29 +34,21 @@ class CustomerController extends BaseController
             $where["parent_id"]=$uid;
         }
         $count = $this->customerDb->where($where)->count();
-        $Page = new \Think\Page($count,5);
-        $list = $this->customerDb->limit($Page->firstRow.','.$Page->listRows)->where($where)->order('uid desc')->select();
+        $listRows=10;
+        $firstRow =$listRows*(1-1);
+        $list = $this->customerDb->limit($firstRow.','.$listRows)->where($where)->order('uid desc')->select();
         foreach ($list as $key => $v) {
             $whereGroup['id'] = $v['group_id'];
             $list[$key]['group_name'] = $this->groupDb->where($whereGroup)->getField("title");
         }
-        $number = $Page->parameter["p"];
-        if($number && $number > 0){
-            $number = ($Page->parameter["p"] - 1)*5;
-        }else{
-            $number = 0;
-        }
-        $this->assign('number',$number);
-        $show = $Page->show();
-        $this->assign('page',$show);
         $this->assign('uid',$uid);
         $this->assign('username',$username);
-        $this->assign('list',$list);
+        $this->assign('list',$list);*/
         $this->display("Customer_Auth");
     }
     //查询客户信息列表
     public function customerPWDList(){
-        $uid=I("uid");
+        /*$uid=I("uid");
         $username=I("username");
         //判断是否为空放进条件中
         $where["status"]="1";
@@ -70,29 +62,21 @@ class CustomerController extends BaseController
             $where["parent_id"]=$uid;
         }
         $count = $this->customerDb->where($where)->count();
-        $Page = new \Think\Page($count,5);
-        $list = $this->customerDb->limit($Page->firstRow.','.$Page->listRows)->where($where)->order('uid desc')->select();
+        $listRows=10;
+        $firstRow =$listRows*(1-1);
+        $list = $this->customerDb->limit($firstRow.','.$listRows)->where($where)->order('uid desc')->select();
         foreach ($list as $key => $v) {
             $whereGroup['id'] = $v['group_id'];
             $list[$key]['group_name'] = $this->groupDb->where($whereGroup)->getField("title");
         }
-        $number = $Page->parameter["p"];
-        if($number && $number > 0){
-            $number = ($Page->parameter["p"] - 1)*5;
-        }else{
-            $number = 0;
-        }
-        $this->assign('number',$number);
-        $show = $Page->show();
-        $this->assign('page',$show);
         $this->assign('uid',$uid);
         $this->assign('username',$username);
-        $this->assign('list',$list);
+        $this->assign('list',$list);*/
         $this->display("Customer_PWDList");
     }
     //查询客户信息列表
     public function customerList(){
-        $uid=I("uid");
+        /*$uid=I("uid");
         $username=I("username");
         //判断是否为空放进条件中
         $where["status"]="1";
@@ -106,25 +90,17 @@ class CustomerController extends BaseController
             $where["parent_id"]=$uid;
         }
         $count = $this->customerDb->where($where)->count();
-        $Page = new \Think\Page($count,10);
-        $list = $this->customerDb->limit($Page->firstRow.','.$Page->listRows)->where($where)->order('uid desc')->select();
+        $listRows=10;
+        $firstRow =$listRows*(1-1);
+        $list = $this->customerDb->limit($firstRow.','.$listRows)->where($where)->order('uid desc')->select();
         foreach ($list as $key => $v) {
             $whereGroup['id'] = $v['group_id'];
             $list[$key]['group_name'] = $this->groupDb->where($whereGroup)->getField("title");
         }
-        $number = $Page->parameter["p"];
-        if($number && $number > 0){
-            $number = ($Page->parameter["p"] - 1)*10;
-        }else{
-            $number = 0;
-        }
-        $this->assign('number',$number);
-        $show = $Page->show();
-        $this->assign('page',$show);
         $this->assign('uid',$uid);
         $this->assign('username',$username);
-        $this->assign('list',$list);
-        $this->display("Customer_List");
+        $this->assign('list',$list);*/
+        $this->display("customer_List");
     }
     // 管理员信息浏览
     public function customerInfo(){
@@ -146,7 +122,7 @@ class CustomerController extends BaseController
      *管理员删除
      */
     public function customerDelete(){
-        $uid = intval($_POST['uid']);
+        $uid = I("uid");
         if($uid == '1'){
             $this->error("当前管理员不允许删除");
         }
@@ -154,10 +130,10 @@ class CustomerController extends BaseController
             $this->error("当前管理员不允许删除");
         }
         $where['uid'] = $uid;
-        $username=  $this->adminDb->data($where)->getField("username");
-        $this->adminDb->data($where)->setField("is_delete",1);
-        $this->groupAccessDb->data($where)->delete();
-        $this->success('删除成功');
+        //$username=  $this->adminDb->data($where)->getField("username");
+        $this->adminDb->where($where)->setField("status",0);
+        $this->groupDb->where($where)->delete();
+        $this->ajaxReturn("删除成功");
     }
 
     /**
@@ -166,7 +142,7 @@ class CustomerController extends BaseController
     public function adminAdd(){
         if(IS_POST){
             $data = $_POST['info'];
-            $password = password($_POST['password']);
+            $password = password(I('password'));
             $data['password'] = $password['password'];
             $data['encrypt'] = $password['encrypt'];
             $data['reg_date'] = $data['last_date'] = $data['update_time'] = time();
@@ -230,8 +206,6 @@ class CustomerController extends BaseController
                 session('admin_username',''.$data['username'].'');
                 session('admin_realname',''.$data['realname'].'');
                 session('admin_avatar',''.$data['avatar'].'');
-
-
             }
             $this->success("操作成功");
         }else{
@@ -260,10 +234,10 @@ class CustomerController extends BaseController
                 $this->error('操作失败');
             }
             if($uid == '1' && session("admin_uid") != '1'){
-                $this->error("不允许修改该管理员密码");
+                $this->error("不允许修改该客户密码");
             }
             if($parent_id != session("admin_uid") && session("admin_uid") !='1'){
-                $this->error("不允许修改该管理员密码");
+                $this->error("不允许修改该客户密码");
             }
             $password=I("password");
             $this->adminDb->where(array("uid" => $uid))->setField("password", $password);
@@ -276,12 +250,13 @@ class CustomerController extends BaseController
         $parent_id = I("parent_id");
         //获取当前职位信息
         if($uid == '1' && session("admin_uid") != '1'){
-            $this->error("不允许修改该管理员密码");
+            $this->error("不允许修改该客户密码");
         }
         if($parent_id != session("admin_uid") && session("admin_uid") !='1'){
-            $this->error("不允许修改该管理员密码");
+            $this->error("不允许修改该客户密码");
         }
-        $this->adminDb->where(array("id" => $uid))->setField("password", "123456");
+        $password = password("123456");
+        $this->adminDb->where(array("id" => $uid))->setField("password", $password);
         $this->success('密码重置成功');
 
     }
@@ -295,20 +270,20 @@ class CustomerController extends BaseController
             $whereData['uid'] = $uid;
             $whereData1['uid'] = $uid;
             $parent_id = I("parent_id");
-            $data = $_POST['info'];
             //管理组判断更新
+            $where['title']=I("group_id");
+            $group_id=$this->groupDb->where($where)->getField("id");
             if($uid == "1"){
                 $this->error("不允许修改该管理员权限");
             }
             if($parent_id != session("admin_uid") && session("admin_uid") !='1'){
                 $this->error("不允许修改该管理员权限");
             }
-            $this->customerAccessDb->where($whereData1)->setField("group_id",$data["group_id"]);
+            $this->customerAccessDb->where($whereData1)->setField("group_id",$group_id);
             //更新管理员信息
-            $this->customerDb->where($whereData)->setField("group_id",$data["group_id"]);
-            $this->success("操作成功");
-            $this->display("customerEdit");
-        }else{
+            $this->customerDb->where($whereData)->setField("group_id",$group_id);
+            $this->ajaxReturn("操作成功");
+        }/*else{
             $uid = I("uid");
             //管理员信息读取
             $whereData['uid'] = $uid;
@@ -322,6 +297,100 @@ class CustomerController extends BaseController
             $this->assign("groupInfo",$groupInfo);
             layout(false);
             $this->display("customerEdit");
+        }*/
+    }
+    //查询客户信息列表
+    public function getcustomerAuthList(){
+        $uid=I("uid");
+        $username=I("username");
+        //判断是否为空放进条件中
+        $where["status"]="1";
+        if($uid){
+            $where["uid"]=$uid;
         }
+        if($username){
+            $where["username"]=$username;
+        }
+        if (session("admin_uid") != '1'){
+            $where["parent_id"]=$uid;
+        }
+        $count = $this->customerDb->where($where)->count();
+        $listRows=5;
+        $firstRow =$listRows*(I("page")-1);
+        $list = $this->customerDb->limit($firstRow.','.$listRows)->where($where)->order('uid desc')->select();
+        foreach ($list as $key => $v) {
+            $whereGroup['id'] = $v['group_id'];
+            $list[$key]['group_name'] = $this->groupDb->where($whereGroup)->getField("title");
+        }
+        $Authwhere["status"]="1";
+        $AuthList=$this->groupDb->where($Authwhere)->select();
+        //$this->assign('uid',$uid);
+        //$this->assign('username',$username);
+        $AuthLists=[];
+        for($i=0; $i< count($AuthList); $i++){
+            $AuthLists[$i]['id']=$AuthList[$i]['id'];
+            $AuthLists[$i]['name']=$AuthList[$i]['title'];
+        }
+        $customerlist['AuthList']=$AuthLists;
+        $customerlist['customerlist']=$list;
+        $customerlist['totalNumber']=$count;
+        $this->ajaxReturn($customerlist);
+        //$this->display("Customer_Auth");
+    }
+    //查询客户信息列表
+    public function getcustomerPWDList(){
+        $uid=I("uid");
+        $username=I("username");
+        //判断是否为空放进条件中
+        $where["status"]="1";
+        if($uid){
+            $where["uid"]=$uid;
+        }
+        if($username){
+            $where["username"]=$username;
+        }
+        if (session("admin_uid") != '1'){
+            $where["parent_id"]=$uid;
+        }
+        $count = $this->customerDb->where($where)->count();
+        $listRows=10;
+        $firstRow =$listRows*(I("page")-1);
+        $list = $this->customerDb->limit($firstRow.','.$listRows)->where($where)->order('uid desc')->select();
+        foreach ($list as $key => $v) {
+            $whereGroup['id'] = $v['group_id'];
+            $list[$key]['group_name'] = $this->groupDb->where($whereGroup)->getField("title");
+        }
+        $this->assign('uid',$uid);
+        $this->assign('username',$username);
+        $this->assign('list',$list);
+        $this->display("Customer_PWDList");
+    }
+    //查询客户信息列表
+    public function getcustomerList(){
+        $uid=I("uid");
+        $username=I("username");
+        //判断是否为空放进条件中
+        $where["status"]="1";
+        if($uid){
+            $where["uid"]=$uid;
+        }
+        if($username){
+            $where["username"]=$username;
+        }
+        if (session("admin_uid") != '1'){
+            $where["parent_id"]=$uid;
+        }
+        $count = $this->customerDb->where($where)->count();
+        $listRows=10;
+        $firstRow =$listRows*(I("page")-1);
+        $list = $this->customerDb->limit($firstRow.','.$listRows)->where($where)->order('uid desc')->select();
+        foreach ($list as $key => $v) {
+            $whereGroup['id'] = $v['group_id'];
+            $list[$key]['group_name'] = $this->groupDb->where($whereGroup)->getField("title");
+        }
+        $this->assign('uid',$uid);
+        $this->assign('username',$username);
+        $this->assign('list',$list);
+        $this->display("customer_List");
     }
 }

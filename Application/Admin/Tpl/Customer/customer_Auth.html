@@ -1,10 +1,228 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-        客户管理页面
-</body>
-</html>
+<style media="screen">
+  input[type=file] {
+    display: none;
+  }
+  .el-form--inline .el-form-item{
+    margin-bottom: 0;
+  }
+  .el-upload-dragger{
+    width: 100%;
+  }
+  .el-upload{
+    width: 100%;
+  }
+</style>
+<div class="padding-md" id="CLIENTLIST">
+  <!-- 面包屑导航 -->
+  <div class="smart-widget" style="margin-bottom: 1px;">
+    <div class="smart-widget-inner">
+      <div class="smart-widget-body">
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item>
+            <a href="">首页</a>
+          </el-breadcrumb-item>
+          <el-breadcrumb-item>
+            客户管理
+          </el-breadcrumb-item>
+          <el-breadcrumb-item>
+            客户列表
+          </el-breadcrumb-item>
+        </el-breadcrumb>
+        <el-divider></el-divider>
+        <div class="flex items-center justify-between">
+          <el-button icon="el-icon-plus" type="primary" @click="createDialog = true">
+            创建客户
+          </el-button>
+          <el-form inline>
+            <el-form-item label="客户ID">
+              <el-input v-model="queryCondition.uid"></el-input>
+            </el-form-item>
+            <el-form-item label="客户名称">
+              <el-input v-model="queryCondition.username"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="doQuery">
+                查询
+              </el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+        <el-table :data="tableData">
+          <el-table-column prop="uid" label="客户ID"></el-table-column>
+          <el-table-column prop="username" label="客户名称"></el-table-column>
+          <el-table-column prop="group_name" label="客户权限">
+            <template #default="{ row }">
+              {{row.group_name}}
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template #default="{ row }">
+              <el-button type="primary" size="mini" @click="() => {
+                editAuthorityFormData.authority_id = row.group_name
+                editAuthorityFormData.uid=row.uid
+                editAuthorityFormData.parent_id=row.parent_id
+                editAuthorityDialog = true
+              }">
+                修改权限
+              </el-button>
+              <el-button type="danger" size="mini" @click="askDel(row)">
+                删除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="mt3 flex justify-end">
+          <el-pagination
+            background
+            layout="prev, pager, next"
+            :total="totalNumber"
+            :page-size="5"
+            :current-page="queryCondition.page"
+            @current-change="pageChange">
+          </el-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 创建客户弹窗 -->
+  <el-dialog title="创建客户" :visible.sync="createDialog" width="480px">
+    <el-form label-width="100px" :model="createFormData" :rules="{
+
+    }">
+      <el-form-item label="客户名称" prop="name">
+        <el-input v-model="createFormData.name"/>
+      </el-form-item>
+      <el-form-item label="客户LOGO" prop="logo">
+        <el-upload drag action="" :before-upload="beforeUpload" style="width: 100%;">
+          <i class="el-icon-upload"></i>
+        </el-upload>
+      </el-form-item>
+      <el-form-item label="客户权限" prop="authority_id">
+        <el-select v-model="createFormData.authority_id" style="width:100%;">
+          <el-option v-for="({ id, name }) in authorities" :key="id" :label="name" :value="id">
+          </el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="flex justify-center">
+      <el-button>
+        重置
+      </el-button>
+      <el-button type="primary" class="ml3">
+        提交
+      </el-button>
+    </div>
+  </el-dialog>
+
+  <!-- 修改权限弹窗 -->
+  <el-dialog title="修改权限" :visible.sync="editAuthorityDialog" width="480px">
+    <el-form label-width="100px" :model="editAuthorityFormData">
+      <el-form-item label="客户权限">
+        <el-select v-model="editAuthorityFormData.authority_id" style="width:100%;">
+          <el-option :label="name" v-for="({ id, name }) in authorities" :key="name" :value="name">
+          </el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="flex justify-center">
+      <el-button type="primary" class="ml3" @click="changeAuth()">
+        提交
+      </el-button>
+    </div>
+  </el-dialog>
+</div>
+<script>
+  const attendenceList = new Vue({
+    el: '#CLIENTLIST',
+    data() {
+      return {
+        // 权限列表，需要从数据库读取，这里是假数据
+        authorities:[],
+        editAuthorityDialog: false,
+        editAuthorityFormData: {
+          authority_id: ''
+        },
+        createDialog: false,
+        createFormData: {
+          name: '',
+          logo: '',
+          authority_id: ''
+        },
+        totalNumber: 0,
+        queryCondition: {
+          uid: '',
+          username: '',
+          page: 1
+        },
+        tableData: []
+      }
+    },
+    computed: {},
+    created() {
+      //this.doQuery()
+    },
+
+    methods: {
+      changeAuth(id){
+        param = {
+          "uid":this.editAuthorityFormData.uid,
+          "parent_id":this.editAuthorityFormData.parent_id,
+          "group_id":this.editAuthorityFormData.authority_id,
+        }
+        DMS.ajaxPost('__CONTROLLER__/authEdit',param, res => {
+          this.$message({
+            type: 'success',
+            message: '修改成功!',
+            showClose: true
+          });
+          window.location.reload();
+        })
+      },
+      doQuery(){
+          // 在这里将查询条件传后台获取查询结果
+          param = {
+            "username":this.queryCondition.username,
+            "uid":this.queryCondition.uid,
+            "page":this.queryCondition.page,
+          }
+          DMS.ajaxPost('__CONTROLLER__/getcustomerAuthList',param, res => {
+            this.authorities=res.AuthList;
+            this.tableData=res.customerlist;
+            this.totalNumber=res.totalNumber * 1;
+
+          })
+
+      },
+      pageChange(p){
+        this.queryCondition.page = p;
+        this.doQuery();
+      },
+      beforeUpload(f){
+        // f 是文件
+        return false
+      },
+      askDel(row){
+        // row 代表用户要删除的行数据
+        this.$confirm('是否删除?', '提示', {
+           confirmButtonText: '确定',
+           type: 'warning'
+         }).then(() => {
+          DMS.ajaxPost('__MODULE__/Customer/customerDelete',{uid:row.uid}, res => {
+            // 执行删除逻辑
+              this.$message({
+                type: 'success',
+                message: '删除成功!',
+                showClose: true
+              });
+            this.doQuery();
+          });
+         }).catch(() => {
+
+         });
+      }
+    }
+  })
+  attendenceList.doQuery();
+
+</script>

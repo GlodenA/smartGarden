@@ -1,0 +1,82 @@
+<div class="padding-md">
+	<div class="smart-widget widget-dark-blue">
+		<div class="smart-widget-header">
+            <a href="javascript:adminAdd();" class="btn btn-sm btn-info">
+                <i class="fa fa-plus"></i>增加管理员
+            </a>
+		</div>
+		<div class="smart-widget-inner">
+			<div class="smart-widget-body">
+				<table class="table table-striped table-bordered" id="dataTable">
+					<thead>
+						<tr>
+							<th>UID</th>
+							<th>账号</th>
+							<th>姓名</th>
+							<th class="hidden-xs">用户组</th>
+							<th class="hidden-xs">注册时间</th>
+							<th class="hidden-xs">最后登录</th>
+							<th class="hidden-xs">状态</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<foreach name="list" item="v">
+						<tr id="data-{$v['uid']}">
+							<td>{$v['uid']}</td>
+							<td><if condition="$v['avatar']"><img src="{$v['avatar']}" class="avatar" />&nbsp;</if>{$v['username']}</td>
+							<td>{$v['realname']}</td>
+							<td class="hidden-xs">{$v['group_name']}</td>
+							<td class="hidden-xs">{$v['reg_date']|date="Y-m-d H:i:s",###}</td>
+							<td class="hidden-xs">{$v['last_date']|date="Y-m-d H:i:s",###}</td>
+							<td class="hidden-xs">
+								<if condition="$v['status'] eq 1">
+								<span class="label label-success">正常</span>
+								<else />
+								<span class="label label-danger">禁止</span>
+								</if>
+							</td>
+							<td>
+								<a href="javascript:showInfo({$v['uid']});" style="color: #edbc6c;"><i class="fa fa-info-circle m-right-xs"></i>详情</a>
+								<a href="javascript:adminEdit({$v['uid']});" ><i class="fa fa-pencil-square-o m-right-xs"></i>编辑</a>
+								<!-- <a href="__CONTROLLER__/adminEdit/uid/1" class="btn btn-manager btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a> -->
+								<a href="javascript:adminDelete({$v['uid']});" style="color: #f03939;"><i class="fa fa-trash-o m-right-xs"></i>删除</a>
+							</td>
+						</tr>
+						</foreach>
+					</tbody>
+				</table>
+				<div class="content text-right">
+					<ul class="pagination">
+					{$page}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	function adminAdd(){
+		DMS.ajaxShow("新增管理员","__CONTROLLER__/adminAdd");
+	}
+	function adminEdit(uid){
+		DMS.ajaxShow("编辑管理员","__CONTROLLER__/adminEdit/uid/"+uid);
+	}
+	function showInfo(uid){
+		DMS.loadUrl("管理员详情","__CONTROLLER__/adminInfo/uid/"+uid);
+	}
+	function adminDelete(uid){
+		DMS.dialog("确定要删除吗?",function(){
+			DMS.ajaxPost("__CONTROLLER__/adminDelete",{uid:uid},function(ret,err){
+				if(ret.status==1){
+	            	DMS.success(ret.info,0,function(){
+	            		$("#data-"+uid).remove();
+					});
+	            }else{
+	            	DMS.error(ret.info,0);
+	            }
+			})
+		});
+
+	}
+</script>

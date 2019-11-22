@@ -6,6 +6,8 @@
  * Time: 15:25
  */
 namespace Admin\Controller;
+use http\Message;
+use Think\Log;
 class MachineController extends BaseController{
     public function __construct(){
         parent::__construct();
@@ -134,6 +136,7 @@ class MachineController extends BaseController{
         }else{
             $number = 0;
         }
+
         $this->assign('number',$number);
         $this->assign("page",$Page->show());
         $this->assign("machineList",$machineList);
@@ -1251,5 +1254,63 @@ class MachineController extends BaseController{
         $this->ajaxReturn($ret);
     }
 
+    //添加设备
+    public function machineAddSubmit(){
+        if(IS_POST){
+            $data = $_POST['info'];
+            $data["add_time"] = $data["update_time"] = time();
+            $data["uid"] = session("admin_uid");
+            $info = M("Machine")->where(array("machine_imei"=>$data["machine_imei"],"is_delete"=>0))->find();
+            if($info){
+                $this->error("添加失败，该设备已存在");
+            }
+            $result = M("Machine")->add($data);
+            if($result){
+                $this->success("添加成功");
+                adminLog("添加设备".$data["machine_imei"]);
+            }else{
+                $this->error("添加失败");
+            }
+        }else{
+            $this->display("machine_add");
+        }
+    }
 
+    public function getAreaListNew(){
+        if(I("keywords")){
+            $where['area_name'] = array('like', '%'.I('keywords').'%');
+        }
+        $where['is_delete'] = 0;
+        $areaList = M('Area_map')->where($where)->select();
+        $this->assign('areaList',$areaList);
+        $ret["areaList"]= $areaList;
+        $this->ajaxReturn($ret);
+    }
+    //批量绑定区域
+    public function areaBindsNew(){
+        if (IS_POST) {
+            $machineList = I("machineList") ? I("machineList") : $this->error("缺少参数");
+            $data["area_id"]=I("area_id");
+//            Log::write("machineList".$machineList);
+            foreach ($machineList as $key => $v) {
+                $res = M('Machine')->where(array('machine_id'=>$v['machine_id']))->save($data);
+            }
+//            Log::write("$res".$res);
+            if($res) {
+                $this->success("绑定成功");
+            }else{
+                $this->error("绑定失败");
+            }
+        }else{
+            if(I("keywords")){
+                $where['area_name'] = array('like', '%'.I('keywords').'%');
+                $this->assign("keywords", I("keywords"));
+            }
+            $machineList = I("machineList") ? I("machineList") : $this->error("缺少参数");
+            $where['is_delete'] = 0;
+            $areaList = M('Area_map')->where($where)->select();
+            $this->assign('areaList',$areaList);
+            $this->assign('machineList',$machineList);
+        }
+    }
 }
