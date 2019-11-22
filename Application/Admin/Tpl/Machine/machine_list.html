@@ -63,7 +63,7 @@
 						</el-form-item>
 					</el-form>
 				</div>
-				<el-table :data="tableData" @selection-change="s => batchSelections = s">
+				<el-table :data="tableData" @selection-change="handleSelectionChange">
 					<el-table-column
 					type="selection"
 					width="55">
@@ -86,11 +86,11 @@
 							<el-link :underline="false" type="primary" @click="devicePosition.dialog = true">
 								设备位置
 							</el-link>
-							<el-link :underline="false" type="primary">
+							<el-link :underline="false" type="primary" @click="deviceTrack.dialog = true">
 								设备轨迹
 							</el-link>
 							<el-link :underline="false" type="primary">
-								划分区域
+								绑定区域
 							</el-link>
 							<el-link :underline="false" type="primary">
 								所属区域
@@ -142,20 +142,25 @@
 	<el-dialog :visible.sync="batchChangeBindDialog" title="批量换绑或者解除区域" width="480px">
 		<el-form label-width="100px">
 			<el-form-item label="关键字查询">
-				<el-input v-model="batchChangeBindDialogFormData.keyword">
-					<el-button type="primary" slot="suffix" size="small">
+				<el-input v-model="batchChangeBindDialogFormData.keywords">
+					<el-button type="primary" slot="suffix" size="small" @click="getAreaList">
 						查询
 					</el-button>
 				</el-input>
 			</el-form-item>
 			<el-form-item label="解除区域">
-				<el-select style="width:100%;" v-model="batchChangeBindDialogFormData.area">
-					<el-option :label="`选项${n}`" v-for="n in 4" :key="n" :value="n"></el-option>
+				<el-select style="width:100%;" v-model="batchChangeBindDialogFormData.id">
+					<!--<el-option :label="`选项${n}`" v-for="n in 4" :key="n" :value="n"></el-option>-->
+					<el-option :value="0" label="解除区域"></el-option>
+					<volist name="areaList" id="pl">
+						<el-option label="{$pl.area_name}" value="{$pl.id}">
+						</el-option>
+					</volist>
 				</el-select>
 			</el-form-item>
 		</el-form>
 		<div class="row justify-center" slot="footer">
-			<el-button type="primary">
+			<el-button type="primary" @click="areaBinds">
 				提交
 			</el-button>
 		</div>
@@ -175,7 +180,7 @@
 				<el-input v-model="create.formData.machine_imei"></el-input>
 			</el-form-item>
 		</el-form>
-		<div v-else class="column items-center">
+		<div v-else if="create.type === 'batch'" class="column items-center">
 			<el-link href="__ROOT__/Public/Admin/File/shebei.xlsx" type="primary" class="mb3">下载批量带入模板</el-link>
 			<el-upload
 			  drag
@@ -185,16 +190,25 @@
 			</el-upload>
 		</div>
 		<div class="row justify-center" slot="footer">
-			<el-button type="primary">
+			<el-button type="primary" @click="machineAddSubmit(create.type)">
 				提交
 			</el-button>
 		</div>
 	</el-dialog>
 	<el-dialog :visible.sync="devicePosition.dialog" title="设备位置" width="620px">
-		<baidu-map style="width:100%;height:400px;" :center="devicePosition.mapData.center" :zoom="devicePosition.mapData.zoom">
+		<baidu-map style="width:100%;height:400px;" :center="mapData.center" :zoom="mapData.zoom">
 			<bm-marker :position="devicePosition.pos" animation="BMAP_ANIMATION_BOUNCE">
 	    </bm-marker>
 		</baidu-map>
+	</el-dialog>
+	<el-dialog :visible.sync="deviceTrack.dialog" title="设备轨迹" width="620px">
+		<baidu-map style="width:100%;height:400px;" :center="mapData.center" :zoom="mapData.zoom">
+			<bm-polyline :path="deviceTrack.points" stroke-color="blue" :stroke-opacity="0.5" :stroke-weight="2"></bm-polyline>
+		</baidu-map>
+	</el-dialog>
+	<el-dialog :visible.sync="bindArea.dialog" title="绑定区域" width="620px">
+		<el-select>
+		</el-select>
 	</el-dialog>
 </div>
 <script src="https://unpkg.com/vue-baidu-map"></script>
@@ -206,21 +220,29 @@
 		el: '#MACHINELIST',
 		data(){
 			return {
+				mapData: {
+					center: {
+						lng: 116.404,
+						lat: 39.915
+					},
+					zoom: 15
+				},
 				create: {
 					createDviceDialog: false,
 					type: 'handy',
 					formDataRules: {
-						deviceName: [
+						machine_name: [
 						]
 					},
 					formData: {
-						diviceName: '',
-						imei: ''
+						machine_name: '',
+						machine_imei: ''
 					}
 				},
 				batchSelections: [],
 				tableData: [
 				],
+				// 查询条件
 				queryCondition: {
 					keyword: '',
 					status: 0,
@@ -246,13 +268,12 @@
 				],
 				batchChangeBindDialog: false,
 				batchChangeBindDialogFormData: {
-					keyword: '',
-					area: '',
+					keywords: '',
+					id: '',
 				},
+				// 设备位置相关
 				devicePosition: {
 					dialog: false,
-					BMap: null,
-					map: null,
 					mapData: {
 						center: {
 							lng: 116.404,
@@ -264,8 +285,24 @@
 						lng: 116.404,
 						lat: 39.915
 					}
+				},
+<<<<<<< HEAD
+				// 设备轨迹相关
+				deviceTrack: {
+					dialog: false,
+					points: [
+		        {lng: 116.404, lat: 39.915},
+		        {lng: 116.405, lat: 39.920},
+		        {lng: 116.423493, lat: 39.907445}
+		      ]
+				},
+				bindArea: {
+					dialog: false,
 				}
+=======
+				areaList:[],
 
+>>>>>>> 11f10c744d3887f875e4bc422bdca039dce96c65
 			}
 		},
 
@@ -275,6 +312,43 @@
 			this.doQuery();
 		},
 		methods: {
+			//批量换绑或者解除
+			areaBinds(){
+				this.$alert(this.batchChangeBindDialogFormData);
+				DMS.ajaxPost("__CONTROLLER__/areaBindsNew", {
+					info: this.batchChangeBindDialogFormData,
+					machineList:this.batchSelections
+				}, ret => {
+					this.$alert(this.batchSelections);
+					if (ret.status == 1) {
+						this.$alert('操作成功！', '通知', {
+							confirmButtonText: '确定',
+							callback: action => {
+								this.batchChangeBindDialog = false
+								window.location.reload()
+							}
+						})
+					} else {
+						this.$alert('操作失败！失败原因：' + ret.info, '通知', {
+							confirmButtonText: '确定',
+							callback: action => {
+								this.batchChangeBindDialog = false
+							}
+						})
+					}
+				})
+			},
+			//获取区域列表
+			getAreaList(){
+				this.$alert(this.batchChangeBindDialogFormData.keywords);
+				DMS.ajaxPost('__CONTROLLER__/getAreaListNew', {
+					keywords:this.batchChangeBindDialogFormData.keywords
+				}, res => {
+					this.areaList=res.areaList;
+				})
+				this.$alert(this.areaList);
+			},
+
 			// getData(){
 			// 	DMS.ajaxPost('__CONTROLLER__/getMachineList',
 			// 		res => {
@@ -315,13 +389,72 @@
 						})
 			},
 			changePosition(e){
-				this.doQuery()
+				this.queryCondition.page = 1;
+				this.doQuery();
 			},
 			changeStatus(e){
-				this.doQuery()
+				this.queryCondition.page = 1;
+				this.doQuery();
 			},
 			changeManager(e){
-				this.doQuery()
+				this.queryCondition.page = 1;
+				this.doQuery();
+			},
+
+			//添加设备
+			machineAddSubmit(type){
+				//批量
+				if(type == "batch"){
+					var excel = $('#filename').val();
+					if(!excel){
+						DMS.error('请先上传文件');
+						return;
+					}
+					DMS.ajaxPost("__CONTROLLER__/importFile",{"filename":excel},function(ret){
+						if(ret.status==1){
+							DMS.success(ret.info,1000,function(){
+								submitStatus = true;
+								if(ret.url){
+									window.location.href = ret.url;
+								}else{
+									window.location.href = window.location.href;
+								}
+							})
+						}else{
+							DMS.error(''+ret.info+'',0,function(){
+								submitStatus = true;
+							})
+						}
+					})
+				}
+				// //手动
+				if(type == "handy"){
+					DMS.ajaxPost("__CONTROLLER__/machineAdd", {
+						info: this.create.formData
+					}, ret => {
+						this.$alert(ret.status);
+						if (ret.status == 1) {
+							this.$alert('添加成功！', '通知', {
+								confirmButtonText: '确定',
+								callback: action => {
+									this.create.createDviceDialog = false
+									window.location.reload()
+								}
+							})
+						} else {
+							this.$alert('添加失败！失败原因：' + ret.info, '通知', {
+								confirmButtonText: '确定',
+								callback: action => {
+									this.create.createDviceDialog = false
+								}
+							})
+						}
+					})
+				}
+			},
+
+			handleSelectionChange(val) {
+				this.batchSelections = val;
 			}
 		},
 		computed: {
