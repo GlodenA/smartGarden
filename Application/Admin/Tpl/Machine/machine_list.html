@@ -83,7 +83,7 @@
 					</el-table-column>
 					<el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'rowOperations'" :width="320">
 						<template #default="{ row }">
-							<el-link :underline="false" type="primary">
+							<el-link :underline="false" type="primary" @click="devicePosition.dialog = true">
 								设备位置
 							</el-link>
 							<el-link :underline="false" type="primary">
@@ -189,8 +189,18 @@
 			</el-button>
 		</div>
 	</el-dialog>
+	<el-dialog :visible.sync="devicePosition.dialog" title="设备位置" width="620px">
+		<baidu-map style="width:100%;height:400px;" :center="devicePosition.mapData.center" :zoom="devicePosition.mapData.zoom">
+			<bm-marker :position="devicePosition.pos" animation="BMAP_ANIMATION_BOUNCE">
+	    </bm-marker>
+		</baidu-map>
+	</el-dialog>
 </div>
+<script src="https://unpkg.com/vue-baidu-map"></script>
 <script type="text/javascript">
+	Vue.use(VueBaiduMap.default, {
+		ak: 'NENpvHSwTNZ6ftZOKdfiiPDxGKKPHjtg'
+	})
 	const MACHINELIST = new Vue({
 		el: '#MACHINELIST',
 		data(){
@@ -237,7 +247,24 @@
 				batchChangeBindDialogFormData: {
 					keyword: '',
 					area: '',
+				},
+				devicePosition: {
+					dialog: false,
+					BMap: null,
+					map: null,
+					mapData: {
+						center: {
+							lng: 116.404,
+							lat: 39.915
+						},
+						zoom: 15
+					},
+					pos: {
+						lng: 116.404,
+						lat: 39.915
+					}
 				}
+
 			}
 		},
 
@@ -295,8 +322,6 @@
 			changeManager(e){
 				this.doQuery()
 			}
-
-
 		},
 		computed: {
 			hasSelection(){
