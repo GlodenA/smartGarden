@@ -144,7 +144,7 @@
                                 bindDeviceDialog = true
                               }">绑定设备
                             </el-link>
-                            <el-link :underline="false" type="primary">解绑设备</el-link>
+                            <el-link :underline="false" type="primary" @click="machineUnbind(row)">解绑设备</el-link>
                             <el-link :underline="false" type="primary">员工轨迹</el-link>
                             <el-link :underline="false" type="primary">所属区域</el-link>
                         </template>
@@ -204,7 +204,8 @@
         </el-form>
         <div v-else class="column items-center">
             <el-link href="__ROOT__/Public/Admin/File/01.xlsx" type="primary" class="mb3">下载批量带入模板</el-link>
-            <el-upload drag action="" :before-upload="beforeUpload">
+            <el-upload drag action="" :before-upload="beforeUpload" :file-list="fileList"
+                       :on-change="(f, fl) => fileList = fl">
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
             </el-upload>
@@ -294,14 +295,14 @@
                     </el-form-item>
                 </el-col>
                 <el-con :span="6">
-                    <el-button type="primary" icon="el-icon-search">
+                    <el-button type="primary" icon="el-icon-search" @click="checkMachine">
                         查询
                     </el-button>
                 </el-con>
             </el-row>
         </el-form>
         <div slot="footer" class="flex justify-center">
-            <el-button type="primary">
+            <el-button type="primary" @click="machineBind">
                 提交
             </el-button>
         </div>
@@ -342,6 +343,7 @@
         el: '#MEMBERLIST',
         data() {
             return {
+                fileList: [],
                 statusMap: new Map([
                     ['1', '在岗'],
                     ['0', '离岗'],
@@ -396,7 +398,7 @@
                 detailDialog: false,
                 editDialog: false,
                 editFormData: {
-                    userid:'',
+                    userid: '',
                     position: '',
                     parent_name: '',
                     realname: '',
@@ -409,7 +411,8 @@
                     realname: '',
                     mobile: '',
                     job_number: '',
-                    imei: ''
+                    imei: '',
+                    userid: ''
                 },
                 exchangeManagerBatchDialog: false,
                 exchangeManagerBatchFormData: {
@@ -432,22 +435,27 @@
         },
         methods: {
             membersDelete() {
-                console.log(this.tableSelections.map(row => row.userid).join(','));
-                DMS.ajaxPost('__CONTROLLER__/membersDelete', {
-                    "userid": this.tableSelections.map(row => row.userid).join(',')
-                }, res => {
-                    if (res.status === 1) {
-                        this.$message({
-                            message: res.info,
-                            type: 'success'
-                        });
-                        window.location.reload();
-                    } else {
-                        this.$message({
-                            message: res.info,
-                            type: 'error'
-                        });
-                    }
+                this.$confirm(`确认删除吗?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    DMS.ajaxPost('__CONTROLLER__/membersDelete', {
+                        "userid": this.tableSelections.map(row => row.userid).join(',')
+                    }, res => {
+                        if (res.status === 1) {
+                            this.$message({
+                                message: res.info,
+                                type: 'success'
+                            });
+                            window.location.reload();
+                        } else {
+                            this.$message({
+                                message: res.info,
+                                type: 'error'
+                            });
+                        }
+                    })
                 })
             },
             beforeUpload(f) {
@@ -456,7 +464,7 @@
                     return false
                 }
                 this.create.formData.file = f
-                return false
+                // return false
             },
             showLeaveDialog(row) {
                 // 从接口查询离岗详情并赋值给this.edit.leaveFormData
@@ -561,10 +569,37 @@
                 }
             },
             deleteMember(row) {
-
-                DMS.ajaxPost('__CONTROLLER__/memberDelete',
-                    {"usersid": row.userid}
-                    , res => {
+                this.$confirm(`确认删除吗?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    DMS.ajaxPost('__CONTROLLER__/memberDelete',
+                        {"usersid": row.userid}
+                        , res => {
+                            if (res.status === 1) {
+                                this.$message({
+                                    message: res.info,
+                                    type: 'success'
+                                });
+                                window.location.reload();
+                            }
+                            else {
+                                this.$message({
+                                    message: res.info,
+                                    type: 'error'
+                                });
+                            }
+                        })
+                })
+            },
+            membersDelete() {
+                this.$confirm(`确认删除吗?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    DMS.ajaxPost('__CONTROLLER__/membersDelete', {"userid": this.tableSelections.map(row => row.userid).join(',')}, res => {
                         if (res.status === 1) {
                             this.$message({
                                 message: res.info,
@@ -579,23 +614,6 @@
                             });
                         }
                     })
-            },
-            membersDelete() {
-                console.log(this.tableSelections.map(row => row.userid).join(','));
-                DMS.ajaxPost('__CONTROLLER__/membersDelete', {"userid": this.tableSelections.map(row => row.userid).join(',')}, res => {
-                    if (res.status === 1) {
-                        this.$message({
-                            message: res.info,
-                            type: 'success'
-                        });
-                        window.location.reload();
-                    }
-                    else {
-                        this.$message({
-                            message: res.info,
-                            type: 'error'
-                        });
-                    }
                 })
             },
             changePosition(e) {
@@ -623,11 +641,11 @@
             },
             membersManagerChange() {
                 param = {
-                    "userids":this.tableSelections.map(row => row.userid).join(','),
+                    "userids": this.tableSelections.map(row => row.userid).join(','),
                     "parent_id": this.exchangeManagerBatchFormData.id
                 }
                 console.log(param);
-                DMS.ajaxPost('__CONTROLLER__/membersManagerChange',param, res => {
+                DMS.ajaxPost('__CONTROLLER__/membersManagerChange', param, res => {
                     if (res.status === 1) {
                         this.$message({
                             message: res.info,
@@ -643,18 +661,18 @@
                     }
                 })
             },
-            memberEdit(){
+            memberEdit() {
                 param = {
-                    "userid":this.editFormData.userid,
+                    "userid": this.editFormData.userid,
                     "parent_id": this.editFormData.parent_name,
-                    "mobile":this.editFormData.mobile,
-                    "realname":this.editFormData.realname,
-                    "job_number":this.editFormData.job_number,
-                    "position":this.editFormData.position,
-                    "sex":this.editFormData.sex,
+                    "mobile": this.editFormData.mobile,
+                    "realname": this.editFormData.realname,
+                    "job_number": this.editFormData.job_number,
+                    "position": this.editFormData.position,
+                    "sex": this.editFormData.sex,
                 }
                 console.log(param);
-                DMS.ajaxPost('__CONTROLLER__/memberEdit',{"info":param,"userid":param.userid}, res => {
+                DMS.ajaxPost('__CONTROLLER__/memberEdit', {"info": param, "userid": param.userid}, res => {
                     if (res.status === 1) {
                         this.$message({
                             message: res.info,
@@ -668,6 +686,82 @@
                             type: 'error'
                         });
                     }
+                })
+            },
+            checkMachine() {
+                DMS.ajaxPost('__CONTROLLER__/checkMachine', {"machine_imei": this.bindDeviceFormData.imei}, res => {
+                    if (res.status === 1) {
+                        if (!res.machine_imei) {
+                            this.$alert('未查询到此设备！', '通知', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    this.create.dialog = false
+                                }
+                            })
+                        } else {
+                            if (res.machine_name) {
+
+                            }
+                            if (res.is_bind > 0) {
+                                this.$alert('状态：该设备已绑定！' + '绑定人：' + res.realname + '员工号：' + res.job_number, '通知', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        this.create.dialog = false
+                                    }
+                                })
+                            } else {
+                                this.$alert('状态：该设备暂未绑定！', '通知', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        this.create.dialog = false
+                                    }
+                                })
+                            }
+                        }
+                    }
+                })
+            },
+            machineBind() {
+                DMS.ajaxPost('__CONTROLLER__/machineBind', {
+                    "userid": this.bindDeviceFormData.userid,
+                    "machine_imei": this.bindDeviceFormData.imei
+                }, res => {
+                    if (res.status === 1) {
+                        this.$message({
+                            message: res.info,
+                            type: 'success'
+                        });
+                        window.location.reload();
+                    }
+                    else {
+                        this.$message({
+                            message: res.info,
+                            type: 'error'
+                        });
+                    }
+                })
+            },
+            machineUnbind(row) {
+                this.$confirm(`确认解除绑定设备吗?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    DMS.ajaxPost('__CONTROLLER__/machineUnbind', {"userid": row.userid}, res => {
+                        if (res.status === 1) {
+                            this.$message({
+                                message: res.info,
+                                type: 'success'
+                            });
+                            window.location.reload();
+                        }
+                        else {
+                            this.$message({
+                                message: res.info,
+                                type: 'error'
+                            });
+                        }
+                    })
                 })
             }
         }
