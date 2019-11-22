@@ -139,20 +139,29 @@
 
 	<el-dialog :visible.sync="bindDevice.dialog" title="绑定设备" width="850px">
 		<div>
-			<el-button type="primary" icon="el-icon-plus" @click="bindDevice.add.dialog = true">
+			<el-button type="primary" icon="el-icon-plus" @click="addMachine">
 				添加设备
 			</el-button>
 		</div>
 		<el-table :data="bindDevice.tableData">
-			<el-table-column prop="deviceNumber" label="设备号" show-overflow-tooltip></el-table-column>
-			<el-table-column prop="name" label="设备名称"></el-table-column>
-			<el-table-column prop="centerNumber" label="中心号码"></el-table-column>
-			<el-table-column prop="status" label="设备状态"></el-table-column>
-			<el-table-column prop="job_number" label="工号"></el-table-column>
-			<el-table-column prop="parent_name" label="负责人"></el-table-column>
+			<el-table-column prop="machine_id" label="设备号" show-overflow-tooltip></el-table-column>
+			<el-table-column prop="machine_name" label="设备名称"></el-table-column>
+			<el-table-column prop="center_tel" label="中心号码">
+			</el-table-column>
+			<el-table-column prop="machine_status" label="设备状态">
+
+				<template #default="{ row }">
+					<el-tag v-if="row.machine_status === 'Stop'" type="primary">在线</el-tag>
+					<el-tag v-else-if="row.machine_status === 'Move'" type="primary">在线</el-tag>
+					<el-tag v-else-if="row.machine_status === 'Offline'" type="danger">离线</el-tag>
+					<el-tag v-else type="info">未知</el-tag>
+				</template>
+			</el-table-column>
+			<el-table-column prop="userInfo.job_number" label="工号"></el-table-column>
+			<el-table-column prop="userInfo.realname" label="负责人"></el-table-column>
 			<el-table-column label="操作">
 				<template #default="{ row }">
-					<el-button type="danger" size="mini">
+					<el-button type="danger" size="mini" @click="machineUnbind(row)">
 						解绑设备
 					</el-button>
 				</template>
@@ -166,8 +175,8 @@
 				<el-input v-model="bindDevice.targetArea.area_name" disabled></el-input>
 			</el-form-item>
 			<el-form-item label="设备IMEI">
-				<el-input v-model="bindDevice.add.deviceIMEI">
-					<el-button slot="suffix" type="primary" size="small">
+				<el-input v-model="bindDevice.add.machine_imei">
+					<el-button slot="suffix" type="primary" size="small" @click="checkMachine()">
 						查询
 					</el-button>
 				</el-input>
@@ -175,15 +184,18 @@
 			<div class="">
 				<el-divider content-position="left">设备情况</el-divider>
 				<el-form-item label="设备名称">
-					<el-input disabled v-model="bindDevice.add.name"></el-input>
+					<el-input disabled v-model="bindDevice.add.deviceInfo.machine_name"></el-input>
 				</el-form-item>
 				<el-form-item label="状态">
-					<el-input disabled v-model="bindDevice.add.status"></el-input>
+					<el-input disabled v-model="bindDevice.add.deviceInfo.status"></el-input>
+				</el-form-item>
+				<el-form-item label="绑定区域"  v-show="bindDevice.add.add_status">
+					<el-input disabled v-model="bindDevice.add.deviceInfo.area_name"></el-input>
 				</el-form-item>
 			</div>
 		</el-form>
-		<div class="flex justify-end" slot="footer">
-			<el-button type="primary">
+		<div class="flex justify-end" slot="footer" v-show="!bindDevice.add.add_status">
+			<el-button type="primary" @click="machineBind">
 				绑定
 			</el-button>
 		</div>
@@ -240,23 +252,19 @@
 						area_name: '',
 						id: ''
 					},
+
 					add: {
 						dialog: false,
-						deviceIMEI: '',
+						machine_imei: '',
+						add_status:false,
 						deviceInfo: {
-							name: '设备1293',
-							status: '该设备暂未绑定'
+							status: '',
+							area_name: '',
+							machine_name:''
 						}
 					},
 					dialog: false,
-					tableData: [{
-						deviceNumber: '092384209384092',
-						name: '设备3982',
-						centerNumber: '013120',
-						status: 1,
-						job_number: '9812',
-						parent_name: '马喜忠'
-					}]
+					tableData: []
 				}
 			}
 		},
@@ -446,7 +454,100 @@
 				Object.keys(this.bindDevice.targetArea).forEach(f => {
 					this.bindDevice.targetArea[f] = row[f]
 				})
+				DMS.ajaxPost('__CONTROLLER__/machineList',{id:row.id},res=>{
+					this.bindDevice.tableData=res.machineList
+
+
+				})
 				this.bindDevice.dialog = true
+			},
+			checkMachine(){
+		        var machine_imei=this.bindDevice.add.machine_imei;
+		        if(!machine_imei){
+					this.$alert('请输入设备IEMI');
+		        }else
+				{
+					DMS.ajaxPost("__CONTROLLER__/checkMachine",{machine_imei:machine_imei},ret=> {
+						if (ret.status === 1) {
+							if (!ret.machine.machine_imei) {
+								this.$alert('未查询到此设备');
+							} else {
+								if (ret.machine.machine_name) {
+									this.bindDevice.add.deviceInfo.machine_name = ret.machine.machine_name;
+								}
+								if (ret.is_bind > 0) {
+									this.bindDevice.add.deviceInfo.machine_name = ret.machine.machine_name;
+									this.bindDevice.add.deviceInfo.status = '已绑定';
+									this.bindDevice.add.deviceInfo.area_name = ret.area_name;
+									this.bindDevice.add.add_status = true
+								} else {
+									this.bindDevice.add.deviceInfo.status = '未绑定';
+									this.bindDevice.add.add_status = false
+								}
+							}
+						}else {
+							this.$alert('未查询到此设备');
+						}
+					})
+				}
+			},
+			machineUnbind(row){
+				this.$confirm(`确认要解绑设备吗?`, '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					DMS.ajaxPost("__CONTROLLER__/machineUnbind",{machine_id:row.machine_id},ret=>{
+						if(ret.status==1){
+							this.$alert('解绑成功！', '通知', {
+								confirmButtonText: '确定',
+								callback: action => {
+									DMS.ajaxPost('__CONTROLLER__/machineList',{id:this.bindDevice.targetArea.id},res=>{
+										this.bindDevice.tableData=res.machineList
+
+									})
+								}
+							})
+
+						}else{
+							this.$alert(ret.info)
+						}
+					})
+				}).catch(() => {})
+			},
+			machineBind(){
+				DMS.ajaxPost("__CONTROLLER__/machineBind",
+						{area_id:this.bindDevice.targetArea.id, machine_imei:this.bindDevice.add.machine_imei},ret=>{
+							if(ret.status==1){
+
+								this.$alert('绑定成功！', '通知', {
+									confirmButtonText: '确定',
+									callback: action => {
+										this.bindDevice.add.dialog = false
+										DMS.ajaxPost('__CONTROLLER__/machineList',{id:this.bindDevice.targetArea.id},res=>{
+											this.bindDevice.tableData=res.machineList
+
+										})
+									}
+								})
+							}else{
+								this.$alert(ret.info, '通知', {
+									confirmButtonText: '确定',
+									callback: action => {
+										this.bindDevice.add.dialog = false
+									}
+								})
+							}
+				});
+			},
+			addMachine(){
+				this.bindDevice.add.machine_imei=''
+				this.bindDevice.add.add_status=false
+				this.bindDevice.add.deviceInfo.status=''
+				this.bindDevice.add.deviceInfo.area_name=''
+				this.bindDevice.add.deviceInfo.machine_name=''
+				this.bindDevice.add.dialog = true
+
 			}
 		},
 		mounted(){
