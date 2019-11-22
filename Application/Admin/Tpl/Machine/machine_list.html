@@ -117,7 +117,7 @@
 				</el-table>
 					<div class="flex justify-between items-center mt4">
 						<div class="">
-							<el-button icon="el-icon-sort" type="primary" :disabled="!hasSelection" @click="batchChangeBindDialog = true">
+							<el-button icon="el-icon-sort" type="primary" :disabled="!hasSelection" @click="batchChangeBindDialogShow">
 								批量换绑或解除
 							</el-button>
 							<el-button type="warning" icon="el-icon-refresh-left" :disabled="!hasSelection">
@@ -148,14 +148,10 @@
 					</el-button>
 				</el-input>
 			</el-form-item>
-			<el-form-item label="解除区域">
-				<el-select style="width:100%;" v-model="batchChangeBindDialogFormData.id">
-					<!--<el-option :label="`选项${n}`" v-for="n in 4" :key="n" :value="n"></el-option>-->
+			<el-form-item label="解除区域" id="area">
+				<el-select style="width:100%;" v-model="batchChangeBindDialogFormData.area_id">
 					<el-option :value="0" label="解除区域"></el-option>
-					<volist name="areaList" id="pl">
-						<el-option label="{$pl.area_name}" value="{$pl.id}">
-						</el-option>
-					</volist>
+					<el-option v-for="({ id, area_name }) in areaList" :key="id" :label="area_name" :value="id"></el-option>
 				</el-select>
 			</el-form-item>
 		</el-form>
@@ -269,7 +265,7 @@
 				batchChangeBindDialog: false,
 				batchChangeBindDialogFormData: {
 					keywords: '',
-					id: '',
+					area_id: '',
 				},
 				// 设备位置相关
 				devicePosition: {
@@ -286,7 +282,6 @@
 						lat: 39.915
 					}
 				},
-<<<<<<< HEAD
 				// 设备轨迹相关
 				deviceTrack: {
 					dialog: false,
@@ -298,11 +293,9 @@
 				},
 				bindArea: {
 					dialog: false,
-				}
-=======
+				},
 				areaList:[],
 
->>>>>>> 11f10c744d3887f875e4bc422bdca039dce96c65
 			}
 		},
 
@@ -312,11 +305,21 @@
 			this.doQuery();
 		},
 		methods: {
+			batchChangeBindDialogShow(){
+				this.batchChangeBindDialog = true;
+				DMS.ajaxPost('__CONTROLLER__/getAreaListNew', {
+					keywords:this.batchChangeBindDialogFormData.keywords
+				}, res => {
+					this.areaList = res.areaList;
+				})
+				this.$alert(this.areaList);
+
+			},
 			//批量换绑或者解除
 			areaBinds(){
-				this.$alert(this.batchChangeBindDialogFormData);
 				DMS.ajaxPost("__CONTROLLER__/areaBindsNew", {
-					info: this.batchChangeBindDialogFormData,
+					area_id: this.batchChangeBindDialogFormData.area_id,
+					keywords:this.batchChangeBindDialogFormData.keywords,
 					machineList:this.batchSelections
 				}, ret => {
 					this.$alert(this.batchSelections);
@@ -340,13 +343,13 @@
 			},
 			//获取区域列表
 			getAreaList(){
-				this.$alert(this.batchChangeBindDialogFormData.keywords);
 				DMS.ajaxPost('__CONTROLLER__/getAreaListNew', {
 					keywords:this.batchChangeBindDialogFormData.keywords
 				}, res => {
-					this.areaList=res.areaList;
+					this.areaList = res.areaList;
+
 				})
-				this.$alert(this.areaList);
+				// this.$alert(this.areaList);
 			},
 
 			// getData(){
@@ -465,3 +468,4 @@
 
 	})
 </script>
+
