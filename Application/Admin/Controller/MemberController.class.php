@@ -511,11 +511,104 @@ class MemberController extends BaseController
 
     }
 
+
+    //获取菜单列表
+    public function getMenuList(){
+
+        $i = 0;
+        $totalList = [];
+        $where["parent_id"] = 0;
+        $whereCount["is_delete"]=$where["is_delete"] = 0;
+        $listRows=10;
+        $firstRow = $listRows*(I("page")-1);
+        $count = M("Member_position")->where($whereCount)->order('id desc')->count();
+        $managerList = M("Member_position")
+            ->limit($firstRow.','.$listRows)
+            ->where($where)
+            ->order('id desc')
+            ->select();
+
+        if($managerList)
+        {
+            foreach($managerList as $k=>$v)
+            {
+                $totalList[$i++] = $managerList[$k];
+                if($v["parent_id"] == 0)
+                {
+                    $whereChild["parent_id"] = $v["id"];
+                    $whereChild["is_delete"] = 0;
+                    $childList = M("Member_position")
+                        ->limit($firstRow.','.$listRows)
+                        ->where($whereChild)
+                        ->order('id desc')
+                        ->select();
+                    if($childList)
+                    {
+                        foreach($childList as $k=>$v)
+                        {
+                            $totalList[$i++] = $childList[$k];
+                        }
+                    }
+
+                }
+            }
+        }
+
+        $ret["totalNumber"] = $count;
+        $ret["MENULIST"] = $totalList;
+        $this->ajaxReturn($ret);
+
+    }
+
+    // 菜单添加
+//    public function menuAdd()
+//    {
+//        if (IS_POST) {
+//            $data = $_POST['info'];
+//            $result = M("Member_position")->add($data);
+//            if ($result) {
+//                $this->success("操作成功");
+//                adminLog("增加职位" . $data["name"]);
+//            } else {
+//                $this->error("操作失败");
+//            }
+//        } else {
+//            $where['parent_id'] = 0;
+//            $data = M("Member_position")->where($where)->select();
+//            $this->assign("menuList", $data);
+//            layout(false);
+//            $this->display("group_add");
+//        }
+//
+//    }
+
+//    // 职位编辑
+//    public function menuEdit()
+//    {
+//        if (IS_POST) {
+//            $id = $where['id'] = I("id");
+//            $data = $_POST['info'];
+//            M("Member_position")->where($where)->save($data);
+//            adminLog("修改职位信息" . $data["name"]);
+//            $this->success("操作成功");
+//        } else {
+//            $id = $where['id'] = I("id");
+//            $whereParent['parent_id'] = 0;
+//            $parentData = M("Member_position")->where($whereParent)->select();
+//            $this->assign("parentData", $parentData);
+//            $data = M("Member_position")->where($where)->find();
+//            $this->assign($data);
+//            layout(false);
+//            $this->display('group_edit');
+//        }
+//    }
+
     // 菜单添加
     public function menuAdd()
     {
         if (IS_POST) {
-            $data = $_POST['info'];
+            $data['parent_id']=I("position");
+            $data['name']=I("name");
             $result = M("Member_position")->add($data);
             if ($result) {
                 $this->success("操作成功");
@@ -523,22 +616,17 @@ class MemberController extends BaseController
             } else {
                 $this->error("操作失败");
             }
-        } else {
-            $where['parent_id'] = 0;
-            $data = M("Member_position")->where($where)->select();
-            $this->assign("menuList", $data);
-            layout(false);
-            $this->display("group_add");
         }
-
     }
+
 
     // 职位编辑
     public function menuEdit()
     {
         if (IS_POST) {
             $id = $where['id'] = I("id");
-            $data = $_POST['info'];
+            $data['parent_id']=I("position");
+            $data['name']=I("name");
             M("Member_position")->where($where)->save($data);
             adminLog("修改职位信息" . $data["name"]);
             $this->success("操作成功");
@@ -564,6 +652,7 @@ class MemberController extends BaseController
                 $this->error("当前职位下存在员工，无法删除！");
             }
             $whereData['parent_id'] = $id;
+            $whereData['is_delete'] = 0;
             $menuData = M("Member_position")->where($whereData)->find();
             if ($menuData) {
                 $this->error("请先删除二级职位");
