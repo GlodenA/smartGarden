@@ -65,6 +65,9 @@
               }">
                 修改权限
               </el-button>
+              <el-button type="primary" size="mini" @click="showCustomerDetail(row)">
+                详情
+              </el-button>
               <el-button type="danger" size="mini" @click="askDel(row)">
                 删除
               </el-button>
@@ -131,6 +134,20 @@
       </el-button>
     </div>
   </el-dialog>
+  <!--管理员详情-->
+  <el-dialog :visible.sync="customerDetail.dialog" title="管理员详情" width="480px">
+    <el-form :model="customerDetail.formData" label-width="100px">
+      <el-form-item :label="l" v-for="([l, f]) in [
+        ['企业名', 'companyname'],
+        ['姓名', 'username'],
+        ['用户昵称', 'realname'],
+        ['手机号', 'mobile'],
+        ['邮箱', 'email']
+      ]">
+        <el-input v-model="customerDetail.formData[f]" disabled/>
+      </el-form-item>
+    </el-form>
+  </el-dialog>
 </div>
 <script>
   const attendenceList = new Vue({
@@ -155,7 +172,19 @@
           username: '',
           page: 1
         },
-        tableData: []
+        tableData: [],
+        customerDetail:{
+          dialog: false,
+          formData: {
+            realname: '',
+            job_number: '',
+            mobile: '',
+            position: '',
+            parent_name: '',
+            sex: '',
+            job_status: ''
+          }
+        }
       }
     },
     computed: {},
@@ -164,6 +193,16 @@
     },
 
     methods: {
+      showCustomerDetail(row){
+        this.customerDetail.dialog = true;
+        DMS.ajaxPost('__MODULE__/Customer/customerInfo',
+                {
+                  "uid" : row.uid
+                }, res => {
+                  this.customerDetail.formData = res;
+                })
+
+      },
       changeAuth(id){
         param = {
           "uid":this.editAuthorityFormData.uid,
