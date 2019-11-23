@@ -22,7 +22,10 @@ class AdminController extends BaseController {
         }
         $show = $Page->show();
         $this->assign('page',$show);
-        $this->assign('list',$list);
+//        $this->assign('list',$list);
+        $whereData['status'] = 1;
+        $groupInfo = $this->groupDb->where($whereData)->select();
+        $this->assign("groupInfo",$groupInfo);
         $this->display("admin_list");
     }
     /**
@@ -71,12 +74,13 @@ class AdminController extends BaseController {
     */
     public function adminEdit(){
         if(IS_POST){
-            $uid = I("uid");
+            $info = I('info');
+            $uid = $info['uid'];
             $whereData['uid'] = $uid;
             if(!checkuserinfo($_POST['info'])){
                 $this->error("提交信息不合法");
             }
-            $data = $_POST['info'];
+            $data = I("info");
             if(isset($_POST['password']) && !empty($_POST['password'])){
                 $password = password($_POST['password']);
                 $passwordData['password'] = $password['password'];
@@ -175,7 +179,7 @@ class AdminController extends BaseController {
     *管理员删除
     */
     public function adminDelete(){
-        $uid = intval($_POST['uid']);
+        $uid = I("uid");
         if($uid == '1'){
             $this->error("当前管理员不允许删除");
         }
@@ -183,9 +187,8 @@ class AdminController extends BaseController {
             $this->error("当前管理员不允许删除");
         }
         $where['uid'] = $uid;
-        $username=  $this->adminDb->data($where)->getField("username");
-        $this->adminDb->data($where)->setField("is_delete",1);
         $this->groupAccessDb->data($where)->delete();
+        $this->adminDb->data($where)->delete();
         $this->success('删除成功');
     }
     // 站点配置
@@ -209,5 +212,19 @@ class AdminController extends BaseController {
             $this->assign($info);
             $this->display("site_setting");
         }
+    }
+
+    public function getIndex(){
+        $count = $this->adminDb->where(array('is_delete'=>0))->count();
+        $listRows=10;
+        $firstRow = $listRows*(I("page")-1);
+        $list = $this->adminDb->limit($firstRow.','.$listRows)->where(array('is_delete'=>0))->order('uid desc')->select();
+        foreach ($list as $key => $v) {
+            $whereGroup['id'] = $v['group_id'];
+            $list[$key]['group_name'] = $this->groupDb->where($whereGroup)->getField("title");
+        }
+        $ret["totalNumber"] = $count;
+        $ret["list"]=$list;
+        $this.$this->ajaxReturn($ret);
     }
 }
