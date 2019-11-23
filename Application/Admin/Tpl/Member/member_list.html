@@ -444,16 +444,21 @@
                         "userid": this.tableSelections.map(row => row.userid).join(',')
                     }, res => {
                         if (res.status === 1) {
-                            this.$message({
-                                message: res.info,
-                                type: 'success'
-                            });
+                            this.$alert(res.info, '通知', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    this.create.dialog = false
+                                    window.location.reload()
+                                }
+                            })
                             window.location.reload();
                         } else {
-                            this.$message({
-                                message: res.info,
-                                type: 'error'
-                            });
+                            this.$alert(res.info+res.info, '通知', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    this.create.dialog = false
+                                }
+                            })
                         }
                     })
                 })
@@ -517,20 +522,22 @@
                         processData: false,
                         success: res => {
                             console.log(res.file.savename)
-                            DMS.ajaxPost("__CONTROLLER__/importFile", {"filename": res.path}, function (ret) {
-                                if (ret.status == 1) {
-                                    DMS.success(ret.info, 1000, function () {
-                                        submitStatus = true;
-                                        if (ret.url) {
-                                            window.location.reload();
-                                        } else {
-                                            window.location.reload();
+                            DMS.ajaxPost("__CONTROLLER__/importFile", {"filename": res.path}, function (res) {
+                                if (res.status === 1) {
+                                    this.$alert(res.info, '通知', {
+                                        confirmButtonText: '确定',
+                                        callback: action => {
+                                            this.create.dialog = false
+                                            window.location.reload()
                                         }
                                     })
+                                    window.location.reload();
                                 } else {
-                                    DMS.error('' + ret.info + '', 0, function () {
-                                        submitStatus = true;
-                                        window.location.reload();
+                                    this.$alert(res.info+res.info, '通知', {
+                                        confirmButtonText: '确定',
+                                        callback: action => {
+                                            this.create.dialog = false
+                                        }
                                     })
                                 }
                             })
@@ -578,17 +585,21 @@
                         {"usersid": row.userid}
                         , res => {
                             if (res.status === 1) {
-                                this.$message({
-                                    message: res.info,
-                                    type: 'success'
-                                });
+                                this.$alert(res.info, '通知', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        this.create.dialog = false
+                                        window.location.reload()
+                                    }
+                                })
                                 window.location.reload();
-                            }
-                            else {
-                                this.$message({
-                                    message: res.info,
-                                    type: 'error'
-                                });
+                            } else {
+                                this.$alert(res.info+res.info, '通知', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        this.create.dialog = false
+                                    }
+                                })
                             }
                         })
                 })
@@ -601,17 +612,21 @@
                 }).then(() => {
                     DMS.ajaxPost('__CONTROLLER__/membersDelete', {"userid": this.tableSelections.map(row => row.userid).join(',')}, res => {
                         if (res.status === 1) {
-                            this.$message({
-                                message: res.info,
-                                type: 'success'
-                            });
+                            this.$alert(res.info, '通知', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    this.create.dialog = false
+                                    window.location.reload()
+                                }
+                            })
                             window.location.reload();
-                        }
-                        else {
-                            this.$message({
-                                message: res.info,
-                                type: 'error'
-                            });
+                        } else {
+                            this.$alert(res.info+res.info, '通知', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    this.create.dialog = false
+                                }
+                            })
                         }
                     })
                 })
@@ -647,17 +662,21 @@
                 console.log(param);
                 DMS.ajaxPost('__CONTROLLER__/membersManagerChange', param, res => {
                     if (res.status === 1) {
-                        this.$message({
-                            message: res.info,
-                            type: 'success'
-                        });
+                        this.$alert(res.info, '通知', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                                this.create.dialog = false
+                                window.location.reload()
+                            }
+                        })
                         window.location.reload();
-                    }
-                    else {
-                        this.$message({
-                            message: res.info,
-                            type: 'error'
-                        });
+                    } else {
+                        this.$alert(res.info+res.info, '通知', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                                this.create.dialog = false
+                            }
+                        })
                     }
                 })
             },
@@ -674,17 +693,21 @@
                 console.log(param);
                 DMS.ajaxPost('__CONTROLLER__/memberEdit', {"info": param, "userid": param.userid}, res => {
                     if (res.status === 1) {
-                        this.$message({
-                            message: res.info,
-                            type: 'success'
-                        });
+                        this.$alert(res.info, '通知', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                                this.create.dialog = false
+                                window.location.reload()
+                            }
+                        })
                         window.location.reload();
-                    }
-                    else {
-                        this.$message({
-                            message: res.info,
-                            type: 'error'
-                        });
+                    } else {
+                        this.$alert(res.info+res.info, '通知', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                                this.create.dialog = false
+                            }
+                        })
                     }
                 })
             },
@@ -727,17 +750,21 @@
                     "machine_imei": this.bindDeviceFormData.imei
                 }, res => {
                     if (res.status === 1) {
-                        this.$message({
-                            message: res.info,
-                            type: 'success'
-                        });
+                        this.$alert(res.info, '通知', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                                this.create.dialog = false
+                                window.location.reload()
+                            }
+                        })
                         window.location.reload();
-                    }
-                    else {
-                        this.$message({
-                            message: res.info,
-                            type: 'error'
-                        });
+                    } else {
+                        this.$alert(res.info+res.info, '通知', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                                this.create.dialog = false
+                            }
+                        })
                     }
                 })
             },
@@ -749,17 +776,21 @@
                 }).then(() => {
                     DMS.ajaxPost('__CONTROLLER__/machineUnbind', {"userid": row.userid}, res => {
                         if (res.status === 1) {
-                            this.$message({
-                                message: res.info,
-                                type: 'success'
-                            });
+                            this.$alert(res.info, '通知', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    this.create.dialog = false
+                                    window.location.reload()
+                                }
+                            })
                             window.location.reload();
-                        }
-                        else {
-                            this.$message({
-                                message: res.info,
-                                type: 'error'
-                            });
+                        } else {
+                            this.$alert(res.info+res.info, '通知', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    this.create.dialog = false
+                                }
+                            })
                         }
                     })
                 })

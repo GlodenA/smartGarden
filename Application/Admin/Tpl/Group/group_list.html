@@ -297,17 +297,21 @@
                 DMS.ajaxPost('__CONTROLLER__/groupSettingMenu',
                     {"ids":this.$refs.treeSelector.getCheckedKeys(false),"groupId":this.menuSetting.id}, res => {
                         if (res.status === 1) {
-                            console.log(res)
-                            this.$message({
-                                message: res.info,
-                                type: 'success'
-                            });
+                            this.$alert(res.info, '通知', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    this.create.dialog = false
+                                    window.location.reload()
+                                }
+                            })
                             window.location.reload();
                         } else {
-                            this.$message({
-                                message: res.info,
-                                type: 'error'
-                            });
+                            this.$alert(res.info+res.info, '通知', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    this.create.dialog = false
+                                }
+                            })
                         }
                     })
 			}
