@@ -155,18 +155,15 @@ class CustomerController extends BaseController
         if (IS_POST) {
             $uid = I("uid");
             $parent_id = I("parent_id");
-            $customer=$this->adminDb->where(array("id" => $uid))->find();
-            if($customer["password"]!=I("password")){
-                $this->error('操作失败');
-            }
             if($uid == '1' && session("admin_uid") != '1'){
                 $this->error("不允许修改该客户密码");
             }
             if($parent_id != session("admin_uid") && session("admin_uid") !='1'){
                 $this->error("不允许修改该客户密码");
             }
-            $password=I("password");
-            $this->adminDb->where(array("uid" => $uid))->setField("password", $password);
+            $password = password(I('newPwd'));
+            $this->adminDb->where(array("uid" => $uid))->setField("password", $password['password']);
+            $this->adminDb->where(array("uid" => $uid))->setField("encrypt", $password['encrypt']);
             $this->success('操作成功');
         }
     }
@@ -182,7 +179,8 @@ class CustomerController extends BaseController
             $this->error("不允许修改该客户密码");
         }
         $password = password("123456");
-        $this->adminDb->where(array("id" => $uid))->setField("password", $password);
+        $this->adminDb->where(array("id" => $uid))->setField("password", $password['password']);
+        $this->adminDb->where(array("id" => $uid))->setField("password", $password['encrypt']);
         $this->success('密码重置成功');
 
     }
