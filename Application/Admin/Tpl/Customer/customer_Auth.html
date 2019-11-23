@@ -11,6 +11,16 @@
   .el-upload{
     width: 100%;
   }
+  .avatar-previewer {
+    width: 50px;
+    height: 50px;
+    display: block;
+  }
+  .avatar-previewer2 {
+    width: 50px;
+    height: 50px;
+    display: block;
+  }
 </style>
 <div class="padding-md" id="CLIENTLIST">
   <!-- 面包屑导航 -->
@@ -79,7 +89,7 @@
             background
             layout="prev, pager, next"
             :total="totalNumber"
-            :page-size="5"
+            :page-size="10"
             :current-page="queryCondition.page"
             @current-change="pageChange">
           </el-pagination>
@@ -90,33 +100,7 @@
 
   <!-- 创建客户弹窗 -->
   <el-dialog title="创建客户" :visible.sync="createDialog" width="480px">
-    <el-form label-width="100px" :model="createFormData" ref="mainForm" :rules="{
-            username: [
-              { required: true, message: '请输入用户名！', trigger: 'blur' },
-              { min: 3, max: 10, message: '用户名长度在 3 到 10 个字符', trigger: 'blur' }
-            ],
-            password: [
-              { required: true, message: '请输入密码！', trigger: 'blur' },
-              { min: 5, max: 15, message: '密码长度在 5 到 15 个字符', trigger: 'blur' }
-            ],
-            realname: [
-              { required: true, message: '请输入真实姓名！', trigger: 'blur' },
-              { min: 3, max: 10, message: '用户名长度在 3 到 10 个字符', trigger: 'blur' }
-            ],
-            email: [
-              { required: true, message: '请输入邮箱！', trigger: 'blur' },
-              { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
-            ],
-            mobile: [
-              { required: true, message: '请输入手机号！', trigger: 'blur' },
-            ],
-            companyname: [
-              { required: true, message: '请输入企业名称！', trigger: 'blur' },
-            ],
-            authority_id: [
-              { required: true, message: '请选择客户权限！', trigger: 'blur' },
-            ],
-          }">
+    <el-form label-width="100px" :model="createFormData" ref="mainForm" :rules="formRules">
       <el-form-item label="客户名称" prop="username">
         <el-input v-model="createFormData.username"/>
       </el-form-item>
@@ -136,8 +120,12 @@
         <el-input v-model="createFormData.companyname"/>
       </el-form-item>
       <el-form-item label="客户LOGO" prop="avatar">
-        <el-upload drag action="" :before-upload="beforeUpload" style="width: 100%;">
-          <i class="el-icon-upload"></i>
+        <el-upload action="" :before-upload="beforeAvatarUpload" :before-remove="() => {
+					createFormData.avatar = ''
+					createFormData.avatarPreview = ''
+				}">
+          <img v-if="createFormData.avatarPreview" :src="createFormData.avatarPreview" class="avatar-previewer">
+          <el-button v-else icon="el-icon-plus" round type="primary"></el-button>
         </el-upload>
       </el-form-item>
       <el-form-item label="客户权限" prop="authority_id">
@@ -156,6 +144,46 @@
       </el-button>
     </div>
   </el-dialog>
+
+
+  <!-- 修改客户弹窗 -->
+  <el-dialog title="修改客户资料" :visible.sync="changeDialog2" width="480px">
+    <el-form label-width="100px" :model="createFormData2" ref="mainForm2" :rules="formRules2">
+      <el-form-item label="客户名称" prop="username">
+        <el-input v-model="createFormData2.username"/>
+      </el-form-item>
+      <el-form-item label="真实姓名" prop="realname">
+        <el-input v-model="createFormData2.realname"/>
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="createFormData2.email"/>
+      </el-form-item>
+      <el-form-item label="手机号" prop="mobile">
+        <el-input v-model="createFormData2.mobile"/>
+      </el-form-item>
+      <el-form-item label="企业名称" prop="companyname">
+        <el-input v-model="createFormData2.companyname"/>
+      </el-form-item>
+        <el-form-item label="客户LOGO" prop="avatar">
+            <el-upload action="" :before-upload="beforeAvatarUploads" :before-remove="() => {
+              createFormData2.avatar = ''
+			  createFormData2.avatarPreview2 = ''
+			  }">
+                <img v-if="createFormData2.avatarPreview2" :src="createFormData2.avatarPreview2" class="avatar-previewer2">
+                <el-button v-else icon="el-icon-plus" round type="primary"></el-button>
+            </el-upload>
+        </el-form-item>
+    </el-form>
+    <div slot="footer" class="flex justify-center">
+      <el-button  @click="$refs.mainForm2.resetFields()">
+        重置
+      </el-button>
+      <el-button type="primary" class="ml3" @click="submit2">
+        提交
+      </el-button>
+    </div>
+  </el-dialog>
+
 
   <!-- 修改权限弹窗 -->
   <el-dialog title="修改权限" :visible.sync="editAuthorityDialog" width="480px">
@@ -193,6 +221,53 @@
     el: '#CLIENTLIST',
     data() {
       return {
+        formRules:{
+          username: [
+            { required: true, message: '请输入用户名！', trigger: 'blur' },
+            { min: 2, max: 10, message: '用户名长度在 3 到 10 个字符', trigger: 'blur' }
+          ],
+          password: [
+            { required: true, message: '请输入密码！', trigger: 'blur' },
+            { min: 5, max: 15, message: '密码长度在 5 到 15 个字符', trigger: 'blur' }
+          ],
+          realname: [
+            { required: true, message: '请输入真实姓名！', trigger: 'blur' },
+            { min: 2, max: 10, message: '用户名长度在 3 到 10 个字符', trigger: 'blur' }
+          ],
+          email: [
+            { required: true, message: '请输入邮箱！', trigger: 'blur' },
+            { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
+          ],
+          mobile: [
+            { required: true, message: '请输入手机号！', trigger: 'blur' },
+          ],
+          companyname: [
+            { required: true, message: '请输入企业名称！', trigger: 'blur' },
+          ],
+          authority_id: [
+            { required: true, message: '请选择客户权限！', trigger: 'blur' },
+          ],
+        },
+        formRules2:{
+          username: [
+            { required: true, message: '请输入用户名！', trigger: 'blur' },
+            { min: 2, max: 10, message: '用户名长度在 3 到 10 个字符', trigger: 'blur' }
+          ],
+          realname: [
+            { required: true, message: '请输入真实姓名！', trigger: 'blur' },
+            { min: 2, max: 10, message: '用户名长度在 3 到 10 个字符', trigger: 'blur' }
+          ],
+          email: [
+            { required: true, message: '请输入邮箱！', trigger: 'blur' },
+            { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
+          ],
+          mobile: [
+            { required: true, message: '请输入手机号！', trigger: 'blur' },
+          ],
+          companyname: [
+            { required: true, message: '请输入企业名称！', trigger: 'blur' },
+          ],
+        },
         // 权限列表，需要从数据库读取，这里是假数据
         authorities:[],
         editAuthorityDialog: false,
@@ -209,7 +284,7 @@
           authority_id: '',
           companyname: '',
           avatar: '',
-          authority_id: ''
+          avatarPreview: '',
         },
         totalNumber: 0,
         queryCondition: {
@@ -229,7 +304,18 @@
             sex: '',
             job_status: ''
           }
-        }
+        },
+        changeDialog2: false,
+        createFormData2: {
+          uid: '',
+          username: '',
+          email: '',
+          realname: '',
+          mobile: '',
+          companyname: '',
+          avatar: '',
+          avatarPreview2: '',
+        },
       }
     },
     computed: {},
@@ -238,6 +324,69 @@
     },
 
     methods: {
+      beforeAvatarUploads(f) {
+        let fd = new FormData();
+        fd.append('file', f)
+        $.ajax({
+          url: '/util.php/Attachment/Index/adminUploadOne',
+          data: fd,
+          type: 'post',
+          data: fd,
+          contentType: false,
+          processData: false,
+          success: res => {
+            this.createFormData2.avatar =res.path;
+            this.createFormData2.avatarPreview2 =res.path;
+          }
+        })
+      },
+      beforeAvatarUpload(f) {
+        let fd = new FormData();
+        fd.append('file', f)
+        $.ajax({
+          url: '/util.php/Attachment/Index/adminUploadOne',
+          data: fd,
+          type: 'post',
+          data: fd,
+          contentType: false,
+          processData: false,
+          success: res => {
+            this.createFormData.avatar =res.path;
+            this.createFormData.avatarPreview =res.path;
+          }
+        })
+      },
+      submit2() {
+        info = {
+          "username": this.createFormData2.username,
+          "email":this.createFormData2.email,
+          "realname":this.createFormData2.realname,
+          "mobile":this.createFormData2.mobile,
+          "companyname":this.createFormData2.companyname,
+          "avatar":this.createFormData2.avatar,
+          "uid":this.createFormData2.uid,
+        }
+        this.$refs.mainForm2.validate(r => {
+          if (r) {
+            // 这里代表表单验证通过，即将提交数据到后台
+            DMS.ajaxPost('__CONTROLLER__/customerEdit', info, ref => {
+              if (ref.status === 1) {
+                this.$message({
+                  message: ref.info,
+                  type: 'success'
+                });
+                window.location.reload();
+              }else{
+                this.$message({
+                  message: ref.info,
+                  type: 'error'
+                });
+                //window.location.reload();
+              }
+            })
+          }
+        })
+      },
       submit() {
         info = {
           "username": this.createFormData.username,
@@ -252,9 +401,7 @@
         this.$refs.mainForm.validate(r => {
           if (r) {
             // 这里代表表单验证通过，即将提交数据到后台
-            console.log(info);
             DMS.ajaxPost('__CONTROLLER__/customerAdd', info, ref => {
-              console.log(ref);
               if (ref.status === 1) {
                 this.$message({
                   message: ref.info,
@@ -273,14 +420,20 @@
         })
       },
       showCustomerDetail(row){
-        this.customerDetail.dialog = true;
-        DMS.ajaxPost('__MODULE__/Customer/customerInfo',
-                {
-                  "uid" : row.uid
-                }, res => {
-                  this.customerDetail.formData = res;
-                })
-
+        /*DMS.ajaxPost('__MODULE__/Customer/customerInfo', {
+          "uid" : row.uid
+        }, res => {
+          this.createFormData2 = res;
+          this.createFormData2.avatarPreview2=this.createFormData2.avatar;
+        })*/
+        let fd = this.createFormData2;
+        Object.keys(fd).forEach(f => {
+          if (f in row) {
+            fd[f] = row[f]
+          }
+        })
+        this.createFormData2.avatarPreview2 = this.createFormData2.avatar;
+        this.changeDialog2 = true;
       },
       changeAuth(id){
         param = {

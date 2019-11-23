@@ -53,7 +53,7 @@
             background
             layout="prev, pager, next"
             :total="totalNumber"
-            :page-size="5"
+            :page-size="10"
             :current-page="queryCondition.page"
             @current-change="pageChange">
           </el-pagination>
@@ -108,12 +108,8 @@
           "uid":this.changePwd.targetRow.uid,
           "parent_id":this.changePwd.targetRow.parent_id,
         }
-        console.log("ssss"+this.changePwd.targetRow.uid);
-        console.log("ssss"+this.changePwd.targetRow.parent_id);
-        console.log("ssss"+this.changePwd.newPwd);
         DMS.ajaxPost('__CONTROLLER__/changePWD',param, ref => {
           //判断是否操作成功，弹出提示
-          console.log(ref);
           if (ref.status === 1) {
             this.$message({
               message: ref.info,

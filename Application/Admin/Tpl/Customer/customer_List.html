@@ -79,7 +79,7 @@
             background
             layout="prev, pager, next"
             :total="totalNumber"
-            :page-size="5"
+            :page-size="10"
             :current-page="queryCondition.page"
             @current-change="pageChange">
           </el-pagination>
@@ -160,7 +160,7 @@
       askDel(row){
         LOADINGOVERLAY.showConfirm({callback: () => {
             DMS.ajaxPost('__MODULE__/Customer/customerDelete',{uid:row.uid}, res => {
-              this.queryCondition.page='1'
+              this.queryCondition.page='1';
               this.doQuery()
               this.$message({
                 type: 'success',
