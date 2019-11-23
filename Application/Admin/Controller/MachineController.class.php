@@ -533,9 +533,13 @@ class MachineController extends BaseController{
             $info["lon"] = $info["b_lon"];
             $info["add_time"] = $info["server_utc_time"];
         }
-        $this->assign($info);
-        $this->display("machine_map");
+        $ret["info"]=$info;
+        $this->ajaxReturn($ret);
+//        $this->assign($info);
+//        $this->display("machine_map");
     }
+
+
 
     // 初始化设备轨迹页面
     public function machineOrbit(){
@@ -582,18 +586,26 @@ class MachineController extends BaseController{
 //        $type = I("type");
         $machineId = I("machine_id");
         $machineInfo = M('Machine')->where(array("machine_id"=>$machineId,"is_delete"=>0))->find();
-        if(I('start_time')){
-            $start_time = strtotime(I('start_time'));
-            $this->assign('start_time',I('start_time'));
-        }
-        if(I('end_time')){
-            if($start_time == I('end_time')){
-                $end_time = strtotime(I('end_time'))+24*3600;
-            }else{
-                $end_time = strtotime(I('end_time'));
-            }
-            $this->assign('end_time',I('end_time'));
-        }
+
+        $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y'));
+
+        $start_time = $beginToday- 96*60*60+1;
+            //$this->assign('start_time',I('start_time'));
+        $end_time = $beginToday-24*60*60-1;
+        Log::write("wdd".$start_time);
+        Log::write($beginToday);
+//        if(I('start_time')){
+//            $start_time = strtotime(I('start_time'));
+//            //$this->assign('start_time',I('start_time'));
+//        }
+//        if(I('end_time')){
+//            if($start_time == I('end_time')){
+//                $end_time = strtotime(I('end_time'))+24*3600;
+//            }else{
+//                $end_time = strtotime(I('end_time'));
+//            }
+//            //$this->assign('end_time',I('end_time'));
+//        }
         //请求轨迹
         $client = new \SoapClient("http://123.57.45.188:8081/Ajax/DevicesAjax.asmx?wsdl");
         $paramOne["DeviceID"] = $machineInfo["mid"];
@@ -1248,7 +1260,11 @@ class MachineController extends BaseController{
             }
         }
 
-
+        $center["lng"] =119.40;
+        $center["lat"] =36.85;
+        $mapData["center"]=$center;
+        $mapData["zoom"]=15;
+        $ret["mapData"]=$mapData;
         $ret["totalNumber"]= $count;
         $ret["machineList"]= $machineList;
         $this->ajaxReturn($ret);

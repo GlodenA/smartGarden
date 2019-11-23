@@ -83,10 +83,10 @@
 					</el-table-column>
 					<el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'rowOperations'" :width="320">
 						<template #default="{ row }">
-							<el-link :underline="false" type="primary" @click="devicePosition.dialog = true">
+							<el-link :underline="false" type="primary" @click="showDevicePosition(row)">
 								设备位置
 							</el-link>
-							<el-link :underline="false" type="primary" @click="deviceTrack.dialog = true">
+							<el-link :underline="false" type="primary" @click="showDeviceTrack(row)">
 								设备轨迹
 							</el-link>
 							<el-link :underline="false" type="primary">
@@ -191,14 +191,14 @@
 			</el-button>
 		</div>
 	</el-dialog>
-	<el-dialog :visible.sync="devicePosition.dialog" title="设备位置" width="620px">
+	<el-dialog :visible.sync="devicePosition.dialog" title="设备位置" width="620px"  :scroll-wheel-zoom="true">
 		<baidu-map style="width:100%;height:400px;" :center="mapData.center" :zoom="mapData.zoom">
 			<bm-marker :position="devicePosition.pos" animation="BMAP_ANIMATION_BOUNCE">
 	    </bm-marker>
 		</baidu-map>
 	</el-dialog>
 	<el-dialog :visible.sync="deviceTrack.dialog" title="设备轨迹" width="620px">
-		<baidu-map style="width:100%;height:400px;" :center="mapData.center" :zoom="mapData.zoom">
+		<baidu-map style="width:100%;height:400px;" :center="mapData.center" :zoom="mapData.zoom" :scroll-wheel-zoom="true">
 			<bm-polyline :path="deviceTrack.points" stroke-color="blue" :stroke-opacity="0.5" :stroke-weight="2"></bm-polyline>
 		</baidu-map>
 	</el-dialog>
@@ -259,11 +259,11 @@
 					totalNumber: 1
 				},
 				mapData: {
-					center: {
-						lng: 116.404,
-						lat: 39.915
-					},
-					zoom: 15
+					// center: {
+					// 	lng: 116.404,
+					// 	lat: 39.915
+					// },
+					// zoom: 15
 				},
 				create: {
 					createDviceDialog: false,
@@ -312,24 +312,24 @@
 				devicePosition: {
 					dialog: false,
 					mapData: {
-						center: {
-							lng: 116.404,
-							lat: 39.915
-						},
-						zoom: 15
+						// center: {
+						// 	lng: 116.404,
+						// 	lat: 39.915
+						// },
+						// zoom: 15
 					},
 					pos: {
-						lng: 116.404,
-						lat: 39.915
+						// lng: 116.404,
+						// lat: 39.915
 					}
 				},
 				// 设备轨迹相关
 				deviceTrack: {
 					dialog: false,
-					points: [
-		        {lng: 116.404, lat: 39.915},
-		        {lng: 116.405, lat: 39.920},
-		        {lng: 116.423493, lat: 39.907445}
+				 	points: [
+		      //   {lng: 116.404, lat: 39.915},
+		      //   {lng: 116.405, lat: 39.920},
+		      //   {lng: 116.423493, lat: 39.907445}
 		      ]
 				},
 				bindArea: {
@@ -432,6 +432,7 @@
 						param, res => {
 							this.tableData=res.machineList;
 							this.totalNumber=res.totalNumber * 1;
+							this.mapData = res.mapData
 						})
 			},
 			changePosition(e){
@@ -509,6 +510,77 @@
 						console.log('即将删除的项：', this.batchSelections);
 					}
 				})
+			},
+            //显示设备位置
+			showDevicePosition   (row){
+				DMS.ajaxPost('__CONTROLLER__/machineMap',{machine_id:row.machine_id},ret=>{
+					// this.create.formData.area_name = row.area_name
+					if(ret.info){
+						// 	lng: 116.404,
+						// 	lat: 39.915
+						this.devicePosition.pos.lat = ret.info.lat
+						this.devicePosition.pos.lng = ret.info.lon
+						this.devicePosition.dialog = true
+					}
+                    else
+					{
+						this.$alert("找不到设备")
+						this.devicePosition.dialog = true
+					}
+
+				})
+			},
+			//显示设备轨迹
+			showDeviceTrack(row){
+				DMS.ajaxPost('__CONTROLLER__/getMachineOrbit',
+						{machine_id:row.machine_id
+							// start_time:
+							// end_time:end_time
+							//
+							},ret=>{
+					if(ret.status){
+						orbitArrOne = ret.listOne;
+						//第一条轨迹
+						if(orbitArrOne.length > 0){
+
+							for(var j=0;j<orbitArrOne.length;j++){
+								var point={};
+								// var content = '设备imei:'+machine_imei+'<br/>采集时间:'+orbitArrOne[j].deviceUtcDate;
+								point = {lng:orbitArrOne[j].baiduLng,lat:orbitArrOne[j].baiduLat};
+								this.deviceTrack.points.push(point);
+								// if(j==0){
+								// 	//设置中心点
+								// 	map.centerAndZoom(new BMap.Point(orbitArrOne[j].baiduLng, orbitArrOne[j].baiduLat), rank);
+								// 	var listStartIcon = new BMap.Icon("{:C('ADMIN_IMAGE_PATH')}/start.png", new BMap.Size(30,30));
+								// 	var listStart =  new BMap.Marker(new BMap.Point(orbitArrOne[j].baiduLng, orbitArrOne[j].baiduLat),{icon:listStartIcon});  // 创建标注
+								// 	map.addOverlay(listStart);
+								// 	addClickHandler(content,listStart);
+								// }
+								// if(j>0 && j==(orbitArrOne.length-1)){
+								// 	var listEndIcon = new BMap.Icon("{:C('ADMIN_IMAGE_PATH')}/end.png", new BMap.Size(30,30));
+								// 	var listEnd =  new BMap.Marker(new BMap.Point(orbitArrOne[j].baiduLng, orbitArrOne[j].baiduLat),{icon:listEndIcon});  // 创建标注
+								// 	map.addOverlay(listEnd);
+								// 	addClickHandler(content,listEnd);
+								// }
+
+							}
+
+							// map.addOverlay(new BMap.Polyline(points, {strokeColor: "green", strokeWeight: 3, strokeOpacity: 1}));
+
+						}
+						console.log(this.deviceTrack.points)
+// 						this.devicePosition.pos.lat = ret.info.lat
+// 						this.devicePosition.pos.lon = ret.info.lon
+						this.deviceTrack.dialog  = true
+					}
+					else
+					{
+						this.$alert("暂无轨迹")
+						this.deviceTrack.dialog = true
+					}
+
+				})
+
 			}
 		},
 		computed: {
