@@ -18,10 +18,10 @@
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/admin.js"></script>
 	    <script src="<?php echo C('ADMIN_JS_PATH');?>/layer/layer.js"></script>
       <!-- Vue, element, 间距工具类 相关 -->
-      <link rel="stylesheet" href="/smartGarden/Public/Admin/Css//util/flex.css">
+      <link rel="stylesheet" href="/Public/Admin/Css//util/flex.css">
       <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
       <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
-      <link rel="stylesheet" href="/smartGarden/Public/Admin/element/index.css">
+      <link rel="stylesheet" href="/Public/Admin/element/index.css">
       <script src="https://unpkg.com/element-ui/lib/index.js"></script>
       <!-- Vue, element, 间距工具类 相关 -->
     </head>
@@ -42,11 +42,6 @@
       },
       endLoading(){
         this.globalLoading = false
-      }
-    },
-    watch: {
-      globalLoading(v){
-        console.log('Loading change: ', v);
       }
     }
   })
@@ -70,7 +65,7 @@
                 <div class="flex justify-end">
                     <el-form inline>
                         <el-form-item label="关键字">
-                            <el-input v-model="queryCondition.keyword" style="width:120px;"></el-input>
+                            <el-input v-model="queryCondition.keyword" placeholder="工号或姓名" style="width:120px;"></el-input>
                         </el-form-item>
                         <el-form-item label="时间">
                             <el-date-picker
@@ -139,7 +134,7 @@
                             <template #default="{ row }">
                                 <el-link type="danger"
                                          :underline="false"
-                                         @click.native="window.open(`/smartGarden/manager.php?s=/Machine/machineOrbit/machine_id/${row.machine_imei}/searchTime/${formatedDateYmd(row.add_time)}`, '_self')"
+                                         @click.native="window.open(`/manager.php?s=/Machine/machineOrbit/machine_id/${row.machine_imei}/searchTime/${formatedDateYmd(row.add_time)}`, '_self')"
                                 >
                                     {{
                                     new Map([
@@ -175,6 +170,7 @@
                             background
                             layout="prev, pager, next"
                             :total="totalNumber"
+                            :page-size="10"
                             :current-page="queryCondition.page"
                             @current-change="pageChange">
                     </el-pagination>
@@ -268,7 +264,7 @@
                 return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
             },
             showEmployeeDetail(row){
-                DMS.ajaxPost('/smartGarden/manager.php?s=/Member/memberInfo',
+                DMS.ajaxPost('/manager.php?s=/Member/memberInfo',
                     {
                         "userid" : row.userid
                     }, res => {
@@ -285,7 +281,7 @@
                     "type":this.queryCondition.warningType,
                     "page":this.queryCondition.page,
                 }
-                DMS.ajaxPost('/smartGarden/manager.php?s=/WarningMessage/getWarningMessageList',
+                DMS.ajaxPost('/manager.php?s=/WarningMessage/getWarningMessageList',
                     param, res => {
                         this.tableData=res.WARNINGLIST;
                         this.totalNumber=res.totalNumber * 1;
@@ -296,12 +292,15 @@
                 this.doQuery()
             },
             changePosition(e){
+                this.queryCondition.page = 1
                 this.doQuery()
             },
             changeWarningType(e){
+                this.queryCondition.page = 1
                 this.doQuery()
             },
             changeManager(e){
+                this.queryCondition.page = 1
                 this.doQuery()
             },
 
@@ -315,7 +314,7 @@
                     "page":this.queryCondition.page,
                 }
 
-                window.open('/smartGarden/manager.php?s=/WarningMessage/warningExcel/keywords/'+param["keyword"]+'/type/'+param["type"]+'/time/'+param["time"]+'/position/'+param["position"]+'/parent_id/'+param["parent_id"]
+                window.open('/manager.php?s=/WarningMessage/warningExcel/keywords/'+param["keyword"]+'/type/'+param["type"]+'/time/'+param["time"]+'/position/'+param["position"]+'/parent_id/'+param["parent_id"]
                     ,"_self");
             }
         }
