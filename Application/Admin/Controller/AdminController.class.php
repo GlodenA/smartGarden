@@ -33,8 +33,8 @@ class AdminController extends BaseController {
     */
     public function adminAdd(){
         if(IS_POST){
-            $data = $_POST['info'];
-            $password = password($_POST['password']);
+            $data =I("info");
+            $password = password($data["password"]);
             $data['password'] = $password['password'];
             $data['encrypt'] = $password['encrypt'];
             $data['reg_date'] = $data['last_date'] = $data['update_time'] = time();

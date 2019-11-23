@@ -86,7 +86,7 @@
     <el-dialog title="添加管理员" :visible.sync="add.dialog" width="480px">
         <el-form :model="add.formData" label-width="100px" :rules="adminFormRules">
             <el-form-item label="登录账号" prop="account">
-                <el-input v-model="add.formData.account"></el-input>
+                <el-input v-model="add.formData.username"></el-input>
             </el-form-item>
             <el-form-item label="登录密码" prop="password">
                 <el-input v-model="add.formData.password"></el-input>
@@ -116,7 +116,7 @@
             </el-form-item>
         </el-form>
         <div class="flex justify-center" slot="footer">
-            <el-button type="primary">
+            <el-button type="primary" @click="adminAdd">
                 提交
             </el-button>
         </div>
@@ -217,6 +217,7 @@
                     dialog: false,
                     avatarPreview: '',
                     formData: {
+                        uid:'',
                         username: '',
                         password: '',
                         realname: '',
@@ -233,13 +234,13 @@
                     dialog: false,
                     avatarPreview: '',
                     formData: {
+                        uid:'',
                         username: '',
                         password: '',
                         realname: '',
                         mobile: '',
-                        avatar: null,
+                        avatar: '',
                         group: '',
-                        groupInfo:''
                     }
                 }
             }
@@ -282,6 +283,8 @@
                     processData: false,
                     success: res => {
                         console.log(res);
+                        this.edit.formData.avatar =res.path;
+                        this.edit.avatarPreview =res.path;
                         this.add.formData.avatar =res.path;
                         this.add.avatarPreview =res.path;
                     }
@@ -330,10 +333,37 @@
                     "realname": this.edit.formData.realname,
                     "mobile": this.edit.formData.mobile,
                     "avatar": this.edit.formData.avatar,
-                    "group": this.edit.formData.groupInfo
+                    "group_id": this.edit.formData.group,
+                    "uid":this.edit.formData.uid
                 }
-                console.log(info);
                 DMS.ajaxPost('__CONTROLLER__/adminEdit',
+                    {"info":info}, res => {
+                        if (res.status === 1) {
+                            this.$message({
+                                message: res.info,
+                                type: 'success'
+                            });
+                            window.location.reload();
+                        } else {
+                            this.$message({
+                                message: res.info,
+                                type: 'error'
+                            });
+                        }
+                    })
+            },
+            adminAdd(){
+                info = {
+                    "username": this.add.formData.username,
+                    "password": this.add.formData.password,
+                    "realname": this.add.formData.realname,
+                    "mobile": this.add.formData.mobile,
+                    "avatar": this.add.formData.avatar,
+                    "group_id": this.add.formData.group,
+                    "uid":this.add.formData.uid
+                }
+                console.log(info)
+                DMS.ajaxPost('__CONTROLLER__/adminAdd',
                     {"info":info}, res => {
                         if (res.status === 1) {
                             this.$message({
