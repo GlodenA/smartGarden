@@ -89,25 +89,25 @@
 							<el-link :underline="false" type="primary" @click="deviceTrack.dialog = true">
 								设备轨迹
 							</el-link>
-							<el-link :underline="false" type="primary">
+							<el-link :underline="false" type="primary" @click="showBindAreaDialog(row)">
 								绑定区域
 							</el-link>
-							<el-link :underline="false" type="primary">
+							<el-link :underline="false" type="primary"  @click="onlyShowAreaDialog(row)">
 								所属区域
 							</el-link>
-							<el-link :underline="false" type="danger">
+							<el-link :underline="false" type="danger" @click="askUnbindArea(row)">
 								解除区域
 							</el-link>
-							<el-link :underline="false" type="primary">
+							<el-link :underline="false" type="primary" @click="showSingleChangeGroupDialog(row)">
 								设置班组
 							</el-link>
-							<el-link :underline="false" type="primary">
+							<el-link :underline="false" type="primary" @click="showBindEmployeeDialog(row)">
 								绑定员工
 							</el-link>
-							<el-link :underline="false" type="primary">
+							<el-link :underline="false" type="primary" @click="showEditDialog(row)">
 								编辑
 							</el-link>
-							<el-link :underline="false" type="danger">
+							<el-link :underline="false" type="danger" @click="askDel(row)">
 								删除
 							</el-link>
 						</template>
@@ -139,6 +139,7 @@
       </div>
 		</div>
 	</div>
+
 	<el-dialog :visible.sync="batchChangeBindDialog" title="批量换绑或者解除区域" width="480px">
 		<el-form label-width="100px">
 			<el-form-item label="关键字查询">
@@ -161,6 +162,7 @@
 			</el-button>
 		</div>
 	</el-dialog>
+
 	<el-dialog :visible.sync="create.createDviceDialog" title="添加设备" width="480px">
 		<div class="flex justify-center">
 			<el-radio-group v-model="create.type" style="margin-bottom: 30px;">
@@ -191,21 +193,38 @@
 			</el-button>
 		</div>
 	</el-dialog>
+
 	<el-dialog :visible.sync="devicePosition.dialog" title="设备位置" width="620px">
 		<baidu-map style="width:100%;height:400px;" :center="mapData.center" :zoom="mapData.zoom">
 			<bm-marker :position="devicePosition.pos" animation="BMAP_ANIMATION_BOUNCE">
 	    </bm-marker>
 		</baidu-map>
 	</el-dialog>
+
 	<el-dialog :visible.sync="deviceTrack.dialog" title="设备轨迹" width="620px">
 		<baidu-map style="width:100%;height:400px;" :center="mapData.center" :zoom="mapData.zoom">
 			<bm-polyline :path="deviceTrack.points" stroke-color="blue" :stroke-opacity="0.5" :stroke-weight="2"></bm-polyline>
 		</baidu-map>
 	</el-dialog>
+
 	<el-dialog :visible.sync="bindArea.dialog" title="绑定区域" width="620px">
-		<el-select>
-		</el-select>
+		<el-form label-width="100px">
+			<el-form-item label="区域名称">
+				<el-autocomplete
+					style="width: 100%;"
+					v-model="bindArea.selectedArea.name"
+					:fetch-suggestions="querySearchAsync"
+					@select="handleSelectArea"
+					:disabled="bindArea.onlyShowArea"
+				></el-autocomplete>
+			</el-form-item>
+		</el-form>
+		<baidu-map style="width:100%;height:400px;" :center="mapData.center" :zoom="mapData.zoom">
+			<bm-polyline :path="bindArea.selectedArea.points" stroke-color="blue" :stroke-opacity="0.5" :stroke-weight="2">
+			</bm-polyline>
+		</baidu-map>
 	</el-dialog>
+
 	<el-dialog :visible.sync="batchChangeGroup.dialog" title="批量切换班组">
 		<el-table
 			:data="batchChangeGroup.tableData"
@@ -233,6 +252,55 @@
 			</el-button>
 		</div>
 	</el-dialog>
+
+	<el-dialog :visible.sync="bindEmployee.dialog" title="绑定员工" width="480px">
+		<el-form :model="bindEmployee.formData" label-width="150px">
+			<el-form-item label="提示">
+				<el-input disabled v-model="bindEmployee.formData.prompt"></el-input>
+			</el-form-item>
+			<el-form-item label="当前设备IMEI">
+				<el-input disabled v-model="bindEmployee.formData.deviceIMEI"></el-input>
+			</el-form-item>
+			<el-form-item label="当前绑定员工信息">
+				<el-input disabled v-model="bindEmployee.formData.currentBindEmployee"></el-input>
+			</el-form-item>
+			<el-form-item label="员工搜索">
+				<el-input placeholder="请输入员工号" v-model="bindEmployee.formData.keyword">
+					<el-button type="primary" slot="suffix" size="small">
+						查询
+					</el-button>
+				</el-input>
+			</el-form-item>
+			<el-form-item label="员工号">
+				<el-input disabled v-model="bindEmployee.formData.job_number"></el-input>
+			</el-form-item>
+			<el-form-item label="姓名">
+				<el-input disabled v-model="bindEmployee.formData.realname"></el-input>
+			</el-form-item>
+			<el-form-item label="已绑定设备IMEI">
+				<el-input disabled v-model="bindEmployee.formData.alreadyBindDeviceIMEI"></el-input>
+			</el-form-item>
+		</el-form>
+	</el-dialog>
+
+	<el-dialog :visible.sync="edit.dialog" title="编辑设备" width="480px">
+		<el-form :model="edit.formData" label-width="150px">
+			<el-form-item label="设备名称">
+				<el-input v-model="edit.formData.machine_name"></el-input>
+			</el-form-item>
+			<el-form-item label="设备IMEI">
+				<el-input disabled v-model="edit.formData.machine_imei"></el-input>
+			</el-form-item>
+			<el-form-item label="绑定员工号">
+				<el-input disabled v-model="edit.formData.job_number"></el-input>
+			</el-form-item>
+		</el-form>
+		<div class="flex justify-end">
+			<el-button type="primary">
+				提交
+			</el-button>
+		</div>
+	</el-dialog>
 </div>
 <script src="https://unpkg.com/vue-baidu-map"></script>
 <script type="text/javascript">
@@ -243,8 +311,20 @@
 		el: '#MACHINELIST',
 		data(){
 			return {
+				// 绑定区域相关
+				bindArea: {
+					onlyShowArea: false,
+					dialog: false,
+					selectedArea: {
+						name: '',
+						points: []
+					}
+				},
+
+				// 批量设置班组相关，单个切换班组复用
 				batchChangeGroup: {
 					dialog: false,
+					isSingleOption: false,	// 批量跟单行操作复用标识，true则说明是对某一行数据进行操作
 					tableData: [{
 						name: '班组1',
 						weekArr: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
@@ -258,6 +338,8 @@
 					page: 1,
 					totalNumber: 1
 				},
+
+				// 地图数据相关
 				mapData: {
 					center: {
 						lng: 116.404,
@@ -265,6 +347,8 @@
 					},
 					zoom: 15
 				},
+
+				// 创建相关
 				create: {
 					createDviceDialog: false,
 					type: 'handy',
@@ -276,9 +360,23 @@
 						machine_imei: ''
 					}
 				},
+
+				// 编辑相关
+				edit: {
+					formData: {
+						machine_name: '',
+						machine_imei: '',
+						job_number: ''
+					},
+					dialog: false
+				},
+				// 批量选择绑定数据
 				batchSelections: [],
+
+				// 表格数据
 				tableData: [
 				],
+
 				// 查询条件
 				queryCondition: {
 					keyword: '',
@@ -287,8 +385,11 @@
 					manager: 0,
 					page: 1
 				},
+
 				// 分页总数据条数
 				totalNumber: 0,
+
+				// 表格显示描述
 				tableColumns: [
 					['serialNumber', '序号'],
 					['machine_imei', '设备号'],
@@ -303,11 +404,16 @@
 					['schedules_name', '班组'],
 					['rowOperations', '操作']
 				],
+
+				// 批量换绑弹窗
 				batchChangeBindDialog: false,
+
+				// 批量换绑弹窗表单
 				batchChangeBindDialogFormData: {
 					keywords: '',
 					area_id: '',
 				},
+
 				// 设备位置相关
 				devicePosition: {
 					dialog: false,
@@ -323,6 +429,7 @@
 						lat: 39.915
 					}
 				},
+
 				// 设备轨迹相关
 				deviceTrack: {
 					dialog: false,
@@ -332,19 +439,79 @@
 		        {lng: 116.423493, lat: 39.907445}
 		      ]
 				},
-				bindArea: {
-					dialog: false,
-				},
+
+				// 区域列表
 				areaList:[],
+
+				// 绑定员工相关
+				bindEmployee: {
+					dialog: false,
+					formData: {
+						prompt: '',
+						deviceIMEI: '',
+						currentBindEmployee: '',
+						keyword: '',
+						job_number: '',
+						realname: '',
+						alreadyBindDeviceIMEI: ''
+					}
+				}
 			}
 		},
 
 		created(){
-			// 从接口获取数据
-			// this.getData();
 			this.doQuery();
 		},
 		methods: {
+			askDel(row){
+				LOADINGOVERLAY.showConfirm({
+						callback: () => {
+							// 这里是用户点击确认删除
+							console.log('需要删除的行数据：', row);
+						}
+				})
+			},
+			showEditDialog(row){
+				let fd = this.edit.formData
+				Object.keys(fd).forEach(f => {
+					fd[f] = row[f]
+				})
+				this.edit.dialog = true
+			},
+			showBindEmployeeDialog(row){
+				this.bindEmployee.dialog = true
+			},
+			showSingleChangeGroupDialog(row){
+				this.batchChangeGroup.isSingleOption = true
+				this.batchChangeGroup.dialog = true
+			},
+			askUnbindArea(row){
+				LOADINGOVERLAY.showConfirm({
+					message: '确认解除绑定吗？',
+					callback: () => {
+						// 这里是用户点击确定之后的逻辑
+						console.log('需要解除绑定的行数据：', row)
+					}
+				})
+			},
+			querySearchAsync(k, cb){
+				setTimeout(() => {
+					cb(Array(10).fill(1).map((_, i) => ({
+						value: `选项${i + 1}`
+					})).filter(({ value }) => value.indexOf(k) !== -1))
+				}, 2000)
+			},
+			handleSelectArea(s){
+				console.log(s)
+			},
+			onlyShowAreaDialog(row){
+				this.bindArea.onlyShowArea = true
+				this.bindArea.dialog = true
+			},
+			showBindAreaDialog(row){
+				this.bindArea.onlyShowArea = false
+				this.bindArea.dialog = true
+			},
 			batchChangeGroupTargetRowChange(row){
 				this.batchChangeGroup.targetRow = row
 			},
@@ -395,13 +562,6 @@
 				// this.$alert(this.areaList);
 			},
 
-			// getData(){
-			// 	DMS.ajaxPost('__CONTROLLER__/getMachineList',
-			// 		res => {
-			// 		this.tableData = res.machineList;
-			// 		this.totalNumber=res.totalNumber * 1;
-			// 	})
-			// },
 			/**
 			 * [pageChange 分页页数变化触发事件]
 			 * @param  {[type]} p [需要查询数据的那一页]
