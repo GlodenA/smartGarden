@@ -224,7 +224,7 @@
                                         message: res.info,
                                         type: 'success'
                                     });
-                                    window.location.reload();
+                                    window.location.reload()
                                 } else {
                                     this.$message({
                                         message: res.info,
@@ -258,7 +258,7 @@
                             this.$alert(res.info, '通知', {
                                 confirmButtonText: '确定',
                                 callback: action => {
-                                    this.create.dialog = false
+
                                     window.location.reload()
                                 }
                             })
@@ -266,7 +266,6 @@
                             this.$alert(res.info+res.info, '通知', {
                                 confirmButtonText: '确定',
                                 callback: action => {
-                                    this.create.dialog = false
                                 }
                             })
                         }
@@ -286,7 +285,6 @@
                             this.$alert(res.info, '通知', {
                                 confirmButtonText: '确定',
                                 callback: action => {
-                                    this.create.dialog = false
                                     window.location.reload()
                                 }
                             })
@@ -294,7 +292,7 @@
                             this.$alert(res.info+res.info, '通知', {
                                 confirmButtonText: '确定',
                                 callback: action => {
-                                    this.create.dialog = false
+
                                 }
                             })
                         }
@@ -308,15 +306,14 @@
                             this.$alert(res.info, '通知', {
                                 confirmButtonText: '确定',
                                 callback: action => {
-                                    this.create.dialog = false
                                     window.location.reload()
+
                                 }
                             })
                         } else {
                             this.$alert(res.info+res.info, '通知', {
                                 confirmButtonText: '确定',
                                 callback: action => {
-                                    this.create.dialog = false
                                 }
                             })
                         }

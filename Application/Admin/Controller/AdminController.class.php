@@ -44,7 +44,6 @@ class AdminController extends BaseController {
             $isIn = $this->adminDb->where($where)->find();
             if($isIn){
                 $this->error('账号已存在');
-                return false;
             }
             if(!$data['username'] || !$data['password']){
                 $this->error('操作失败');

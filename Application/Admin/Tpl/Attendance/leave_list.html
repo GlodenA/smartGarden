@@ -135,7 +135,6 @@
                                 this.$alert(res.info, '通知', {
                                     confirmButtonText: '确定',
                                     callback: action => {
-                                        this.create.dialog = false
                                         window.location.reload()
                                     }
                                 })
@@ -143,7 +142,7 @@
                                 this.$alert(res.info+res.info, '通知', {
                                     confirmButtonText: '确定',
                                     callback: action => {
-                                        this.create.dialog = false
+
                                     }
                                 })
                             }
