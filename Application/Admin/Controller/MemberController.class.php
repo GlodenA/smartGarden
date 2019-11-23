@@ -356,39 +356,44 @@ class MemberController extends BaseController
         if (IS_POST) {
             $userid = I("userid");
             $machine_imei = I("machine_imei");
-            $memberInfo = M('Member')->where(array('userid' => $userid))->find();
-            $machineInfo = M('Machine')->where(array('machine_imei' => $machine_imei, "is_delete" => 0))->find();
+            if($machine_imei){
+                $memberInfo = M('Member')->where(array('userid' => $userid))->find();
+                $machineInfo = M('Machine')->where(array('machine_imei' => $machine_imei, "is_delete" => 0))->find();
 //            var_dump($machineInfo);
-            $check["machine_id"] = $memberInfo['machine_id'];
-            $check["status"] = 1;
-            $machine_bind = M("Machine_bind")->where($check)->find();
+                if (!$machineInfo)
+                    $this->error("设备不存在");
+                $check["machine_id"] = $memberInfo['machine_id'];
+                $check["status"] = 1;
+                $machine_bind = M("Machine_bind")->where($check)->find();
 //            var_dump($machine_bind);die;
-            $data["machine_id"] = $machineInfo['machine_id'];
-            $data["userid"] = $userid;
-            $data["add_time"] = $data["update_time"] = time();
-            $data["status"] = 1;
-            $res = M("Machine_bind")->add($data);
+                $data["machine_id"] = $machineInfo['machine_id'];
+                $data["userid"] = $userid;
+                $data["add_time"] = $data["update_time"] = time();
+                $data["status"] = 1;
+                $res = M("Machine_bind")->add($data);
 
-            if ($res) {
-                $memberWhere['userid'] = $userid;
-                $memberData['machine_id'] = $machineInfo['machine_id'];
-                M('Member')->where($memberWhere)->save($memberData);
-                $machineData['userid'] = $userid;
-                M('Machine')->where(array('machine_imei' => $machine_imei, "is_delete" => 0))->save($machineData);
-                if ($machine_bind) {
-                    $set["machine_imei"] = $machine_imei;
-                    $set["userid"] = $machine_bind['userid'];
-                    $setData['status'] = 0;
-                    M("Machine_bind")->where($set)->save($setData);
+                if ($res) {
+                    $memberWhere['userid'] = $userid;
+                    $memberData['machine_id'] = $machineInfo['machine_id'];
+                    M('Member')->where($memberWhere)->save($memberData);
+                    $machineData['userid'] = $userid;
+                    M('Machine')->where(array('machine_imei' => $machine_imei, "is_delete" => 0))->save($machineData);
+                    if ($machine_bind) {
+                        $set["machine_imei"] = $machine_imei;
+                        $set["userid"] = $machine_bind['userid'];
+                        $setData['status'] = 0;
+                        M("Machine_bind")->where($set)->save($setData);
 
-                    $machineWhere['machine_id'] = $machine_bind['machine_id'];
-                    $machineDataOld['userid'] = 0;
-                    M('Machine')->where($machineWhere)->save($machineDataOld);
+                        $machineWhere['machine_id'] = $machine_bind['machine_id'];
+                        $machineDataOld['userid'] = 0;
+                        M('Machine')->where($machineWhere)->save($machineDataOld);
+                    }
+                    $this->success("绑定成功");
+                } else {
+                    $this->error("绑定失败");
                 }
-                $this->success("绑定成功");
-            } else {
-                $this->error("绑定失败");
             }
+
         } else {
             $userid = I("userid");
             $where["userid"] = $userid;
