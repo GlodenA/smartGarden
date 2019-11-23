@@ -42,6 +42,19 @@
       },
       endLoading(){
         this.globalLoading = false
+      },
+      showConfirm({
+        message = '确认删除吗？',
+        title = '提示',
+        type = 'warning',
+        callback = () => {}
+      }){
+        this.$confirm(message, title, {
+          confirmButtonText: '确定',
+          type
+        }).then(() => {
+          callback()
+        }).catch(() => {})
       }
     }
   })
