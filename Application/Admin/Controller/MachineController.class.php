@@ -480,7 +480,7 @@ class MachineController extends BaseController{
     }
     //导入设备
     public function importFile(){
-        $file_name='./'.I("filename");
+        $file_name = I("filename");
         $extension = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
         vendor("PHPExcel.PHPExcel");
         if($extension =='xls'){
@@ -533,9 +533,13 @@ class MachineController extends BaseController{
             $info["lon"] = $info["b_lon"];
             $info["add_time"] = $info["server_utc_time"];
         }
-        $this->assign($info);
-        $this->display("machine_map");
+        $ret["info"]=$info;
+        $this->ajaxReturn($ret);
+//        $this->assign($info);
+//        $this->display("machine_map");
     }
+
+
 
     // 初始化设备轨迹页面
     public function machineOrbit(){
@@ -582,18 +586,26 @@ class MachineController extends BaseController{
 //        $type = I("type");
         $machineId = I("machine_id");
         $machineInfo = M('Machine')->where(array("machine_id"=>$machineId,"is_delete"=>0))->find();
-        if(I('start_time')){
-            $start_time = strtotime(I('start_time'));
-            $this->assign('start_time',I('start_time'));
-        }
-        if(I('end_time')){
-            if($start_time == I('end_time')){
-                $end_time = strtotime(I('end_time'))+24*3600;
-            }else{
-                $end_time = strtotime(I('end_time'));
-            }
-            $this->assign('end_time',I('end_time'));
-        }
+
+        $beginToday=mktime(0,0,0,date('m'),date('d'),date('Y'));
+
+        $start_time = $beginToday- 96*60*60+1;
+            //$this->assign('start_time',I('start_time'));
+        $end_time = $beginToday-24*60*60-1;
+        Log::write("wdd".$start_time);
+        Log::write($beginToday);
+//        if(I('start_time')){
+//            $start_time = strtotime(I('start_time'));
+//            //$this->assign('start_time',I('start_time'));
+//        }
+//        if(I('end_time')){
+//            if($start_time == I('end_time')){
+//                $end_time = strtotime(I('end_time'))+24*3600;
+//            }else{
+//                $end_time = strtotime(I('end_time'));
+//            }
+//            //$this->assign('end_time',I('end_time'));
+//        }
         //请求轨迹
         $client = new \SoapClient("http://123.57.45.188:8081/Ajax/DevicesAjax.asmx?wsdl");
         $paramOne["DeviceID"] = $machineInfo["mid"];
@@ -1248,7 +1260,11 @@ class MachineController extends BaseController{
             }
         }
 
-
+        $center["lng"] =119.40;
+        $center["lat"] =36.85;
+        $mapData["center"]=$center;
+        $mapData["zoom"]=15;
+        $ret["mapData"]=$mapData;
         $ret["totalNumber"]= $count;
         $ret["machineList"]= $machineList;
         $this->ajaxReturn($ret);
@@ -1311,6 +1327,85 @@ class MachineController extends BaseController{
             $areaList = M('Area_map')->where($where)->select();
             $this->assign('areaList',$areaList);
             $this->assign('machineList',$machineList);
+        }
+    }
+    //设备位置
+    public function machineMapNew(){
+        $where["c.machine_id"] = I("machine_id");
+        $where["c.is_delete"] = 0;
+        $where["m.is_delete"] = 0;
+        $info = M("Machine")->alias("c")->join("left join __MEMBER__ m on c.userid = m.userid")->field("c.*,m.realname,m.job_number,m.mobile,m.position,m.parent_id")->where($where)->find();
+        if($info){
+            if($info["parent_id"]>0){
+                $info["parent_name"] = M("Member")->where(array("userid"=>$info["parent_id"],"is_delete"=>0))->getField("realname");
+            }else{
+                $info["parent_name"] ="";
+            }
+            if($info["position"]>0){
+                $info["position_name"] = M("Member_position")->where(array("id"=>$info["position"],"is_delete"=>0))->getField("name");
+            }else{
+                $info["position_name"] ="";
+            }
+            $info["lat"] = $info["b_lat"];
+            $info["lon"] = $info["b_lon"];
+            $info["add_time"] = $info["server_utc_time"];
+        }
+        $this->assign($info);
+        $ret["info"]= $info;
+        $this->ajaxReturn($ret);
+    }
+    //批量切换班组
+    public function batchChangeSchedules(){
+        if(IS_POST){
+            $schedules_id = I('scheduleIdList');
+            if(!$schedules_id){
+                $this->error('请选择班组');
+            }
+            $data["schedules_id"] = $schedules_id;
+            $data["update_time"] = time();
+            $machineList = I("machineList");
+            if($machineList){
+                foreach ($machineList as $key => $v) {
+                    M('Machine')->where(array("machine_id"=>$v["machine_id"]))->save($data);
+                }
+            }
+            $this->success('切换成功');
+        }else{
+//            $machineids = I("machineList");
+//            $this->assign("machineids",$machineids);
+            $where['is_delete'] = 0;
+            $where['is_show'] = 1;
+            $scheduleList = M("Schedules_setting")->where($where)->order('schedules_id desc')->select();
+            if($scheduleList){
+                $work_day = '';
+                foreach($scheduleList as $k=>$v){
+//                    $list[$k]['work_day'] = explode(",",$v['work_day']);
+                    foreach ($scheduleList[$k]['work_day']as $kkk => $vvv) {
+                        if($vvv == 1){
+                            $work_day = $work_day."周一";
+                        }elseif($vvv == 2){
+                            $work_day = $work_day." 周二";
+                        }elseif($vvv == 3){
+                            $work_day = $work_day." 周三";
+                        }elseif($vvv == 4){
+                            $work_day = $work_day." 周四";
+                        }elseif($vvv == 5){
+                            $work_day = $work_day." 周五";
+                        }elseif($vvv == 6){
+                            $work_day = $work_day." 周六";
+                        }elseif($vvv == 0){
+                            $work_day = $work_day." 周日";
+                        }
+                    }
+                    $scheduleList[$k]['work_day'] = $work_day;
+                    $work_day = '';
+//                    $scheduleList[$k]['time_id'] = explode(",",$v['time_id']);
+                    foreach ($scheduleList[$k]['time_id']as $kk => $vv) {
+                        $scheduleList[$k]['timeList'][] = M("Schedules_time")->where(array('is_delete'=>0,'id'=>$vv))->find();
+                    }
+                }
+            }
+            $this->assign('scheduleList',$scheduleList);
         }
     }
 }

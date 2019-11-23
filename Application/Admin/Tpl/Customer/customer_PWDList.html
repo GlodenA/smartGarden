@@ -1,16 +1,4 @@
 <style media="screen">
-  input[type=file] {
-    display: none;
-  }
-  .el-form--inline .el-form-item{
-    margin-bottom: 0;
-  }
-  .el-upload-dragger{
-    width: 100%;
-  }
-  .el-upload{
-    width: 100%;
-  }
 </style>
 <div class="padding-md" id="app">
   <!-- 面包屑导航 -->
@@ -80,11 +68,11 @@
       ]
     }">
       <el-form-item label="新密码" prop="newPwd">
-        <el-input v-model="changePwd.newPwd"></el-input>
+        <el-input v-model="changePwd.newPwd" type="password"></el-input>
       </el-form-item>
     </el-form>
     <div class="flex justify-end" slot="footer">
-      <el-button type="primary">
+      <el-button type="primary" @click="changePWD()">
         提交
       </el-button>
     </div>
@@ -114,6 +102,33 @@
       this.doQuery()
     },
     methods: {
+      changePWD(){
+        param = {
+          "newPwd":this.changePwd.newPwd,
+          "uid":this.changePwd.targetRow.uid,
+          "parent_id":this.changePwd.targetRow.parent_id,
+        }
+        console.log("ssss"+this.changePwd.targetRow.uid);
+        console.log("ssss"+this.changePwd.targetRow.parent_id);
+        console.log("ssss"+this.changePwd.newPwd);
+        DMS.ajaxPost('__CONTROLLER__/changePWD',param, ref => {
+          //判断是否操作成功，弹出提示
+          console.log(ref);
+          if (ref.status === 1) {
+            this.$message({
+              message: ref.info,
+              type: 'success'
+            });
+            window.location.reload();
+          }else{
+            this.$message({
+              message: ref.info,
+              type: 'error'
+            });
+            //window.location.reload();
+          }
+        })
+      },
       showChangePwdDialog(row){
         this.changePwd.targetRow = row
         this.changePwd.dialog = true

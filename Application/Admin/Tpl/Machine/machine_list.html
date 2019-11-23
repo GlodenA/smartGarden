@@ -1,521 +1,774 @@
 <style media="screen">
-	.el-link+.el-link{
-		margin-left: 8px;
-	}
-	input[type=file]{
-		display: none;
-	}
+    .el-link+.el-link{
+        margin-left: 8px;
+    }
+    input[type=file]{
+        display: none;
+    }
 </style>
 <div class="padding-md" id="MACHINELIST">
-	<div class="smart-widget" style="margin-bottom: 1px;">
-		<div class="smart-widget-inner">
-			<div class="smart-widget-body">
-				<el-breadcrumb separator="/">
-          <el-breadcrumb-item>
-            <a href="">首页</a>
-          </el-breadcrumb-item>
-          <el-breadcrumb-item>
-            设备管理
-          </el-breadcrumb-item>
-          <el-breadcrumb-item>
-            设备列表
-          </el-breadcrumb-item>
-        </el-breadcrumb>
-				<el-divider></el-divider>
-				<div class="flex px3 justify-between items-start">
-					<el-button icon="el-icon-plus" type="primary" @click="create.createDviceDialog = true">
-						添加设备
-					</el-button>
-					<el-form inline :model="queryCondition">
-						<el-form-item label="设备状态">
-							<el-select v-model="queryCondition.status" style="width:100px;"  @change="changeStatus">
-								<el-option v-for="(l, i) in ['全部', '在线', '离线']" :label="l" :key="l" :value="i">
-								</el-option>
-							</el-select>
-						</el-form-item>
-						<el-form-item label="职位">
-							<el-select v-model="queryCondition.position" style="width:100px;" @change="changePosition" >
-								<el-option label="全部" :value="0">
-								</el-option>
-								<volist name="positionList" id="pl">
-									<el-option label="{$pl.name}" value="{$pl.id}">
-									</el-option>
-								</volist>
-							</el-select>
-						</el-form-item>
-						<el-form-item label="管理人员">
-							<el-select v-model="queryCondition.manager" style="width:100px;" @change="changeManager">
-								<el-option label="全部" :value="0">
-								</el-option>
-								<volist name="managerList" id="pl">
-									<el-option label="{$pl.realname}" value="{$pl.userid}">
-									</el-option>
-								</volist>
-							</el-select>
-						</el-form-item>
-						<el-form-item label="关键字" prop="keyword">
-							<el-input v-model="queryCondition.keyword"/>
-						</el-form-item>
-						<el-form-item>
-							<el-button icon="el-icon-search" type="primary" @click="doQuery">
-								查询
-							</el-button>
-						</el-form-item>
-					</el-form>
-				</div>
-				<el-table :data="tableData" @selection-change="handleSelectionChange">
-					<el-table-column
-					type="selection"
-					width="55">
-				</el-table-column>
-				<template v-for="([prop, label], i) in tableColumns">
-					<el-table-column :key="prop" :prop="prop" :label="label" v-if="prop === 'serialNumber'">
-						<template #default="{ $index }">
-							{{ $index + 1 }}
-						</template>
-					</el-table-column>
-					<el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'machine_status'">
-						<template #default="{ row }">
-							<el-tag v-if="row.machine_status === 1" type="primary">在线</el-tag>
-							<el-tag v-else-if="row.machine_status === 2" type="danger">离线</el-tag>
-							<el-tag v-else type="info">未知</el-tag>
-						</template>
-					</el-table-column>
-					<el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'rowOperations'" :width="320">
-						<template #default="{ row }">
-							<el-link :underline="false" type="primary" @click="devicePosition.dialog = true">
-								设备位置
-							</el-link>
-							<el-link :underline="false" type="primary" @click="deviceTrack.dialog = true">
-								设备轨迹
-							</el-link>
-							<el-link :underline="false" type="primary">
-								绑定区域
-							</el-link>
-							<el-link :underline="false" type="primary">
-								所属区域
-							</el-link>
-							<el-link :underline="false" type="danger">
-								解除区域
-							</el-link>
-							<el-link :underline="false" type="primary">
-								设置班组
-							</el-link>
-							<el-link :underline="false" type="primary">
-								绑定员工
-							</el-link>
-							<el-link :underline="false" type="primary">
-								编辑
-							</el-link>
-							<el-link :underline="false" type="danger">
-								删除
-							</el-link>
-						</template>
-					</el-table-column>
-					<el-table-column :key="prop" :prop="prop" :label="label" v-else></el-table-column>
-				</template>
-				</el-table>
-				<div class="flex justify-between items-center mt4">
-						<div class="">
-							<el-button icon="el-icon-sort" type="primary" :disabled="!hasSelection" @click="batchChangeBindDialogShow">
-								批量换绑或解除
-							</el-button>
-							<el-button type="warning" icon="el-icon-refresh-left" :disabled="!hasSelection" @click="batchChangeGroup.dialog = true">
-								批量切换班组
-							</el-button>
-							<el-button type="danger" icon="el-icon-delete" :disabled="!hasSelection" @click="askBatchDel">
-								批量删除设备
-							</el-button>
-						</div>
-						<el-pagination
-							background
-							layout="prev, pager, next"
-							:total="totalNumber"
-							:page-size="10"
-							:current-page="queryCondition.page"
-							@current-change="pageChange">
-						</el-pagination>
-				</div>
-      </div>
-		</div>
-	</div>
-	<el-dialog :visible.sync="batchChangeBindDialog" title="批量换绑或者解除区域" width="480px">
-		<el-form label-width="100px">
-			<el-form-item label="关键字查询">
-				<el-input v-model="batchChangeBindDialogFormData.keywords">
-					<el-button type="primary" slot="suffix" size="small" @click="getAreaList">
-						查询
-					</el-button>
-				</el-input>
-			</el-form-item>
-			<el-form-item label="解除区域" id="area">
-				<el-select style="width:100%;" v-model="batchChangeBindDialogFormData.area_id">
-					<el-option :value="0" label="解除区域"></el-option>
-					<el-option v-for="({ id, area_name }) in areaList" :key="id" :label="area_name" :value="id"></el-option>
-				</el-select>
-			</el-form-item>
-		</el-form>
-		<div class="row justify-center" slot="footer">
-			<el-button type="primary" @click="areaBinds">
-				提交
-			</el-button>
-		</div>
-	</el-dialog>
-	<el-dialog :visible.sync="create.createDviceDialog" title="添加设备" width="480px">
-		<div class="flex justify-center">
-			<el-radio-group v-model="create.type" style="margin-bottom: 30px;">
-				<el-radio-button label="handy">手动添加</el-radio-button>
-				<el-radio-button label="batch">批量添加</el-radio-button>
-			</el-radio-group>
-		</div>
-		<el-form label-width="100px" v-if="create.type === 'handy'">
-			<el-form-item label="设备名称">
-				<el-input v-model="create.formData.machine_name"></el-input>
-			</el-form-item>
-			<el-form-item label="设备IMEI">
-				<el-input v-model="create.formData.machine_imei"></el-input>
-			</el-form-item>
-		</el-form>
-		<div v-else if="create.type === 'batch'" class="column items-center">
-			<el-link href="__ROOT__/Public/Admin/File/shebei.xlsx" type="primary" class="mb3">下载批量带入模板</el-link>
-			<el-upload
-			  drag
-			  action="">
-			  <i class="el-icon-upload"></i>
-			  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-			</el-upload>
-		</div>
-		<div class="row justify-center" slot="footer">
-			<el-button type="primary" @click="machineAddSubmit(create.type)">
-				提交
-			</el-button>
-		</div>
-	</el-dialog>
-	<el-dialog :visible.sync="devicePosition.dialog" title="设备位置" width="620px">
-		<baidu-map style="width:100%;height:400px;" :center="mapData.center" :zoom="mapData.zoom">
-			<bm-marker :position="devicePosition.pos" animation="BMAP_ANIMATION_BOUNCE">
-	    </bm-marker>
-		</baidu-map>
-	</el-dialog>
-	<el-dialog :visible.sync="deviceTrack.dialog" title="设备轨迹" width="620px">
-		<baidu-map style="width:100%;height:400px;" :center="mapData.center" :zoom="mapData.zoom">
-			<bm-polyline :path="deviceTrack.points" stroke-color="blue" :stroke-opacity="0.5" :stroke-weight="2"></bm-polyline>
-		</baidu-map>
-	</el-dialog>
-	<el-dialog :visible.sync="bindArea.dialog" title="绑定区域" width="620px">
-		<el-select>
-		</el-select>
-	</el-dialog>
-	<el-dialog :visible.sync="batchChangeGroup.dialog" title="批量切换班组">
-		<el-table
-			:data="batchChangeGroup.tableData"
-			highlight-current-row
-    	@current-change="batchChangeGroupTargetRowChange">
-			<el-table-column prop="name" label="班组名称"></el-table-column>
-			<el-table-column label="时间段">
-				<template #default="{ row }">
-					{{ row.weekArr.join(' ') }} ({{ row.time[0] }} - {{ row.time[1] }})
-				</template>
-			</el-table-column>
-		</el-table>
-		<div class="flex justify-end mt3">
-			<el-pagination
-				background
-				layout="prev, pager, next"
-				:total="batchChangeGroup.totalNumber"
-				:page-size="10"
-				:current-page.sync="batchChangeGroup.page">
-			</el-pagination>
-		</div>
-		<div class="flex justify-end" slot="footer">
-			<el-button type="primary">
-				提交
-			</el-button>
-		</div>
-	</el-dialog>
+    <div class="smart-widget" style="margin-bottom: 1px;">
+        <div class="smart-widget-inner">
+            <div class="smart-widget-body">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item>
+                        <a href="">首页</a>
+                    </el-breadcrumb-item>
+                    <el-breadcrumb-item>
+                        设备管理
+                    </el-breadcrumb-item>
+                    <el-breadcrumb-item>
+                        设备列表
+                    </el-breadcrumb-item>
+                </el-breadcrumb>
+                <el-divider></el-divider>
+                <div class="flex px3 justify-between items-start">
+                    <el-button icon="el-icon-plus" type="primary" @click="create.createDviceDialog = true">
+                        添加设备
+                    </el-button>
+                    <el-form inline :model="queryCondition">
+                        <el-form-item label="设备状态">
+                            <el-select v-model="queryCondition.status" style="width:100px;"  @change="changeStatus">
+                                <el-option v-for="(l, i) in ['全部', '在线', '离线']" :label="l" :key="l" :value="i">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="职位">
+                            <el-select v-model="queryCondition.position" style="width:100px;" @change="changePosition" >
+                                <el-option label="全部" :value="0">
+                                </el-option>
+                                <volist name="positionList" id="pl">
+                                    <el-option label="{$pl.name}" value="{$pl.id}">
+                                    </el-option>
+                                </volist>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="管理人员">
+                            <el-select v-model="queryCondition.manager" style="width:100px;" @change="changeManager">
+                                <el-option label="全部" :value="0">
+                                </el-option>
+                                <volist name="managerList" id="pl">
+                                    <el-option label="{$pl.realname}" value="{$pl.userid}">
+                                    </el-option>
+                                </volist>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="关键字" prop="keyword">
+                            <el-input v-model="queryCondition.keyword"/>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button icon="el-icon-search" type="primary" @click="doQuery">
+                                查询
+                            </el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+                <el-table :data="tableData" @selection-change="handleSelectionChange">
+                    <el-table-column
+                            type="selection"
+                            width="55">
+                    </el-table-column>
+                    <template v-for="([prop, label], i) in tableColumns">
+                        <el-table-column :key="prop" :prop="prop" :label="label" v-if="prop === 'serialNumber'">
+                            <template #default="{ $index }">
+                                {{ $index + 1 }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'machine_status'">
+                            <template #default="{ row }">
+                                <el-tag v-if="row.machine_status === 1" type="primary">在线</el-tag>
+                                <el-tag v-else-if="row.machine_status === 2" type="danger">离线</el-tag>
+                                <el-tag v-else type="info">未知</el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column :key="prop" :prop="prop" :label="label" v-else-if="prop === 'rowOperations'" :width="320">
+                            <template #default="{ row }">
+                                <el-link :underline="false" type="primary" @click="showDevicePosition(row)">
+                                    设备位置
+                                </el-link>
+                                <el-link :underline="false" type="primary" @click="showDeviceTrack(row)">
+                                    设备轨迹
+                                </el-link>
+                                <el-link :underline="false" type="primary" @click="showBindAreaDialog(row)">
+                                    绑定区域
+                                </el-link>
+                                <el-link :underline="false" type="primary"  @click="onlyShowAreaDialog(row)">
+                                    所属区域
+                                </el-link>
+                                <el-link :underline="false" type="danger" @click="askUnbindArea(row)">
+                                    解除区域
+                                </el-link>
+                                <el-link :underline="false" type="primary" @click="showSingleChangeGroupDialog(row)">
+                                    设置班组
+                                </el-link>
+                                <el-link :underline="false" type="primary" @click="showBindEmployeeDialog(row)">
+                                    绑定员工
+                                </el-link>
+                                <el-link :underline="false" type="primary" @click="showEditDialog(row)">
+                                    编辑
+                                </el-link>
+                                <el-link :underline="false" type="danger" @click="askDel(row)">
+                                    删除
+                                </el-link>
+                            </template>
+                        </el-table-column>
+                        <el-table-column :key="prop" :prop="prop" :label="label" v-else></el-table-column>
+                    </template>
+                </el-table>
+                <div class="flex justify-between items-center mt4">
+                    <div class="">
+                        <el-button icon="el-icon-sort" type="primary" :disabled="!hasSelection" @click="batchChangeBindDialogShow">
+                            批量换绑或解除
+                        </el-button>
+                        <el-button type="warning" icon="el-icon-refresh-left" :disabled="!hasSelection" @click="batchChangeGroup.dialog = true">
+                            批量切换班组
+                        </el-button>
+                        <el-button type="danger" icon="el-icon-delete" :disabled="!hasSelection" @click="askBatchDel">
+                            批量删除设备
+                        </el-button>
+                    </div>
+                    <el-pagination
+                            background
+                            layout="prev, pager, next"
+                            :total="totalNumber"
+                            :page-size="10"
+                            :current-page="queryCondition.page"
+                            @current-change="pageChange">
+                    </el-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+    <el-dialog :visible.sync="batchChangeBindDialog" title="批量换绑或者解除区域" width="480px">
+        <el-form label-width="100px">
+            <el-form-item label="关键字查询">
+                <el-input v-model="batchChangeBindDialogFormData.keywords">
+                    <el-button type="primary" slot="suffix" size="small" @click="getAreaList">
+                        查询
+                    </el-button>
+                </el-input>
+            </el-form-item>
+            <el-form-item label="解除区域" id="area">
+                <el-select style="width:100%;" v-model="batchChangeBindDialogFormData.area_id">
+                    <el-option :value="0" label="解除区域"></el-option>
+                    <el-option v-for="({ id, area_name }) in areaList" :key="id" :label="area_name" :value="id"></el-option>
+                </el-select>
+            </el-form-item>
+        </el-form>
+        <div class="row justify-center" slot="footer">
+            <el-button type="primary" @click="areaBinds">
+                提交
+            </el-button>
+        </div>
+    </el-dialog>
+    <el-dialog :visible.sync="create.createDviceDialog" title="添加设备" width="480px">
+        <div class="flex justify-center">
+            <el-radio-group v-model="create.type" style="margin-bottom: 30px;">
+                <el-radio-button label="handy">手动添加</el-radio-button>
+                <el-radio-button label="batch">批量添加</el-radio-button>
+            </el-radio-group>
+        </div>
+        <el-form label-width="100px" v-if="create.type === 'handy'" :model="create.formData" :rules="create.formRules">
+            <el-form-item label="设备名称">
+                <el-input v-model="create.formData.machine_name"></el-input>
+            </el-form-item>
+            <el-form-item label="设备IMEI">
+                <el-input v-model="create.formData.machine_imei"></el-input>
+            </el-form-item>
+        </el-form>
+        <div v-else if="create.type === 'batch'" class="column items-center">
+            <el-link href="__ROOT__/Public/Admin/File/shebei.xlsx" type="primary" class="mb3">下载批量带入模板</el-link>
+            <el-upload
+                    drag
+                    action=""
+                    :before-upload="beforeUpload"
+                    :file-list="fileList"
+                    :on-change="(f, fl) => fileList = fl">
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            </el-upload>
+        </div>
+        <div class="row justify-center" slot="footer">
+            <el-button type="primary" @click="machineAddSubmit(create.type)">
+                提交
+            </el-button>
+        </div>
+    </el-dialog>
+    <el-dialog :visible.sync="devicePosition.dialog" title="设备位置" width="620px"  :scroll-wheel-zoom="true">
+        <baidu-map style="width:100%;height:400px;" :center="mapData.center" :zoom="mapData.zoom">
+            <bm-marker :position="devicePosition.pos" animation="BMAP_ANIMATION_BOUNCE">
+            </bm-marker>
+        </baidu-map>
+    </el-dialog>
+    <el-dialog :visible.sync="deviceTrack.dialog" title="设备轨迹" width="620px">
+        <baidu-map style="width:100%;height:400px;" :center="mapData.center" :zoom="mapData.zoom" :scroll-wheel-zoom="true">
+            <bm-polyline :path="deviceTrack.points" stroke-color="blue" :stroke-opacity="0.5" :stroke-weight="2"></bm-polyline>
+        </baidu-map>
+    </el-dialog>
+    <el-dialog :visible.sync="bindArea.dialog" title="绑定区域" width="620px">
+        <el-form label-width="100px">
+            <el-form-item label="区域名称">
+                <el-autocomplete
+                        style="width: 100%;"
+                        v-model="bindArea.selectedArea.name"
+                        :fetch-suggestions="querySearchAsync"
+                        @select="handleSelectArea"
+                        :disabled="bindArea.onlyShowArea"
+                ></el-autocomplete>
+            </el-form-item>
+        </el-form>
+        <baidu-map style="width:100%;height:400px;" :center="mapData.center" :zoom="mapData.zoom">
+            <bm-polyline :path="bindArea.selectedArea.points" stroke-color="blue" :stroke-opacity="0.5" :stroke-weight="2">
+            </bm-polyline>
+        </baidu-map>
+    </el-dialog>
+    <el-dialog :visible.sync="batchChangeGroup.dialog" title="批量切换班组">
+        <el-table
+                :data="batchChangeGroup.tableData"
+                highlight-current-row
+                @current-change="batchChangeGroupTargetRowChange">
+            <el-table-column prop="name" label="班组名称"></el-table-column>
+            <el-table-column prop="time" label="时间段">
+                <template #default="{ row }">
+                    {{ row.weekArr.join(' ') }} ({{ row.time[0] }} - {{ row.time[1] }})
+                </template>
+            </el-table-column>
+        </el-table>
+        <div class="flex justify-end mt3">
+            <el-pagination
+                    background
+                    layout="prev, pager, next"
+                    :total="batchChangeGroup.totalNumber"
+                    :page-size="10"
+                    :current-page.sync="batchChangeGroup.page">
+            </el-pagination>
+        </div>
+        <div class="flex justify-end" slot="footer">
+            <el-button type="primary">
+                提交
+            </el-button>
+        </div>
+    </el-dialog>
+
+    <el-dialog :visible.sync="bindEmployee.dialog" title="绑定员工" width="480px">
+        <el-form :model="bindEmployee.formData" label-width="150px">
+            <el-form-item label="提示">
+                <el-input disabled v-model="bindEmployee.formData.prompt"></el-input>
+            </el-form-item>
+            <el-form-item label="当前设备IMEI">
+                <el-input disabled v-model="bindEmployee.formData.deviceIMEI"></el-input>
+            </el-form-item>
+            <el-form-item label="当前绑定员工信息">
+                <el-input disabled v-model="bindEmployee.formData.currentBindEmployee"></el-input>
+            </el-form-item>
+            <el-form-item label="员工搜索">
+                <el-input placeholder="请输入员工号" v-model="bindEmployee.formData.keyword">
+                    <el-button type="primary" slot="suffix" size="small">
+                        查询
+                    </el-button>
+                </el-input>
+            </el-form-item>
+            <el-form-item label="员工号">
+                <el-input disabled v-model="bindEmployee.formData.job_number"></el-input>
+            </el-form-item>
+            <el-form-item label="姓名">
+                <el-input disabled v-model="bindEmployee.formData.realname"></el-input>
+            </el-form-item>
+            <el-form-item label="已绑定设备IMEI">
+                <el-input disabled v-model="bindEmployee.formData.alreadyBindDeviceIMEI"></el-input>
+            </el-form-item>
+        </el-form>
+    </el-dialog>
+
+    <el-dialog :visible.sync="edit.dialog" title="编辑设备" width="480px">
+        <el-form :model="edit.formData" label-width="150px">
+            <el-form-item label="设备名称">
+                <el-input v-model="edit.formData.machine_name"></el-input>
+            </el-form-item>
+            <el-form-item label="设备IMEI">
+                <el-input disabled v-model="edit.formData.machine_imei"></el-input>
+            </el-form-item>
+            <el-form-item label="绑定员工号">
+                <el-input disabled v-model="edit.formData.job_number"></el-input>
+            </el-form-item>
+        </el-form>
+        <div class="flex justify-end">
+            <el-button type="primary">
+                提交
+            </el-button>
+        </div>
+    </el-dialog>
 </div>
 <script src="https://unpkg.com/vue-baidu-map"></script>
 <script type="text/javascript">
-	Vue.use(VueBaiduMap.default, {
-		ak: 'NENpvHSwTNZ6ftZOKdfiiPDxGKKPHjtg'
-	})
-	const MACHINELIST = new Vue({
-		el: '#MACHINELIST',
-		data(){
-			return {
-				batchChangeGroup: {
-					dialog: false,
-					tableData: [{
-						name: '班组1',
-						weekArr: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
-						time: [
-							'09:00:00',
-							'18:00:00'
-						]
-					}],
-					// 选中行
-					targetRow: {},
-					page: 1,
-					totalNumber: 1
-				},
-				mapData: {
-					center: {
-						lng: 116.404,
-						lat: 39.915
-					},
-					zoom: 15
-				},
-				create: {
-					createDviceDialog: false,
-					type: 'handy',
-					formDataRules: {
-						machine_name: []
-					},
-					formData: {
-						machine_name: '',
-						machine_imei: ''
-					}
-				},
-				batchSelections: [],
-				tableData: [
-				],
-				// 查询条件
-				queryCondition: {
-					keyword: '',
-					status: 0,
-					position: 0,
-					manager: 0,
-					page: 1
-				},
-				// 分页总数据条数
-				totalNumber: 0,
-				tableColumns: [
-					['serialNumber', '序号'],
-					['machine_imei', '设备号'],
-					['machine_name', '设备名称'],
-					['machine_status', '设备状态'],
-					['electricity', '电量'],
-					['job_number', '工号'],
-					['realname', '负责人'],
-					['position_name', '职位'],
-					['parent_name', '管理人员'],
-					['area_name', '所属区域名称'],
-					['schedules_name', '班组'],
-					['rowOperations', '操作']
-				],
-				batchChangeBindDialog: false,
-				batchChangeBindDialogFormData: {
-					keywords: '',
-					area_id: '',
-				},
-				// 设备位置相关
-				devicePosition: {
-					dialog: false,
-					mapData: {
-						center: {
-							lng: 116.404,
-							lat: 39.915
-						},
-						zoom: 15
-					},
-					pos: {
-						lng: 116.404,
-						lat: 39.915
-					}
-				},
-				// 设备轨迹相关
-				deviceTrack: {
-					dialog: false,
-					points: [
-		        {lng: 116.404, lat: 39.915},
-		        {lng: 116.405, lat: 39.920},
-		        {lng: 116.423493, lat: 39.907445}
-		      ]
-				},
-				bindArea: {
-					dialog: false,
-				},
-				areaList:[],
-			}
-		},
+    Vue.use(VueBaiduMap.default, {
+        ak: 'NENpvHSwTNZ6ftZOKdfiiPDxGKKPHjtg'
+    })
+    const MACHINELIST = new Vue({
+        el: '#MACHINELIST',
+        data(){
+            return {
+                // 绑定区域相关
+                bindArea: {
+                    onlyShowArea: false,
+                    dialog: false,
+                    selectedArea: {
+                        name: '',
+                        points: []
+                    }
+                },
+                fileList: [],
+                // 批量设置班组相关，单个切换班组复用
+                batchChangeGroup: {
+                    dialog: false,
+                    isSingleOption: false,	// 批量跟单行操作复用标识，true则说明是对某一行数据进行操作
+                    tableData: [{
+                        name: '班组1',
+                        weekArr: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+                        time: [
+                            '09:00:00',
+                            '18:00:00'
+                        ]
+                    }],
+                    // 选中行
+                    targetRow: {},
+                    page: 1,
+                    totalNumber: 1
+                },
 
-		created(){
-			// 从接口获取数据
-			// this.getData();
-			this.doQuery();
-		},
-		methods: {
-			batchChangeGroupTargetRowChange(row){
-				this.batchChangeGroup.targetRow = row
-			},
-			batchChangeBindDialogShow(){
-				this.batchChangeBindDialog = true;
-				DMS.ajaxPost('__CONTROLLER__/getAreaListNew', {
-					keywords:this.batchChangeBindDialogFormData.keywords
-				}, res => {
-					this.areaList = res.areaList;
-				})
-				this.$alert(this.areaList);
+                // 地图数据相关
+                mapData: {
+                    // center: {
+                    // 	lng: 116.404,
+                    // 	lat: 39.915
+                    // },
+                    // zoom: 15
+                },
 
-			},
-			//批量换绑或者解除
-			areaBinds(){
-				DMS.ajaxPost("__CONTROLLER__/areaBindsNew", {
-					area_id: this.batchChangeBindDialogFormData.area_id,
-					keywords:this.batchChangeBindDialogFormData.keywords,
-					machineList:this.batchSelections
-				}, ret => {
-					this.$alert(this.batchSelections);
-					if (ret.status == 1) {
-						this.$alert('操作成功！', '通知', {
-							confirmButtonText: '确定',
-							callback: action => {
-								this.batchChangeBindDialog = false
-								window.location.reload()
-							}
-						})
-					} else {
-						this.$alert('操作失败！失败原因：' + ret.info, '通知', {
-							confirmButtonText: '确定',
-							callback: action => {
-								this.batchChangeBindDialog = false
-							}
-						})
-					}
-				})
-			},
-			//获取区域列表
-			getAreaList(){
-				DMS.ajaxPost('__CONTROLLER__/getAreaListNew', {
-					keywords:this.batchChangeBindDialogFormData.keywords
-				}, res => {
-					this.areaList = res.areaList;
+                // 创建相关
+                create: {
+                    createDviceDialog: false,
+                    type: 'handy',
+                    formDataRules: {
+                        machine_name: []
+                    },
+                    formData: {
+                        machine_name: '',
+                        machine_imei: ''
+                    }
+                },
 
-				})
-				// this.$alert(this.areaList);
-			},
+                // 编辑相关
+                edit: {
+                    formData: {
+                        machine_name: '',
+                        machine_imei: '',
+                        job_number: ''
+                    },
+                    dialog: false
+                },
+                // 批量选择绑定数据
+                batchSelections: [],
 
-			// getData(){
-			// 	DMS.ajaxPost('__CONTROLLER__/getMachineList',
-			// 		res => {
-			// 		this.tableData = res.machineList;
-			// 		this.totalNumber=res.totalNumber * 1;
-			// 	})
-			// },
-			/**
-			 * [pageChange 分页页数变化触发事件]
-			 * @param  {[type]} p [需要查询数据的那一页]
-			 * @return {[type]}   [无]
-			 */
-			pageChange(p){
-				// 在这里用 p 向后台ajax获取分页数据
-				// this.getData()
-				// console.log(`新的页码：${p}`)
-				this.queryCondition.page=p;
-				this.doQuery();
-			},
+                // 表格数据
+                tableData: [
+                ],
+                // 查询条件
+                queryCondition: {
+                    keyword: '',
+                    status: 0,
+                    position: 0,
+                    manager: 0,
+                    page: 1
+                },
+                // 分页总数据条数
+                totalNumber: 0,
 
-			/**
-			 * [doQuery 查询触发事件]
-			 * @return {[type]} [description]
-			 */
-			doQuery(){
-				// 在这里将查询条件传后台获取查询结果
-				param = {
-					"keyword":this.queryCondition.keyword,
-					"status":this.queryCondition.status,
-					"position":this.queryCondition.position,
-					"parent_id":this.queryCondition.manager,
-					"page":this.queryCondition.page,
-				}
-				DMS.ajaxPost('__CONTROLLER__/getMachineList',
-						param, res => {
-							this.tableData=res.machineList;
-							this.totalNumber=res.totalNumber * 1;
-						})
-			},
-			changePosition(e){
-				this.queryCondition.page = 1;
-				this.doQuery();
-			},
-			changeStatus(e){
-				this.queryCondition.page = 1;
-				this.doQuery();
-			},
-			changeManager(e){
-				this.queryCondition.page = 1;
-				this.doQuery();
-			},
+                // 表格显示描述
+                tableColumns: [
+                    ['serialNumber', '序号'],
+                    ['machine_imei', '设备号'],
+                    ['machine_name', '设备名称'],
+                    ['machine_status', '设备状态'],
+                    ['electricity', '电量'],
+                    ['job_number', '工号'],
+                    ['realname', '负责人'],
+                    ['position_name', '职位'],
+                    ['parent_name', '管理人员'],
+                    ['area_name', '所属区域名称'],
+                    ['schedules_name', '班组'],
+                    ['rowOperations', '操作']
+                ],
 
-			//添加设备
-			machineAddSubmit(type){
-				//批量
-				if(type == "batch"){
-					var excel = $('#filename').val();
-					if(!excel){
-						DMS.error('请先上传文件');
-						return;
-					}
-					DMS.ajaxPost("__CONTROLLER__/importFile",{"filename":excel},function(ret){
-						if(ret.status==1){
-							DMS.success(ret.info,1000,function(){
-								submitStatus = true;
-								if(ret.url){
-									window.location.href = ret.url;
-								}else{
-									window.location.href = window.location.href;
-								}
-							})
-						}else{
-							DMS.error(''+ret.info+'',0,function(){
-								submitStatus = true;
-							})
-						}
-					})
-				}
-				// //手动
-				if(type == "handy"){
-					DMS.ajaxPost("__CONTROLLER__/machineAdd", {
-						info: this.create.formData
-					}, ret => {
-						this.$alert(ret.status);
-						if (ret.status == 1) {
-							this.$alert('添加成功！', '通知', {
-								confirmButtonText: '确定',
-								callback: action => {
-									this.create.createDviceDialog = false
-									window.location.reload()
-								}
-							})
-						} else {
-							this.$alert('添加失败！失败原因：' + ret.info, '通知', {
-								confirmButtonText: '确定',
-								callback: action => {
-									this.create.createDviceDialog = false
-								}
-							})
-						}
-					})
-				}
-			},
+                // 批量换绑弹窗
+                batchChangeBindDialog: false,
 
-			handleSelectionChange(val) {
-				this.batchSelections = val;
-			},
-			askBatchDel(){
-				LOADINGOVERLAY.showConfirm({
-					callback: () => {
-						// 这里执行确认删除逻辑
-						console.log('即将删除的项：', this.batchSelections);
-					}
-				})
-			}
-		},
-		computed: {
-			hasSelection(){
-				return this.batchSelections.length > 0
-			}
-		}
+                // 批量换绑弹窗表单
+                batchChangeBindDialogFormData: {
+                    keywords: '',
+                    area_id: '',
+                },
+                // 设备位置相关
+                devicePosition: {
+                    dialog: false,
+                    mapData: {
+                        // center: {
+                        // 	lng: 116.404,
+                        // 	lat: 39.915
+                        // },
+                        // zoom: 15
+                    },
+                    pos: {
+                        // lng: 116.404,
+                        // lat: 39.915
+                    }
+                },
+                // 设备轨迹相关
+                deviceTrack: {
+                    dialog: false,
+                    points: [
+                        //   {lng: 116.404, lat: 39.915},
+                        //   {lng: 116.405, lat: 39.920},
+                        //   {lng: 116.423493, lat: 39.907445}
+                    ]
+                },
 
-	})
+                // 区域列表
+                areaList:[],
+
+                // 绑定员工相关
+                bindEmployee: {
+                    dialog: false,
+                    formData: {
+                        prompt: '',
+                        deviceIMEI: '',
+                        currentBindEmployee: '',
+                        keyword: '',
+                        job_number: '',
+                        realname: '',
+                        alreadyBindDeviceIMEI: ''
+                    }
+                }
+            }
+        },
+
+        created(){
+            // 从接口获取数据
+            // this.getData();
+            this.doQuery();
+        },
+        methods: {
+            askDel(row){
+                LOADINGOVERLAY.showConfirm({
+                    callback: () => {
+                        // 这里是用户点击确认删除
+                        console.log('需要删除的行数据：', row);
+                    }
+                })
+            },
+            showEditDialog(row){
+                let fd = this.edit.formData
+                Object.keys(fd).forEach(f => {
+                    fd[f] = row[f]
+                })
+                this.edit.dialog = true
+            },
+            showBindEmployeeDialog(row){
+                this.bindEmployee.dialog = true
+            },
+            showSingleChangeGroupDialog(row){
+                this.batchChangeGroup.isSingleOption = true
+                this.batchChangeGroup.dialog = true
+            },
+            askUnbindArea(row){
+                LOADINGOVERLAY.showConfirm({
+                    message: '确认解除绑定吗？',
+                    callback: () => {
+                        // 这里是用户点击确定之后的逻辑
+                        console.log('需要解除绑定的行数据：', row)
+                    }
+                })
+            },
+            querySearchAsync(k, cb){
+                setTimeout(() => {
+                    cb(Array(10).fill(1).map((_, i) => ({
+                        value: `选项${i + 1}`
+                    })).filter(({ value }) => value.indexOf(k) !== -1))
+                }, 2000)
+            },
+            handleSelectArea(s){
+                console.log(s)
+            },
+            onlyShowAreaDialog(row){
+                this.bindArea.onlyShowArea = true
+                this.bindArea.dialog = true
+            },
+            showBindAreaDialog(row){
+                this.bindArea.onlyShowArea = false
+                this.bindArea.dialog = true
+            },
+            batchChangeGroupTargetRowChange(row){
+                this.batchChangeGroup.targetRow = row
+            },
+            batchChangeBindDialogShow(){
+                this.batchChangeBindDialog = true;
+                DMS.ajaxPost('__CONTROLLER__/getAreaListNew', {
+                    keywords:this.batchChangeBindDialogFormData.keywords
+                }, res => {
+                    this.areaList = res.areaList;
+                })
+                this.$alert(this.areaList);
+
+            },
+            //设备批量导入
+            beforeUpload(f) {
+                if (!new RegExp(/(xls)|(xlsx)/i).test(f.name)) {
+                    this.$alert('只能上传xlsx文件')
+                    return false
+                }
+                this.create.formData.file = f
+                // return false
+            },
+            //批量换绑或者解除
+            areaBinds(){
+                DMS.ajaxPost("__CONTROLLER__/areaBindsNew", {
+                    area_id: this.batchChangeBindDialogFormData.area_id,
+                    keywords:this.batchChangeBindDialogFormData.keywords,
+                    machineList:this.batchSelections
+                }, ret => {
+                    this.$alert(this.batchSelections);
+                    if (ret.status == 1) {
+                        this.$alert('操作成功！', '通知', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                                this.batchChangeBindDialog = false
+                                window.location.reload()
+                            }
+                        })
+                    } else {
+                        this.$alert('操作失败！失败原因：' + ret.info, '通知', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                                this.batchChangeBindDialog = false
+                            }
+                        })
+                    }
+                })
+            },
+            //获取区域列表
+            getAreaList(){
+                DMS.ajaxPost('__CONTROLLER__/getAreaListNew', {
+                    keywords:this.batchChangeBindDialogFormData.keywords
+                }, res => {
+                    this.areaList = res.areaList;
+
+                })
+                // this.$alert(this.areaList);
+            },
+
+            // getData(){
+            // 	DMS.ajaxPost('__CONTROLLER__/getMachineList',
+            // 		res => {
+            // 		this.tableData = res.machineList;
+            // 		this.totalNumber=res.totalNumber * 1;
+            // 	})
+            // },
+            /**
+             * [pageChange 分页页数变化触发事件]
+             * @param  {[type]} p [需要查询数据的那一页]
+             * @return {[type]}   [无]
+             */
+            pageChange(p){
+                // 在这里用 p 向后台ajax获取分页数据
+                // this.getData()
+                // console.log(`新的页码：${p}`)
+                this.queryCondition.page=p;
+                this.doQuery();
+            },
+
+            /**
+             * [doQuery 查询触发事件]
+             * @return {[type]} [description]
+             */
+            doQuery(){
+                // 在这里将查询条件传后台获取查询结果
+                param = {
+                    "keyword":this.queryCondition.keyword,
+                    "status":this.queryCondition.status,
+                    "position":this.queryCondition.position,
+                    "parent_id":this.queryCondition.manager,
+                    "page":this.queryCondition.page,
+                }
+                DMS.ajaxPost('__CONTROLLER__/getMachineList',
+                    param, res => {
+                        this.tableData=res.machineList;
+                        this.totalNumber=res.totalNumber * 1;
+                        this.mapData = res.mapData
+                    })
+            },
+            changePosition(e){
+                this.queryCondition.page = 1;
+                this.doQuery();
+            },
+            changeStatus(e){
+                this.queryCondition.page = 1;
+                this.doQuery();
+            },
+            changeManager(e){
+                this.queryCondition.page = 1;
+                this.doQuery();
+            },
+
+            //添加设备
+            machineAddSubmit(type){
+                //批量
+                if(type == "batch"){
+                    let fd = new FormData()
+                    fd.append('file', this.create.formData.file)
+                    $.ajax({
+                        url: '/util.php?m=Attachment&c=Index&a=excelUpload',
+                        data: fd,
+                        type: 'post',
+                        data: fd,
+                        contentType: false,
+                        processData: false,
+                        success: res => {
+                            console.log(res.file.savename)
+                            DMS.ajaxPost("__CONTROLLER__/importFile", {"filename": res.path}, function (ret) {
+                                if (ret.status == 1) {
+                                    DMS.success(ret.info, 1000, function () {
+                                        submitStatus = true;
+                                        if (ret.url) {
+                                            window.location.reload();
+                                        } else {
+                                            window.location.reload();
+                                        }
+                                    })
+                                } else {
+                                    DMS.error('' + ret.info + '', 0, function () {
+                                        submitStatus = true;
+                                        window.location.reload();
+                                    })
+                                }
+                            })
+                        }
+                    })
+                    return
+                }
+                // //手动
+                if(type == "handy"){
+                    DMS.ajaxPost("__CONTROLLER__/machineAdd", {
+                        info: this.create.formData
+                    }, ret => {
+                        this.$alert(ret.status);
+                        if (ret.status == 1) {
+                            this.$alert('添加成功！', '通知', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    this.create.createDviceDialog = false
+                                    window.location.reload()
+                                }
+                            })
+                        } else {
+                            this.$alert('添加失败！失败原因：' + ret.info, '通知', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    this.create.createDviceDialog = false
+                                }
+                            })
+                        }
+                    })
+                }
+            },
+
+            handleSelectionChange(val) {
+                this.batchSelections = val;
+            },
+            askBatchDel(){
+                LOADINGOVERLAY.showConfirm({
+                    callback: () => {
+                        // 这里执行确认删除逻辑
+                        console.log('即将删除的项：', this.batchSelections);
+                    }
+                })
+            },
+            //显示设备位置
+            showDevicePosition   (row){
+                DMS.ajaxPost('__CONTROLLER__/machineMap',{machine_id:row.machine_id},ret=>{
+                    // this.create.formData.area_name = row.area_name
+                    if(ret.info){
+                        // 	lng: 116.404,
+                        // 	lat: 39.915
+                        this.devicePosition.pos.lat = ret.info.lat
+                        this.devicePosition.pos.lng = ret.info.lon
+                        this.devicePosition.dialog = true
+                    }
+                    else
+                    {
+                        this.$alert("找不到设备")
+                        this.devicePosition.dialog = true
+                    }
+
+                })
+            },
+            //显示设备轨迹
+            showDeviceTrack(row){
+                DMS.ajaxPost('__CONTROLLER__/getMachineOrbit',
+                    {machine_id:row.machine_id
+                        // start_time:
+                        // end_time:end_time
+                        //
+                    },ret=>{
+                        if(ret.status){
+                            orbitArrOne = ret.listOne;
+                            //第一条轨迹
+                            if(orbitArrOne.length > 0){
+
+                                for(var j=0;j<orbitArrOne.length;j++){
+                                    var point={};
+                                    // var content = '设备imei:'+machine_imei+'<br/>采集时间:'+orbitArrOne[j].deviceUtcDate;
+                                    point = {lng:orbitArrOne[j].baiduLng,lat:orbitArrOne[j].baiduLat};
+                                    this.deviceTrack.points.push(point);
+                                    // if(j==0){
+                                    // 	//设置中心点
+                                    // 	map.centerAndZoom(new BMap.Point(orbitArrOne[j].baiduLng, orbitArrOne[j].baiduLat), rank);
+                                    // 	var listStartIcon = new BMap.Icon("{:C('ADMIN_IMAGE_PATH')}/start.png", new BMap.Size(30,30));
+                                    // 	var listStart =  new BMap.Marker(new BMap.Point(orbitArrOne[j].baiduLng, orbitArrOne[j].baiduLat),{icon:listStartIcon});  // 创建标注
+                                    // 	map.addOverlay(listStart);
+                                    // 	addClickHandler(content,listStart);
+                                    // }
+                                    // if(j>0 && j==(orbitArrOne.length-1)){
+                                    // 	var listEndIcon = new BMap.Icon("{:C('ADMIN_IMAGE_PATH')}/end.png", new BMap.Size(30,30));
+                                    // 	var listEnd =  new BMap.Marker(new BMap.Point(orbitArrOne[j].baiduLng, orbitArrOne[j].baiduLat),{icon:listEndIcon});  // 创建标注
+                                    // 	map.addOverlay(listEnd);
+                                    // 	addClickHandler(content,listEnd);
+                                    // }
+
+                                }
+
+                                // map.addOverlay(new BMap.Polyline(points, {strokeColor: "green", strokeWeight: 3, strokeOpacity: 1}));
+
+                            }
+                            console.log(this.deviceTrack.points)
+// 						this.devicePosition.pos.lat = ret.info.lat
+// 						this.devicePosition.pos.lon = ret.info.lon
+                            this.deviceTrack.dialog  = true
+                        }
+                        else
+                        {
+                            this.$alert("暂无轨迹")
+                            this.deviceTrack.dialog = true
+                        }
+
+                    })
+
+            }
+        },
+        computed: {
+            hasSelection(){
+                return this.batchSelections.length > 0
+            }
+        }
+
+    })
 </script>
