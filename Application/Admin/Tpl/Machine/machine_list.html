@@ -115,15 +115,15 @@
 					<el-table-column :key="prop" :prop="prop" :label="label" v-else></el-table-column>
 				</template>
 				</el-table>
-					<div class="flex justify-between items-center mt4">
+				<div class="flex justify-between items-center mt4">
 						<div class="">
-							<el-button icon="el-icon-sort" type="primary" :disabled="!hasSelection" @click="batchChangeBindDialog = true">
+							<el-button icon="el-icon-sort" type="primary" :disabled="!hasSelection" @click="batchChangeBindDialogShow">
 								批量换绑或解除
 							</el-button>
-							<el-button type="warning" icon="el-icon-refresh-left" :disabled="!hasSelection">
+							<el-button type="warning" icon="el-icon-refresh-left" :disabled="!hasSelection" @click="batchChangeGroup.dialog = true">
 								批量切换班组
 							</el-button>
-							<el-button type="danger" icon="el-icon-delete" :disabled="!hasSelection">
+							<el-button type="danger" icon="el-icon-delete" :disabled="!hasSelection" @click="askBatchDel">
 								批量删除设备
 							</el-button>
 						</div>
@@ -148,14 +148,10 @@
 					</el-button>
 				</el-input>
 			</el-form-item>
-			<el-form-item label="解除区域">
-				<el-select style="width:100%;" v-model="batchChangeBindDialogFormData.id">
-					<!--<el-option :label="`选项${n}`" v-for="n in 4" :key="n" :value="n"></el-option>-->
+			<el-form-item label="解除区域" id="area">
+				<el-select style="width:100%;" v-model="batchChangeBindDialogFormData.area_id">
 					<el-option :value="0" label="解除区域"></el-option>
-					<volist name="areaList" id="pl">
-						<el-option label="{$pl.area_name}" value="{$pl.id}">
-						</el-option>
-					</volist>
+					<el-option v-for="({ id, area_name }) in areaList" :key="id" :label="area_name" :value="id"></el-option>
 				</el-select>
 			</el-form-item>
 		</el-form>
@@ -210,6 +206,33 @@
 		<el-select>
 		</el-select>
 	</el-dialog>
+	<el-dialog :visible.sync="batchChangeGroup.dialog" title="批量切换班组">
+		<el-table
+			:data="batchChangeGroup.tableData"
+			highlight-current-row
+    	@current-change="batchChangeGroupTargetRowChange">
+			<el-table-column prop="name" label="班组名称"></el-table-column>
+			<el-table-column label="时间段">
+				<template #default="{ row }">
+					{{ row.weekArr.join(' ') }} ({{ row.time[0] }} - {{ row.time[1] }})
+				</template>
+			</el-table-column>
+		</el-table>
+		<div class="flex justify-end mt3">
+			<el-pagination
+				background
+				layout="prev, pager, next"
+				:total="batchChangeGroup.totalNumber"
+				:page-size="10"
+				:current-page.sync="batchChangeGroup.page">
+			</el-pagination>
+		</div>
+		<div class="flex justify-end" slot="footer">
+			<el-button type="primary">
+				提交
+			</el-button>
+		</div>
+	</el-dialog>
 </div>
 <script src="https://unpkg.com/vue-baidu-map"></script>
 <script type="text/javascript">
@@ -220,6 +243,21 @@
 		el: '#MACHINELIST',
 		data(){
 			return {
+				batchChangeGroup: {
+					dialog: false,
+					tableData: [{
+						name: '班组1',
+						weekArr: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+						time: [
+							'09:00:00',
+							'18:00:00'
+						]
+					}],
+					// 选中行
+					targetRow: {},
+					page: 1,
+					totalNumber: 1
+				},
 				mapData: {
 					center: {
 						lng: 116.404,
@@ -231,8 +269,7 @@
 					createDviceDialog: false,
 					type: 'handy',
 					formDataRules: {
-						machine_name: [
-						]
+						machine_name: []
 					},
 					formData: {
 						machine_name: '',
@@ -269,7 +306,7 @@
 				batchChangeBindDialog: false,
 				batchChangeBindDialogFormData: {
 					keywords: '',
-					id: '',
+					area_id: '',
 				},
 				// 设备位置相关
 				devicePosition: {
@@ -308,11 +345,24 @@
 			this.doQuery();
 		},
 		methods: {
+			batchChangeGroupTargetRowChange(row){
+				this.batchChangeGroup.targetRow = row
+			},
+			batchChangeBindDialogShow(){
+				this.batchChangeBindDialog = true;
+				DMS.ajaxPost('__CONTROLLER__/getAreaListNew', {
+					keywords:this.batchChangeBindDialogFormData.keywords
+				}, res => {
+					this.areaList = res.areaList;
+				})
+				this.$alert(this.areaList);
+
+			},
 			//批量换绑或者解除
 			areaBinds(){
-				this.$alert(this.batchChangeBindDialogFormData);
 				DMS.ajaxPost("__CONTROLLER__/areaBindsNew", {
-					info: this.batchChangeBindDialogFormData,
+					area_id: this.batchChangeBindDialogFormData.area_id,
+					keywords:this.batchChangeBindDialogFormData.keywords,
 					machineList:this.batchSelections
 				}, ret => {
 					this.$alert(this.batchSelections);
@@ -336,13 +386,13 @@
 			},
 			//获取区域列表
 			getAreaList(){
-				this.$alert(this.batchChangeBindDialogFormData.keywords);
 				DMS.ajaxPost('__CONTROLLER__/getAreaListNew', {
 					keywords:this.batchChangeBindDialogFormData.keywords
 				}, res => {
-					this.areaList=res.areaList;
+					this.areaList = res.areaList;
+
 				})
-				this.$alert(this.areaList);
+				// this.$alert(this.areaList);
 			},
 
 			// getData(){
@@ -451,6 +501,14 @@
 
 			handleSelectionChange(val) {
 				this.batchSelections = val;
+			},
+			askBatchDel(){
+				LOADINGOVERLAY.showConfirm({
+					callback: () => {
+						// 这里执行确认删除逻辑
+						console.log('即将删除的项：', this.batchSelections);
+					}
+				})
 			}
 		},
 		computed: {

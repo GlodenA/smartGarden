@@ -1,0 +1,92 @@
+<div class="padding-md">
+	<div class="smart-widget widget-dark-blue">
+		<div class="smart-widget-header">
+            <a href="javascript:menuAdd()" class="btn btn-sm btn-info"><i class="fa fa-plus"></i>添加菜单</a>
+		</div>
+		<div class="smart-widget-inner">
+			<div class="smart-widget-body">
+				<table class="table table-striped table-bordered" id="dataTable">
+					<thead>
+						<tr>
+							<th>排序</th>
+							<th>ID</th>
+							<th>名称</th>
+							<th>模块/控制器/方法</th>
+							<th>是否显示</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<foreach name="menuList" item="v">
+						<tr id="data-{$v['id']}">
+							<td>{$v['sort']}</td>
+							<td>{$v['id']}</td>
+							<td>{$v['name']}</td>
+							<td>{$v['m']}&nbsp;-&nbsp;{$v['c']}&nbsp;-&nbsp;{$v['a']}</td>
+							<td>
+								<if condition="$v['is_show'] eq 1">
+								<span class="label label-success">是</span>
+								<else />
+								<span class="label label-danger">否</span>
+								</if>
+							</td>
+							<td>
+								<a href="javascript:menuAdd({$v['id']})" class="btn btn-manager btn-warning btn-xs" data-toggle="tooltip" data-placement="top" title="添加子菜单" data-original-title="添加子菜单"><i class="fa fa-plus"></i></a>
+								<a href="javascript:menuEdit({$v['id']})" class="btn btn-manager btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="修改"><i class="fa fa-pencil"></i></a>
+								<a href="javascript:menuDelete({$v['id']})" class="btn btn-manager btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-trash-o"></i></a>
+							</td>
+						</tr>
+						<php>if($v['children']){</php>
+							<foreach name="v['children']" item="r">
+							<tr id="data-{$r['id']}">
+								<td>{$r['sort']}</td>
+								<td>{$r['id']}</td>
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├&nbsp;&nbsp;{$r['name']}</td>
+								<td>{$r['m']}&nbsp;-&nbsp;{$r['c']}&nbsp;-&nbsp;{$r['a']}</td>
+								<td>
+									<if condition="$r['is_show'] eq 1">
+									<span class="label label-success">是</span>
+									<else />
+									<span class="label label-danger">否</span>
+									</if>
+								</td>
+								<td>
+									<a href="javascript:menuEdit({$r['id']})" class="btn btn-manager btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="修改"><i class="fa fa-pencil"></i></a>
+									<a href="javascript:menuDelete({$r['id']})" class="btn btn-manager btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-trash-o"></i></a>
+								</td>
+							</tr>
+							</foreach>
+						<php>}</php>
+						</foreach>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	function menuAdd(pid){
+		if(pid){
+			DMS.ajaxShow("新增菜单","__CONTROLLER__/menuAdd/pid/"+pid);
+		}else{
+			DMS.ajaxShow("新增菜单","__CONTROLLER__/menuAdd");
+		}
+
+	}
+	function menuEdit(id){
+		DMS.ajaxShow("菜单编辑","__CONTROLLER__/menuEdit/id/"+id);
+	}
+	function menuDelete(id){
+		DMS.dialog("确定要删除吗?",function(){
+			DMS.ajaxPost("__CONTROLLER__/menuDelete",{id:id},function(ret){
+				if(ret.status==1){
+                	DMS.success(ret.info,0,function(){
+                		$("#data-"+id).remove();
+					});
+                }else{
+                	DMS.error(ret.info,0);
+                }
+			})
+		});
+	}
+</script>
