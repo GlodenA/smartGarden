@@ -255,16 +255,20 @@
                 DMS.ajaxPost('__CONTROLLER__/groupAdd',
                     {"info":info}, res => {
                         if (res.status === 1) {
-                            this.$message({
-                                message: res.info,
-                                type: 'success'
-                            });
-                            window.location.reload();
+                            this.$alert(res.info, '通知', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    this.create.dialog = false
+                                    window.location.reload()
+                                }
+                            })
                         } else {
-                            this.$message({
-                                message: res.info,
-                                type: 'error'
-                            });
+                            this.$alert(res.info+res.info, '通知', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    this.create.dialog = false
+                                }
+                            })
                         }
                     })
 			},
@@ -279,16 +283,20 @@
                 DMS.ajaxPost('__CONTROLLER__/groupEdit',
                     {"info":info}, res => {
                         if (res.status === 1) {
-                            this.$message({
-                                message: res.info,
-                                type: 'success'
-                            });
-                            window.location.reload();
+                            this.$alert(res.info, '通知', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    this.create.dialog = false
+                                    window.location.reload()
+                                }
+                            })
                         } else {
-                            this.$message({
-                                message: res.info,
-                                type: 'error'
-                            });
+                            this.$alert(res.info+res.info, '通知', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    this.create.dialog = false
+                                }
+                            })
                         }
                     })
 			},
@@ -304,7 +312,6 @@
                                     window.location.reload()
                                 }
                             })
-                            window.location.reload();
                         } else {
                             this.$alert(res.info+res.info, '通知', {
                                 confirmButtonText: '确定',

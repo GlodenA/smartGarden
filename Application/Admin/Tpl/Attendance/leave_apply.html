@@ -113,7 +113,7 @@
             // 这里代表表单验证通过，即将提交数据到后台
               console.log('提交数据至后台')
 
-              DMS.ajaxPost('__CONTROLLER__/leaveApply',info,ref =>{
+              DMS.ajaxPost('__CONTROLLER__/leaveApply',info,res =>{
                   if (res.status === 1) {
                       this.$alert(res.info, '通知', {
                           confirmButtonText: '确定',
@@ -122,7 +122,6 @@
                               window.location.reload()
                           }
                       })
-                      window.location.reload();
                   } else {
                       this.$alert(res.info+res.info, '通知', {
                           confirmButtonText: '确定',
