@@ -5,6 +5,49 @@
     input[type=file]{
         display: none;
     }
+		.map-menu-overlay{
+			 background-color: rgba(0, 0, 0, .7);
+		}
+		.el-form-item.map-label{
+			margin-bottom: 0;
+		}
+		.el-form--inline .el-form-item.map-label .el-form-item__label{
+			color: white;
+		}
+
+		@-webkit-keyframes slide-top {
+		  0% {
+		    -webkit-transform: translateY(0);
+		            transform: translateY(0);
+		  }
+		  100% {
+		    -webkit-transform: translateY(-20px);
+		            transform: translateY(-20px);
+		  }
+		}
+		@keyframes slide-top {
+		  0% {
+		    -webkit-transform: translateY(0);
+		            transform: translateY(0);
+		  }
+		  100% {
+		    -webkit-transform: translateY(-20px);
+		            transform: translateY(-20px);
+		  }
+		}
+
+		.map-position-icon{
+			-webkit-animation: slide-top 0.5s ease-in-out infinite alternate-reverse both;
+      		animation: slide-top 0.5s ease-in-out infinite alternate-reverse both;
+			border-radius: 50%;
+			width: 24px;
+			height: 24px;
+			background-color: #33D792;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: white;
+		}
 </style>
 <div class="padding-md" id="MACHINELIST">
     <div class="smart-widget" style="margin-bottom: 1px;">
@@ -194,32 +237,138 @@
             </el-button>
         </div>
     </el-dialog>
-    <el-dialog :visible.sync="devicePosition.dialog" title="设备位置" width="620px"  :scroll-wheel-zoom="true">
-        <baidu-map style="width:100%;height:400px;" :center="mapData.center" :zoom="mapData.zoom">
-            <bm-marker :position="devicePosition.pos" animation="BMAP_ANIMATION_BOUNCE">
-            </bm-marker>
+    <el-dialog :visible.sync="devicePosition.dialog" title="设备位置" fullscreen>
+        <baidu-map
+					style="width:100%;height:720px;"
+					:center="mapData.center"
+					:zoom="mapData.zoom"
+					scroll-wheel-zoom>
+					<bm-control anchor="BMAP_ANCHOR_TOP_RIGHT" :offset="{
+						width: 20,
+						height: 20
+					}">
+						<div class="flex items-center p2 map-menu-overlay">
+							<el-button type="primary" icon="el-icon-refresh">
+								刷新
+							</el-button>
+						</div>
+					</bm-control>
+					<bm-overlay
+				    pane="labelPane"
+						style="position:absolute;"
+				    @draw=" ({el, BMap, map}) => {
+				      const {lng, lat} = this.devicePosition.pos
+				      const pixel = map.pointToOverlayPixel(new BMap.Point(lng, lat))
+				      el.style.left = pixel.x -12 +'px'
+				      el.style.top = pixel.y - 12 + 'px'
+				    }">
+						<el-tooltip placement="right">
+							<div class="map-position-icon">
+								<i class="el-icon-place" type="primary">
+								</i>
+							</div>
+							<el-table slot="content" :show-header="false" :data="devicePosition.deviceInfo" style="width:400px;">
+								<el-table-column prop="label"></el-table-column>
+								<el-table-column prop="value"></el-table-column>
+							</el-table>
+						</el-tooltip>
+				  </bm-overlay>
         </baidu-map>
     </el-dialog>
-    <el-dialog :visible.sync="deviceTrack.dialog" title="设备轨迹" width="620px">
-        <baidu-map style="width:100%;height:400px;" :center="mapData.center" :zoom="mapData.zoom" :scroll-wheel-zoom="true">
+    <el-dialog :visible.sync="deviceTrack.dialog" title="设备轨迹" fullscreen>
+        <baidu-map
+					style="width:100%;height:720px;"
+					:center="mapData.center"
+					:zoom="mapData.zoom"
+					scroll-wheel-zoom>
+						<div v-if="deviceTrack.showPoints">
+							<bm-overlay
+								v-for="(p, i) in deviceTrack.points"
+						    pane="labelPane"
+								style="position:absolute;"
+						    @draw=" ({el, BMap, map}) => {
+						      const {lng, lat} = p
+						      const pixel = map.pointToOverlayPixel(new BMap.Point(lng, lat))
+						      el.style.left = pixel.x -12 +'px'
+						      el.style.top = pixel.y - 12 + 'px'
+						    }">
+								<el-tooltip placement="right">
+									<div class="map-position-icon">
+										<i class="el-icon-place" type="primary">
+										</i>
+									</div>
+									<el-table slot="content" :show-header="false" :data="[
+										['imei', '设备IMEI'],
+										['time', '采集时间']
+									].map(([f, label]) => ({
+										label,
+										value: p[f]
+									}))" style="width:400px;">
+										<el-table-column prop="label"></el-table-column>
+										<el-table-column prop="value"></el-table-column>
+									</el-table>
+								</el-tooltip>
+						  </bm-overlay>
+						</div>
+						<bm-control anchor="BMAP_ANCHOR_TOP_RIGHT" :offset="{
+							width: 20,
+							height: 20
+						}">
+							<div class="flex items-center p2 map-menu-overlay">
+								<el-date-picker
+									v-model="deviceTrack.timeRange"
+									type="datetimerange"
+									range-separator="至"
+									start-placeholder="开始日期"
+									end-placeholder="结束日期"
+									style="margin-right:12px;">
+								</el-date-picker>
+								<el-button type="primary">
+									搜索
+								</el-button>
+								<el-button type="primary" @click="deviceTrack.showPoints = !deviceTrack.showPoints">
+									{{ deviceTrack.showPoints ? '隐藏' : '显示' }}轨迹点
+								</el-button>
+								<el-button type="primary" icon="el-icon-refresh">
+									刷新
+								</el-button>
+							</div>
+						</bm-control>
             <bm-polyline :path="deviceTrack.points" stroke-color="blue" :stroke-opacity="0.5" :stroke-weight="2"></bm-polyline>
         </baidu-map>
     </el-dialog>
-    <el-dialog :visible.sync="bindArea.dialog" title="绑定区域" width="620px">
-        <el-form label-width="100px">
-            <el-form-item label="区域名称">
-                <el-autocomplete
-                        style="width: 100%;"
-                        v-model="bindArea.selectedArea.name"
-                        :fetch-suggestions="querySearchAsync"
-                        @select="handleSelectArea"
-                        :disabled="bindArea.onlyShowArea"
-                ></el-autocomplete>
-            </el-form-item>
-        </el-form>
-        <baidu-map style="width:100%;height:400px;" :center="mapData.center" :zoom="mapData.zoom">
-            <bm-polyline :path="bindArea.selectedArea.points" stroke-color="blue" :stroke-opacity="0.5" :stroke-weight="2">
-            </bm-polyline>
+    <el-dialog :visible.sync="bindArea.dialog" title="绑定区域" fullscreen>
+        <baidu-map scroll-wheel-zoom style="width:100%;height:720px;" :center="mapData.center" :zoom="mapData.zoom">
+					<bm-control anchor="BMAP_ANCHOR_TOP_RIGHT" :offset="{
+						width: 20,
+						height: 20
+					}">
+						<div class="flex items-center p2 map-menu-overlay">
+							<el-form label-width="100px" inline>
+		            <el-form-item label="区域名称" class="map-label">
+									<el-autocomplete
+										style="width: 100%;"
+										v-model="bindArea.selectedArea.name"
+										:fetch-suggestions="querySearchAsync"
+										@select="handleSelectArea"
+										:disabled="bindArea.onlyShowArea"
+									></el-autocomplete>
+		            </el-form-item>
+								<el-form-item>
+									<el-button type="primary">
+										搜索
+									</el-button>
+								</el-form-item>
+			        </el-form>
+						</div>
+					</bm-control>
+					<bm-polygon
+						:path="bindArea.selectedArea.points"
+						stroke-color="blue"
+						:stroke-opacity="1"
+						:stroke-weight="2"
+						fillColor= "rgb(246,246,246)"
+					></bm-polygon>
         </baidu-map>
     </el-dialog>
     <el-dialog :visible.sync="batchChangeGroup.dialog" title="批量切换班组">
@@ -314,7 +463,11 @@
                     dialog: false,
                     selectedArea: {
                         name: '',
-                        points: []
+                        points: [
+													{lng: 116.404, lat: 39.915},
+													{lng: 116.405, lat: 39.920},
+													{lng: 116.423493, lat: 39.907445}
+												]
                     }
                 },
                 fileList: [],
@@ -338,11 +491,11 @@
 
                 // 地图数据相关
                 mapData: {
-                    // center: {
-                    // 	lng: 116.404,
-                    // 	lat: 39.915
-                    // },
-                    // zoom: 15
+                    center: {
+                    	lng: 116.404,
+                    	lat: 39.915
+                    },
+                    zoom: 15
                 },
 
                 // 创建相关
@@ -408,29 +561,28 @@
                     keywords: '',
                     area_id: '',
                 },
+
                 // 设备位置相关
                 devicePosition: {
                     dialog: false,
-                    mapData: {
-                        // center: {
-                        // 	lng: 116.404,
-                        // 	lat: 39.915
-                        // },
-                        // zoom: 15
-                    },
+										showInfo: false,
                     pos: {
-                        // lng: 116.404,
-                        // lat: 39.915
-                    }
+                        lng: 116.404,
+                        lat: 39.915
+                    },
+										deviceInfo: []
                 },
+
                 // 设备轨迹相关
                 deviceTrack: {
+										showPoints: false,
                     dialog: false,
                     points: [
-                        //   {lng: 116.404, lat: 39.915},
-                        //   {lng: 116.405, lat: 39.920},
-                        //   {lng: 116.423493, lat: 39.907445}
-                    ]
+                          { lng: 116.404, lat: 39.915, imei: '2903480234', time: '2019-11-23 17:00:00' },
+                          { lng: 116.405, lat: 39.920, imei: '24234234321', time: '2019-11-23 18:00:00' },
+                          { lng: 116.423493, lat: 39.907445, imei: '1231241341', time: '2019-11-23 19:00:00'}
+                    ],
+										timeRange: []
                 },
 
                 // 区域列表
@@ -566,13 +718,6 @@
                 // this.$alert(this.areaList);
             },
 
-            // getData(){
-            // 	DMS.ajaxPost('__CONTROLLER__/getMachineList',
-            // 		res => {
-            // 		this.tableData = res.machineList;
-            // 		this.totalNumber=res.totalNumber * 1;
-            // 	})
-            // },
             /**
              * [pageChange 分页页数变化触发事件]
              * @param  {[type]} p [需要查询数据的那一页]
@@ -603,7 +748,7 @@
                     param, res => {
                         this.tableData=res.machineList;
                         this.totalNumber=res.totalNumber * 1;
-                        this.mapData = res.mapData
+                        // this.mapData = res.mapData
                     })
             },
             changePosition(e){
@@ -694,21 +839,29 @@
             },
             //显示设备位置
             showDevicePosition   (row){
+								this.devicePosition.deviceInfo = [
+									['machine_imei', '设备IMEI'],
+									['realname', '员工姓名'],
+									['mobile', '员工手机号'],
+									['job_number', '工号'],
+									['position_name', '职位'],
+									['parent_name', '管理人员'],
+									['device_utc_time', '采集时间'],
+								].map(([f, label]) => ({
+									label,
+									value: row[f]
+								}))
                 DMS.ajaxPost('__CONTROLLER__/machineMap',{machine_id:row.machine_id},ret=>{
                     // this.create.formData.area_name = row.area_name
                     if(ret.info){
-                        // 	lng: 116.404,
-                        // 	lat: 39.915
                         this.devicePosition.pos.lat = ret.info.lat
                         this.devicePosition.pos.lng = ret.info.lon
-                        this.devicePosition.dialog = true
                     }
                     else
                     {
                         this.$alert("找不到设备")
-                        this.devicePosition.dialog = true
                     }
-
+										this.devicePosition.dialog = true
                 })
             },
             //显示设备轨迹
