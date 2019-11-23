@@ -1085,7 +1085,6 @@ class MemberController extends BaseController
 //        }
         $ret["totalNumber"] = $count;
         $ret["MEMBERLIST"] = $list;
-        $ret["MEMBERLIST"] = $list;
         $this.$this->ajaxReturn($ret);
     }
 }
