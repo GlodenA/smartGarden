@@ -170,7 +170,7 @@
 				<el-radio-button label="batch">批量添加</el-radio-button>
 			</el-radio-group>
 		</div>
-		<el-form label-width="100px" v-if="create.type === 'handy'">
+		<el-form label-width="100px" v-if="create.type === 'handy'" :model="create.formData" :rules="create.formRules">
 			<el-form-item label="设备名称">
 				<el-input v-model="create.formData.machine_name"></el-input>
 			</el-form-item>
@@ -182,7 +182,10 @@
 			<el-link href="__ROOT__/Public/Admin/File/shebei.xlsx" type="primary" class="mb3">下载批量带入模板</el-link>
 			<el-upload
 			  drag
-			  action="">
+			  action=""
+			  :before-upload="beforeUpload"
+			  :file-list="fileList"
+			  :on-change="(f, fl) => fileList = fl">
 			  <i class="el-icon-upload"></i>
 			  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
 			</el-upload>
@@ -231,7 +234,7 @@
 			highlight-current-row
     	@current-change="batchChangeGroupTargetRowChange">
 			<el-table-column prop="name" label="班组名称"></el-table-column>
-			<el-table-column label="时间段">
+			<el-table-column prop="time" label="时间段">
 				<template #default="{ row }">
 					{{ row.weekArr.join(' ') }} ({{ row.time[0] }} - {{ row.time[1] }})
 				</template>
@@ -320,7 +323,7 @@
 						points: []
 					}
 				},
-
+				fileList: [],
 				// 批量设置班组相关，单个切换班组复用
 				batchChangeGroup: {
 					dialog: false,
@@ -525,6 +528,15 @@
 				this.$alert(this.areaList);
 
 			},
+			//设备批量导入
+			beforeUpload(f) {
+				if (!new RegExp(/(xls)|(xlsx)/i).test(f.name)) {
+					this.$alert('只能上传xlsx文件')
+					return false
+				}
+				this.create.formData.file = f
+				// return false
+			},
 			//批量换绑或者解除
 			areaBinds(){
 				DMS.ajaxPost("__CONTROLLER__/areaBindsNew", {
@@ -559,7 +571,6 @@
 					this.areaList = res.areaList;
 
 				})
-				// this.$alert(this.areaList);
 			},
 
 			/**
@@ -611,27 +622,37 @@
 			machineAddSubmit(type){
 				//批量
 				if(type == "batch"){
-					var excel = $('#filename').val();
-					if(!excel){
-						DMS.error('请先上传文件');
-						return;
-					}
-					DMS.ajaxPost("__CONTROLLER__/importFile",{"filename":excel},function(ret){
-						if(ret.status==1){
-							DMS.success(ret.info,1000,function(){
-								submitStatus = true;
-								if(ret.url){
-									window.location.href = ret.url;
-								}else{
-									window.location.href = window.location.href;
+					let fd = new FormData()
+					fd.append('file', this.create.formData.file)
+					$.ajax({
+						url: '/util.php?m=Attachment&c=Index&a=excelUpload',
+						data: fd,
+						type: 'post',
+						data: fd,
+						contentType: false,
+						processData: false,
+						success: res => {
+							console.log(res.file.savename)
+							DMS.ajaxPost("__CONTROLLER__/importFile", {"filename": res.path}, function (ret) {
+								if (ret.status == 1) {
+									DMS.success(ret.info, 1000, function () {
+										submitStatus = true;
+										if (ret.url) {
+											window.location.reload();
+										} else {
+											window.location.reload();
+										}
+									})
+								} else {
+									DMS.error('' + ret.info + '', 0, function () {
+										submitStatus = true;
+										window.location.reload();
+									})
 								}
-							})
-						}else{
-							DMS.error(''+ret.info+'',0,function(){
-								submitStatus = true;
 							})
 						}
 					})
+					return
 				}
 				// //手动
 				if(type == "handy"){
