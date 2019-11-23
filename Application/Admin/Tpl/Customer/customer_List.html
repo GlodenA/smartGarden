@@ -62,7 +62,8 @@
                   detail.targetRow[f] = row[f]
                 })
                 // 测试图像
-                detail.targetRow.avatar = 'Uploads/2019-11-05/157292623993304875.jpg'
+                detail.targetRow.group_id = row.group_name
+                detail.targetRow.avatar = row.avatar
                 detail.dialog = true
               }">
                 详情
@@ -99,7 +100,7 @@
           客户权限
         </div>
         <div class="detail-value">
-          {{ detail.targetRow.username }}
+          {{ detail.targetRow.group_id }}
         </div>
       </el-col>
       <el-col :span="12">
@@ -127,7 +128,7 @@
           dialog: false,
           targetRow: {
             username: '',
-            gorup_name: '',
+            gorup_id: '',
             avatar: ''
           }
         }
@@ -157,9 +158,9 @@
         this.doQuery();
       },
       askDel(row){
-        LOADINGOVERLAY.showConfirm({
-					callback: () => {
+        LOADINGOVERLAY.showConfirm({callback: () => {
             DMS.ajaxPost('__MODULE__/Customer/customerDelete',{uid:row.uid}, res => {
+              this.queryCondition.page='1'
               this.doQuery()
               this.$message({
                 type: 'success',
@@ -167,8 +168,8 @@
                 showClose: true
               })
             });
-					}
-				})
+          }
+        })
       }
     }
   })
