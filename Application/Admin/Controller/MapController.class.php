@@ -40,8 +40,8 @@ class MapController extends BaseController {
                 $areaList[$k]['coordinate'] = json_decode('['.$v['coordinate'].']',true);
             }
         }
-        $center["lng"] =119.15;
-        $center["lat"] =36.70;
+        $center["lng"] =119.40;
+        $center["lat"] =36.85;
         $mapData["center"]=$center;
         $mapData["zoom"]=16;
         $ret["mapData"]=$mapData;
