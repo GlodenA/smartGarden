@@ -331,9 +331,11 @@ class MapController extends BaseController {
                 $machineList[$k]['userInfo'] = M('Member')->where(array('userid'=>$v['userid']))->field('realname,mobile,job_number')->find();
             }
         }
-        $this->assign('machineList',$machineList);
-        $this->assign('area_id',$area_id);
-        $this->display('machine_list');
+//        $this->assign('machineList',$machineList);
+//        $this->assign('area_id',$area_id);
+//        $this->display('machine_list');
+        $ret["machineList"]=$machineList;
+        $this->ajaxReturn($ret);
     }
 
     //绑定设备

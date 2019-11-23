@@ -6,6 +6,7 @@
  * Time: 15:25
  */
 namespace Admin\Controller;
+use http\Message;
 use Think\Log;
 class MachineController extends BaseController{
     public function __construct(){
@@ -135,9 +136,6 @@ class MachineController extends BaseController{
         }else{
             $number = 0;
         }
-
-        $areaList = M('Area_map')->where(array("is_delete"=>0))->select();
-        $this->assign('areaList',$areaList);
 
         $this->assign('number',$number);
         $this->assign("page",$Page->show());
@@ -1292,12 +1290,12 @@ class MachineController extends BaseController{
     public function areaBindsNew(){
         if (IS_POST) {
             $machineList = I("machineList") ? I("machineList") : $this->error("缺少参数");
-            Log::write("machineList".$machineList);
+            $data["area_id"]=I("area_id");
+//            Log::write("machineList".$machineList);
             foreach ($machineList as $key => $v) {
-                $data = $_POST['info'];
                 $res = M('Machine')->where(array('machine_id'=>$v['machine_id']))->save($data);
             }
-            Log::write("$res".$res);
+//            Log::write("$res".$res);
             if($res) {
                 $this->success("绑定成功");
             }else{
@@ -1313,7 +1311,6 @@ class MachineController extends BaseController{
             $areaList = M('Area_map')->where($where)->select();
             $this->assign('areaList',$areaList);
             $this->assign('machineList',$machineList);
-//            $this->display("area_binds");
         }
     }
 }
