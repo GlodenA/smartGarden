@@ -17,6 +17,7 @@ class CustomerController extends BaseController
         $this->groupDb = M("Auth_group");
         $this->customerAccessDb =M("Auth_group_access");
         $this->adminDb = M('Admin');
+
     }
     //查询客户信息列表
     public function customerAuthList(){
@@ -65,42 +66,41 @@ class CustomerController extends BaseController
     /**
      * 客户增加
      */
-    public function adminAdd(){
-        if(IS_POST){
-            $data = $_POST['info'];
-            $password = password(I('password'));
-            $data['password'] = $password['password'];
-            $data['encrypt'] = $password['encrypt'];
-            $data['reg_date'] = $data['last_date'] = $data['update_time'] = time();
-            $data['reg_ip'] = $data['last_ip'] = ip();
-            $data['parent_id'] = session("admin_uid");//获取当前登录的管理员id作为父id
-            //判断用户名是否存在
-            $where['username'] = $data['username'];
-            $isIn = $this->adminDb->where($where)->find();
-            if($isIn){
-                $this->error('账号已存在');
-                return false;
-            }
-            if(!$data['username'] || !$data['password']){
-                $this->error('操作失败');
-            }else{
-                $result = $this->adminDb->data($data)->add();
-                //添加至管理组表
-                $groupAccessData['uid'] = $result;
-                $groupAccessData['group_id'] = $data["group_id"];
-                $this->groupAccessDb->data($groupAccessData)->add();
-                if($result){
-                    $this->success('操作成功');
-                }else{
-                    $this->error('操作失败');
-                }
-            }
+    public function customerAdd(){
+        $password = password(I('password'));
+        $data['username'] = I("username");
+        $data['password'] = $password['password'];
+        $data['encrypt'] = $password['encrypt'];
+        $data['realname'] = I('realname');
+        $data['email'] = I('email');
+        $data['mobile'] = I('mobile');
+        $data['reg_date'] = $data['last_date'] = $data['update_time'] = time();
+        $data['reg_ip'] = $data['last_ip'] = ip();
+        $data['status'] = '1';
+        $data['group_id']=I("group_id");
+        $data['avatar'] = "Uploads/2019-11-23/15744760091433621112.jpeg";
+        $data['companyname'] = I('companyname');
+        $data['parent_id'] = session("admin_uid");//获取当前登录的管理员id作为父id
+        //判断用户名是否存在
+        $where['username'] = I('username');
+        $isIn = $this->adminDb->where($where)->find();
+        if($isIn){
+            $this->error('账号已存在');
+            return false;
+        }
+        if(!$data['username'] || !$data['password']){
+            $this->error('用户名密码不能为空');
         }else{
-            $whereData['status'] = 1;
-            $groupInfo = $this->groupDb->where($whereData)->select();
-            $this->assign("groupInfo",$groupInfo);
-            layout(false);
-            $this->display("customerAdd");
+            $result = $this->adminDb->data($data)->add();
+            //添加至管理组表
+            $groupAccessData['uid'] = $result;
+            $groupAccessData['group_id'] = $data["group_id"];
+            $this->customerAccessDb->data($groupAccessData)->add();
+            if($result){
+                $this->success('操作成功');
+            }else{
+                $this->error('插入关系表失败');
+            }
         }
     }
     /**
