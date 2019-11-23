@@ -1,223 +1,360 @@
 <style media="screen">
-	.text-indent {
-		text-indent: 1em;
-	}
+    .text-indent {
+        text-indent: 1em;
+    }
 </style>
 <div class="padding-md" id="GROUPLIST">
-	<div class="smart-widget widget-dark-blue">
-		<div class="smart-widget-inner">
-			<div class="smart-widget-body">
-				<el-breadcrumb separator="/">
-					<el-breadcrumb-item>
-						<a href="">首页</a>
-					</el-breadcrumb-item>
-					<el-breadcrumb-item>
-						员工管理
-					</el-breadcrumb-item>
-					<el-breadcrumb-item>
-						员工职位
-					</el-breadcrumb-item>
-				</el-breadcrumb>
-				<el-divider></el-divider>
-				<div class="">
-					<el-button icon="el-icon-plus" type="primary" @click="addDialog = true">
-						添加管理职位
-					</el-button>
-				</div>
-				<el-table :data="tableData">
-					<el-table-column prop="id" label="ID"></el-table-column>
-					<el-table-column prop="name" label="名称">
-						<template #default="{ row }">
-							<div :class="[{ 'text-indent': row.isChild }]">
-								{{ `${row.isChild ? '|- ' : ''}${row.name}` }}
-							</div>
-						</template>
-					</el-table-column>
-					<el-table-column label="操作">
-						<template #default="{ row }">
-							<el-button type="primary" size="mini" v-if="!row.isChild" @click="addChild(row)">
-								添加下级
-							</el-button>
-							<el-button type="primary" size="mini" @click="() => {
+    <div class="smart-widget widget-dark-blue">
+        <div class="smart-widget-inner">
+            <div class="smart-widget-body">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item>
+                        <a href="">首页</a>
+                    </el-breadcrumb-item>
+                    <el-breadcrumb-item>
+                        员工管理
+                    </el-breadcrumb-item>
+                    <el-breadcrumb-item>
+                        员工职位
+                    </el-breadcrumb-item>
+                </el-breadcrumb>
+                <el-divider></el-divider>
+                <div class="">
+                    <el-button icon="el-icon-plus" type="primary" @click="addDialog = true">
+                        添加管理职位
+                    </el-button>
+                </div>
+                <el-table :data="tableData">
+                    <el-table-column prop="id" label="ID"></el-table-column>
+                    <el-table-column prop="name" label="名称">
+                        <template #default="{ row }">
+                            <div :class="[{ 'text-indent': row.isChild }]">
+                                {{ `${row.isChild ? '|- ' : ''}${row.name}` }}
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <template #default="{ row }">
+                            <el-button type="primary" size="mini" v-if="!row.isChild" @click="addChild(row)">
+                                添加下级
+                            </el-button>
+                            <el-button type="primary" size="mini" @click="() => {
 								if(row.isChild){
 									editDialog = true
+									editFormData.id = row.id
 									editFormData.name = row.name
 									editFormData.position = row.parentId
 									return
 								}
+								editManageFormData.id = row.id
 								editManageFormData.name = row.name
 								editManagerDialog = true
 							}">
-								编辑
-							</el-button>
-							<el-button type="danger" size="mini" @click="askDel(row)">
-								删除
-							</el-button>
-						</template>
-					</el-table-column>
-				</el-table>
-			</div>
-		</div>
-	</div>
+                                编辑
+                            </el-button>
+                            <el-button type="danger" size="mini" @click="askDel(row)">
+                                删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </div>
+    </div>
 
-	<!-- 添加管理职位 -->
-	<el-dialog title="添加管理职位" :visible.sync="addDialog" width="480px">
-		<el-form :model="addFormData" label-width="100px"  :rules="nameRules">
-			<el-form-item label="">
-				<el-select v-model="addFormData.position" style="width:100%;" disabled>
-					<el-option :value="0" label="作为管理人员"></el-option>
-				</el-select>
-			</el-form-item>
-			<el-form-item prop="name" label="职位名称">
-				<el-input v-model="addFormData.name" />
-			</el-form-item>
-		</el-form>
-		<div slot="footer" class="flex justify-center">
-			<el-button type="primary">
-				提交
-			</el-button>
-		</div>
-	</el-dialog>
+    <!-- 添加管理职位 -->
+    <el-dialog title="添加管理职位" :visible.sync="addDialog" width="480px">
+        <el-form :model="addFormData" label-width="100px"  :rules="nameRules">
+            <el-form-item label="">
+                <el-select v-model="addFormData.position" style="width:100%;" disabled>
+                    <el-option :value="0" label="作为管理人员"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item prop="name" label="职位名称">
+                <el-input v-model="addFormData.name" />
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="flex justify-center">
+            <el-button type="primary" @click="addPosition(1)">
+                提交
+            </el-button>
+        </div>
+    </el-dialog>
 
-	<!-- 添加下级 -->
-	<el-dialog title="添加下级" :visible.sync="addChildDialog" width="480px">
-		<el-form :model="addChildFormData" label-width="100px" :rules="nameRules">
-			<el-form-item label="">
-				<el-select v-model="addChildFormData.position" style="width:100%;" disabled>
-					<volist name="addPositionList" id="pl">
-						<el-option label="{$pl.name}" value="{$pl.id}">
-						</el-option>
-					</volist>
-				</el-select>
-			</el-form-item>
-			<el-form-item prop="name" label="名称">
-				<el-input v-model="addChildFormData.name" />
-			</el-form-item>
-		</el-form>
-		<div slot="footer" class="flex justify-center">
-			<el-button type="primary">
-				提交
-			</el-button>
-		</div>
-	</el-dialog>
+    <!-- 添加下级 -->
+    <el-dialog title="添加下级" :visible.sync="addChildDialog" width="480px">
+        <el-form :model="addChildFormData" label-width="100px" :rules="nameRules">
+            <el-form-item label="">
+                <el-select v-model="addChildFormData.position" style="width:100%;" disabled>
+                    <volist name="addPositionList" id="pl">
+                        <el-option label="{$pl.name}" value="{$pl.id}">
+                        </el-option>
+                    </volist>
+                </el-select>
+            </el-form-item>
+            <el-form-item prop="name" label="名称">
+                <el-input v-model="addChildFormData.name" />
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="flex justify-center">
+            <el-button type="primary" @click="addPosition(0)">
+                提交
+            </el-button>
+        </div>
+    </el-dialog>
 
 
-	<!-- 编辑管理人员信息 -->
-	<el-dialog title="编辑管理人员信息" :visible.sync="editManagerDialog" width="480px">
-		<el-form :model="editManageFormData" label-width="100px" :rules="nameRules">
-			<el-form-item label="">
-				<el-select v-model="editManageFormData.position" style="width:100%;" disabled>
-					<el-option :value="0" label="作为管理人员"></el-option>
-				</el-select>
-			</el-form-item>
-			<el-form-item prop="name" label="名称">
-				<el-input v-model="editManageFormData.name" />
-			</el-form-item>
-		</el-form>
-		<div slot="footer" class="flex justify-center">
-			<el-button type="primary">
-				提交
-			</el-button>
-		</div>
-	</el-dialog>
+    <!-- 编辑管理人员信息 -->
+    <el-dialog title="编辑管理人员信息" :visible.sync="editManagerDialog" width="480px">
+        <el-form :model="editManageFormData" label-width="100px" :rules="nameRules">
+            <el-form-item label="">
+                <el-select v-model="editManageFormData.position" style="width:100%;" disabled>
+                    <el-option :value="0" label="作为管理人员"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item prop="name" label="名称">
+                <el-input v-model="editManageFormData.name" />
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="flex justify-center">
+            <el-button type="primary" @click="editPositionName(1)">
+                提交
+            </el-button>
+        </div>
+    </el-dialog>
 
-	<!-- 编辑职位信息 -->
-	<el-dialog title="编辑职位信息" :visible.sync="editDialog" width="480px">
-		<el-form :model="editFormData" label-width="100px" :rules="nameRules">
-			<el-form-item label="">
-				<el-select v-model="editFormData.position" style="width:100%;">
-					<el-option :value="0" label="作为管理人员"></el-option>
-					<volist name="addPositionList" id="pl">
-						<el-option label="{$pl.name}" value="{$pl.id}">
-						</el-option>
-					</volist>
-				</el-select>
-			</el-form-item>
-			<el-form-item prop="name" label="名称">
-				<el-input v-model="editFormData.name" />
-			</el-form-item>
-		</el-form>
-		<div slot="footer" class="flex justify-center">
-			<el-button type="primary">
-				提交
-			</el-button>
-		</div>
-	</el-dialog>
+    <!-- 编辑职位信息 -->
+    <el-dialog title="编辑职位信息" :visible.sync="editDialog" width="480px">
+        <el-form :model="editFormData" label-width="100px" :rules="nameRules">
+            <el-form-item label="">
+                <el-select v-model="editFormData.position" style="width:100%;">
+                    <el-option :value="0" label="作为管理人员"></el-option>
+                    <volist name="addPositionList" id="pl">
+                        <el-option label="{$pl.name}" value="{$pl.id}">
+                        </el-option>
+                    </volist>
+                </el-select>
+            </el-form-item>
+            <el-form-item prop="name" label="名称">
+                <el-input v-model="editFormData.name" />
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="flex justify-center">
+            <el-button type="primary" @click="editPositionName(0)">
+                提交
+            </el-button>
+        </div>
+    </el-dialog>
 </div>
 <script>
-	let tableData = []
+    let tableData = []
 </script>
 <foreach name="menuList" item="v">
-	<script type="text/javascript">
-		tableData.push({
-			id: "{$v['id']}",
-			name: "{$v['name']}",
-		})
-	</script>
-	<foreach name="v['children']" item="r">
-		<script type="text/javascript">
-			tableData.push({
-				id: "{$r['id']}",
-				name: "{$r['name']}",
-				parentId: "{$r[parent_id]}",
-				isChild: true
-			})
-		</script>
-	</foreach>
+    <script type="text/javascript">
+        tableData.push({
+            id: "{$v['id']}",
+            name: "{$v['name']}",
+        })
+    </script>
+    <foreach name="v['children']" item="r">
+        <script type="text/javascript">
+            tableData.push({
+                id: "{$r['id']}",
+                name: "{$r['name']}",
+                parentId: "{$r[parent_id]}",
+                isChild: true
+            })
+        </script>
+    </foreach>
 </foreach>
 <script type="text/javascript">
-	const GROUPLIST = new Vue({
-		el: '#GROUPLIST',
-		data() {
-			return {
-				nameRules: {
-					name: [{
-						required: true,
-						message: '请输入名称！',
-						trigger: 'blur'
-					}]
-				},
-				tableData,
-				addChildDialog: false,
-				addChildFormData: {
-					name: '',
-					position: ''
-				},
-				editDialog: false,
-				editFormData: {
-					name: ''
-				},
-				addDialog: false,
-				addFormData: {
-					name: '',
-					position: 0
-				},
-				editManagerDialog: false,
-				editManageFormData: {
-				    name: '',
+    const GROUPLIST = new Vue({
+        el: '#GROUPLIST',
+        data() {
+            return {
+                nameRules: {
+                    name: [{
+                        required: true,
+                        message: '请输入名称！',
+                        trigger: 'blur'
+                    }],
+                    position: [{
+                        validator: (rule, message, callback) => {
+                            callback()
+                        },
+                        trigger: 'change'
+                    }]
+                },
+                tableData,
+                addChildDialog: false,
+                addChildFormData: {
+                    name: '',
+                    position: ''
+                },
+                editDialog: false,
+                editFormData: {
+                    id: '',
+                    name: '',
+                    position: ''
+                },
+                addDialog: false,
+                addFormData: {
+                    name: '',
                     position: 0
+                },
+                editManagerDialog: false,
+                editManageFormData: {
+                    id: '',
+                    name: '',
+                    position: 0
+                },
+                page: 1
+            }
+        },
+        mounted() {},
+        methods: {
+            addChild(row) {
+                this.addChildFormData.position = row.id
+                this.addChildDialog = true
+            },
+            askDel(row) {
+
+                this.$confirm('确认删除吗?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    DMS.ajaxPost('__CONTROLLER__/menuDelete',
+                        {"id": row.id}
+                        , res => {
+                            if (res.status === 1) {
+                                this.$message({
+                                    type: 'success',
+                                    message: '删除成功!',
+                                    showClose: true
+                                });
+                                window.location.reload();
+                            }
+                            else {
+                                this.$message.error('删除失败！失败原因：'+res.info);
+                            }
+                        })
+                }).catch(() => {})
+
+            },
+            addPosition(isLeader){
+                if(isLeader ==1)
+                {
+                    param = {
+                        "position": this.addFormData.position,
+                        "name": this.addFormData.name,
+                    }
+                    DMS.ajaxPost('__CONTROLLER__/menuAdd',
+                        param, res => {
+                            if (res.status === 1) {
+                                this.$alert(res.info, '通知', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        this.addDialog = false
+                                        window.location.reload()
+                                    }
+                                })
+                            }
+                            else {
+                                this.$alert(res.info, '通知', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        this.addDialog = false
+                                    }
+                                })
+                            }
+                        })
                 }
-			}
-		},
-		mounted() {},
-		methods: {
-			addChild(row) {
-			    this.addChildFormData.position = row.id
-				this.addChildDialog = true
-			},
-			askDel(row) {
-				this.$confirm('确认删除吗?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					this.$message({
-						type: 'success',
-						showClose: true,
-						message: '删除成功!'
-					})
-				}).catch(() => {})
-			}
-		}
-	})
+                else{
+                    param = {
+                        "position": this.addChildFormData.position,
+                        "name": this.addChildFormData.name,
+                    }
+                    DMS.ajaxPost('__CONTROLLER__/menuAdd',
+                        param, res => {
+                            if (res.status === 1) {
+                                this.$alert(res.info, '通知', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        this.addChildDialog = false
+                                        window.location.reload()
+                                    }
+                                })
+                            }
+                            else {
+                                this.$alert(res.info, '通知', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        this.addChildDialog = false
+                                    }
+                                })
+                            }
+                        })
+                }
+            },
+            editPositionName(isManager){
+                if(isManager ==1)
+                {
+                    param = {
+                        "position": this.editManageFormData.position,
+                        "name": this.editManageFormData.name,
+                        "id": this.editManageFormData.id
+                    }
+                    DMS.ajaxPost('__CONTROLLER__/menuEdit',
+                        param, res => {
+                            if (res.status === 1) {
+                                this.$alert(res.info, '通知', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        this.editManagerDialog = false
+                                        window.location.reload()
+                                    }
+                                })
+                            }
+                            else {
+                                this.$alert(res.info, '通知', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        this.editManagerDialog = false
+                                    }
+                                })
+                            }
+                        })
+                }
+                else{
+                    param = {
+                        "position": this.editFormData.position,
+                        "name": this.editFormData.name,
+                        "id": this.editFormData.id
+                    }
+                    DMS.ajaxPost('__CONTROLLER__/menuEdit',
+                        param, res => {
+                            if (res.status === 1) {
+                                this.$alert(res.info, '通知', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        this.editDialog = false
+                                        window.location.reload()
+                                    }
+                                })
+                            }
+                            else {
+                                this.$alert(res.info, '通知', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        this.editDialog = false
+                                    }
+                                })
+                            }
+                        })
+                }
+
+            }
+            }
+    })
 </script>

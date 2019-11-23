@@ -125,13 +125,12 @@
             在岗情况占比
           </div>
           <div class="flex flex-column items-center">
-            <canvas
+            <div style="width:90%;">
+              <canvas
               id="employee-chart"
-              heght="160px"
-              width="160px"
-              style="width:160px;height:160px;"
-            ></canvas>
-            <div>
+              ></canvas>
+            </div>
+            <div class="mt3">
               <div class="legend-item flex items-center mt2" v-for="(c, i) in backgroundColor" :key="c">
                 <div class="dot" :style="{
                   backgroundColor: c
@@ -145,7 +144,7 @@
         </div>
       </div>
       <div class="middle">
-
+        
       </div>
       <div class="right">
 
@@ -154,6 +153,11 @@
   </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+<script src="https://unpkg.com/vue-baidu-map"></script>
+<script type="text/javascript">
+	Vue.use(VueBaiduMap.default, {
+		ak: 'NENpvHSwTNZ6ftZOKdfiiPDxGKKPHjtg'
+	})
 <script>
   const BIGSCREEN = new Vue({
     el: '#BIGSCREEN',

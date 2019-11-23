@@ -4,24 +4,52 @@ use Think\Auth;
 class MapController extends BaseController {
 	//区域划分列表
 	public function areaList(){
-		$where['is_delete'] = 0;
+//		$where['is_delete'] = 0;
+//        $keywords = I('keywords');
+//        if($keywords){
+//            $where['area_name'] = array("like", "%" . $keywords . "%");
+//            $this->assign('keywords',$keywords);
+//        }
+//		$count = M('Area_map')->where($where)->count();
+//		$Page = new \Think\Page($count,20);
+//		$areaList = M('Area_map')->where($where)->limit($Page->firstRow.','.$Page->listRows)->select();
+//        if($areaList){
+//            foreach($areaList as $k=>$v){
+//                $areaList[$k]['coordinate'] = json_decode('['.$v['coordinate'].']',true);
+//            }
+//        }
+//		$this->assign("page",$Page->show());
+//        $this->assign("areaList",$areaList);
+        $this->display("area_list");
+	}
+
+    public function getAreaList(){
+        $where['is_delete'] = 0;
         $keywords = I('keywords');
         if($keywords){
             $where['area_name'] = array("like", "%" . $keywords . "%");
-            $this->assign('keywords',$keywords);
         }
-		$count = M('Area_map')->where($where)->count();
-		$Page = new \Think\Page($count,20);
-		$areaList = M('Area_map')->where($where)->limit($Page->firstRow.','.$Page->listRows)->select();
+        $count = M('Area_map')->where($where)->count();
+        $listRows=10;
+        $firstRow = $listRows*(I("page")-1);
+        $areaList = M('Area_map')->where($where)
+                ->field(" id,area_name,employee_num,coordinate,FROM_UNIXTIME(add_time) add_time,is_show,is_delete ")
+                 ->limit($firstRow.','.$listRows)->select();
         if($areaList){
             foreach($areaList as $k=>$v){
                 $areaList[$k]['coordinate'] = json_decode('['.$v['coordinate'].']',true);
             }
         }
-		$this->assign("page",$Page->show());
-        $this->assign("areaList",$areaList);
-        $this->display("area_list");
-	}
+        $center["lng"] =119.40;
+        $center["lat"] =36.85;
+        $mapData["center"]=$center;
+        $mapData["zoom"]=16;
+        $ret["mapData"]=$mapData;
+        $ret["areaList"] = $areaList;
+        $ret["totalNumber"]=$count;
+        $this->ajaxReturn($ret);
+
+    }
 
 	// 百度地图
 	public function mapFence(){
@@ -51,7 +79,7 @@ class MapController extends BaseController {
             if($type == 2){
                 $data['coordinate'] = htmlspecialchars_decode(I('coordinate'));
             }
-            
+
             // var_dump($data);die;
             $result = M('Area_map')->where($where)->save($data);
             if($result){
@@ -303,9 +331,11 @@ class MapController extends BaseController {
                 $machineList[$k]['userInfo'] = M('Member')->where(array('userid'=>$v['userid']))->field('realname,mobile,job_number')->find();
             }
         }
-        $this->assign('machineList',$machineList);
-        $this->assign('area_id',$area_id);
-        $this->display('machine_list');
+//        $this->assign('machineList',$machineList);
+//        $this->assign('area_id',$area_id);
+//        $this->display('machine_list');
+        $ret["machineList"]=$machineList;
+        $this->ajaxReturn($ret);
     }
 
     //绑定设备

@@ -232,8 +232,8 @@ class MemberController extends BaseController
     public function memberEdit()
     {
         if (IS_POST) {
-            $userid = intval(I("userid"));
             $data = $_POST['info'];
+            $userid = $data["userid"];
             $where["userid"] = array("neq", $userid);
             $where["is_delete"] = 0;
             $where["job_number"] = $data["job_number"];
@@ -288,6 +288,35 @@ class MemberController extends BaseController
         $this->display("member_info");
     }
 
+    // 浏览员工信息
+    public function memberInfo2()
+    {
+        $where['userid'] = I("userid");
+        $memberInfo = M('Member')->where($where)->find();
+        if ($memberInfo["parent_id"] > 0) {
+            $memberInfo["parent_name"] = M("Member")->where(array("userid" => $memberInfo["parent_id"], "is_delete" => 0))->getField("realname");
+        } else {
+            $memberInfo["parent_name"] = "";
+        }
+        if($memberInfo["sex"]==1){
+            $memberInfo["sex"]="男";
+        }else{
+            $memberInfo["sex"]=="女";
+        }
+        if($memberInfo["position"] > 0){
+            $memberInfo["position"] = M("Member_position")->where(array("id" => $memberInfo["position"], "is_delete" => 0))->getField("name");
+        }
+        if($memberInfo["job_status"]==1){
+            $memberInfo["job_status"]="在岗";
+        }else if ($memberInfo["job_status"]==2){
+            $memberInfo["job_status"]="未上岗";
+        }else if ($memberInfo["job_status"]==0){
+            $memberInfo["job_status"]="离岗";
+        }
+        $this->ajaxReturn($memberInfo);
+        adminLog("查看用户" . $memberInfo["userid"] . "详情");
+        //$this->display("member_info");
+    }
     /**
      * 员工删除
      */
@@ -511,11 +540,104 @@ class MemberController extends BaseController
 
     }
 
+
+    //获取菜单列表
+    public function getMenuList(){
+
+        $i = 0;
+        $totalList = [];
+        $where["parent_id"] = 0;
+        $whereCount["is_delete"]=$where["is_delete"] = 0;
+        $listRows=10;
+        $firstRow = $listRows*(I("page")-1);
+        $count = M("Member_position")->where($whereCount)->order('id desc')->count();
+        $managerList = M("Member_position")
+            ->limit($firstRow.','.$listRows)
+            ->where($where)
+            ->order('id desc')
+            ->select();
+
+        if($managerList)
+        {
+            foreach($managerList as $k=>$v)
+            {
+                $totalList[$i++] = $managerList[$k];
+                if($v["parent_id"] == 0)
+                {
+                    $whereChild["parent_id"] = $v["id"];
+                    $whereChild["is_delete"] = 0;
+                    $childList = M("Member_position")
+                        ->limit($firstRow.','.$listRows)
+                        ->where($whereChild)
+                        ->order('id desc')
+                        ->select();
+                    if($childList)
+                    {
+                        foreach($childList as $k=>$v)
+                        {
+                            $totalList[$i++] = $childList[$k];
+                        }
+                    }
+
+                }
+            }
+        }
+
+        $ret["totalNumber"] = $count;
+        $ret["MENULIST"] = $totalList;
+        $this->ajaxReturn($ret);
+
+    }
+
+    // 菜单添加
+//    public function menuAdd()
+//    {
+//        if (IS_POST) {
+//            $data = $_POST['info'];
+//            $result = M("Member_position")->add($data);
+//            if ($result) {
+//                $this->success("操作成功");
+//                adminLog("增加职位" . $data["name"]);
+//            } else {
+//                $this->error("操作失败");
+//            }
+//        } else {
+//            $where['parent_id'] = 0;
+//            $data = M("Member_position")->where($where)->select();
+//            $this->assign("menuList", $data);
+//            layout(false);
+//            $this->display("group_add");
+//        }
+//
+//    }
+
+//    // 职位编辑
+//    public function menuEdit()
+//    {
+//        if (IS_POST) {
+//            $id = $where['id'] = I("id");
+//            $data = $_POST['info'];
+//            M("Member_position")->where($where)->save($data);
+//            adminLog("修改职位信息" . $data["name"]);
+//            $this->success("操作成功");
+//        } else {
+//            $id = $where['id'] = I("id");
+//            $whereParent['parent_id'] = 0;
+//            $parentData = M("Member_position")->where($whereParent)->select();
+//            $this->assign("parentData", $parentData);
+//            $data = M("Member_position")->where($where)->find();
+//            $this->assign($data);
+//            layout(false);
+//            $this->display('group_edit');
+//        }
+//    }
+
     // 菜单添加
     public function menuAdd()
     {
         if (IS_POST) {
-            $data = $_POST['info'];
+            $data['parent_id']=I("position");
+            $data['name']=I("name");
             $result = M("Member_position")->add($data);
             if ($result) {
                 $this->success("操作成功");
@@ -523,22 +645,17 @@ class MemberController extends BaseController
             } else {
                 $this->error("操作失败");
             }
-        } else {
-            $where['parent_id'] = 0;
-            $data = M("Member_position")->where($where)->select();
-            $this->assign("menuList", $data);
-            layout(false);
-            $this->display("group_add");
         }
-
     }
+
 
     // 职位编辑
     public function menuEdit()
     {
         if (IS_POST) {
             $id = $where['id'] = I("id");
-            $data = $_POST['info'];
+            $data['parent_id']=I("position");
+            $data['name']=I("name");
             M("Member_position")->where($where)->save($data);
             adminLog("修改职位信息" . $data["name"]);
             $this->success("操作成功");
@@ -564,6 +681,7 @@ class MemberController extends BaseController
                 $this->error("当前职位下存在员工，无法删除！");
             }
             $whereData['parent_id'] = $id;
+            $whereData['is_delete'] = 0;
             $menuData = M("Member_position")->where($whereData)->find();
             if ($menuData) {
                 $this->error("请先删除二级职位");
@@ -602,43 +720,11 @@ class MemberController extends BaseController
                 $fileName = $title = "离岗员工统计表";
             }
             if ($status == 4) {
-                //未上岗但有考勤
-                //先查出状态为未上岗并且有考勤的
-                $beginToday = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
-                $whereMember["m.job_status"] = 2;
-                $whereMember["a.add_time"] = array("gt", $beginToday);
-                $whereMember["m.is_delete"] = 0;
-                $whereMember["_string"] = "m.userid = a.userid";
-                $useridList = M("Member")->table("__MEMBER__ m,__ATTENDANCE__ a")->where($whereMember)->field("a.userid")->select();
-                $useridArr = array();
-                if ($useridList) {
-                    foreach ($useridList as $key => $value) {
-                        Array_push($useridArr, $value["userid"]);
-                    }
-                }
-                $where["userid"] = array('in', $useridArr);
-                $where["job_status"] = 2;
-                $fileName = $title = "未上岗但有考勤员工统计表";
+                //离职
+                $where["is_delete"] = 1;
+                $fileName = $title = "离职员工统计表";
             }
-            if ($status == 5) {
-                //未上岗且无考勤
-                //先查出状态为未上岗并且有考勤的
-                $beginToday = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
-                $whereMember["m.job_status"] = 2;
-                $whereMember["a.add_time"] = array("gt", $beginToday);
-                $whereMember["m.is_delete"] = 0;
-                $whereMember["_string"] = "m.userid = a.userid";
-                $useridList = M("Member")->table("__MEMBER__ m,__ATTENDANCE__ a")->where($whereMember)->field("a.userid")->select();
-                $useridArr = array();
-                if ($useridList) {
-                    foreach ($useridList as $key => $value) {
-                        Array_push($useridArr, $value["userid"]);
-                    }
-                }
-                $where["userid"] = array('not in', $useridArr);
-                $where["job_status"] = 2;
-                $fileName = $title = "未上岗且无考勤员工统计表";
-            }
+
         } else {
             $fileName = $title = "员工统计表";
         }
@@ -651,7 +737,10 @@ class MemberController extends BaseController
             $whereMember["_complex"] = array($whereParent, $wherePositon, '_logic' => 'or');
             $where["_complex"] = $whereMember;
         }
-        $where["is_delete"] = 0;
+        if ($status != 4) {
+        //离职
+            $where["is_delete"] = 0;
+        }
         $list = M("Member")->where($where)->field("userid,job_number,realname,mobile,machine_id,parent_id")->select();
         if ($list) {
             $headArr = array("员工号", "姓名", "手机号", "设备IMEI", "分管人员", "备注");
@@ -995,7 +1084,6 @@ class MemberController extends BaseController
 //            $number = 0;
 //        }
         $ret["totalNumber"] = $count;
-        $ret["MEMBERLIST"] = $list;
         $ret["MEMBERLIST"] = $list;
         $this.$this->ajaxReturn($ret);
     }
