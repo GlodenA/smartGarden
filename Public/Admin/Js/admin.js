@@ -185,8 +185,8 @@ var DMS = {
     }
   },
   // ajax post请求
-  ajaxPost: function(url, data, callback) {
-    if (window.LOADINGOVERLAY) {
+  ajaxPost: function(url, data, callback, needLoaing = true) {
+    if (window.LOADINGOVERLAY && needLoaing) {
       window.LOADINGOVERLAY.startLoading()
     }
     $.ajax({
@@ -199,7 +199,7 @@ var DMS = {
         if (callback) {
           callback(ret);
         }
-        if (window.LOADINGOVERLAY) {
+        if (window.LOADINGOVERLAY && needLoaing) {
           window.LOADINGOVERLAY.endLoading()
         }
       },
