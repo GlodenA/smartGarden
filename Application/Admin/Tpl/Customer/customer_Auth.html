@@ -65,6 +65,9 @@
               }">
                 修改权限
               </el-button>
+              <el-button type="primary" size="mini" @click="showCustomerDetail(row)">
+                详情
+              </el-button>
               <el-button type="danger" size="mini" @click="askDel(row)">
                 删除
               </el-button>
@@ -87,13 +90,52 @@
 
   <!-- 创建客户弹窗 -->
   <el-dialog title="创建客户" :visible.sync="createDialog" width="480px">
-    <el-form label-width="100px" :model="createFormData" :rules="{
-
-    }">
-      <el-form-item label="客户名称" prop="name">
-        <el-input v-model="createFormData.name"/>
+    <el-form label-width="100px" :model="createFormData" ref="mainForm" :rules="{
+            username: [
+              { required: true, message: '请输入用户名！', trigger: 'blur' },
+              { min: 3, max: 10, message: '用户名长度在 3 到 10 个字符', trigger: 'blur' }
+            ],
+            password: [
+              { required: true, message: '请输入密码！', trigger: 'blur' },
+              { min: 5, max: 15, message: '密码长度在 5 到 15 个字符', trigger: 'blur' }
+            ],
+            realname: [
+              { required: true, message: '请输入真实姓名！', trigger: 'blur' },
+              { min: 3, max: 10, message: '用户名长度在 3 到 10 个字符', trigger: 'blur' }
+            ],
+            email: [
+              { required: true, message: '请输入邮箱！', trigger: 'blur' },
+              { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
+            ],
+            mobile: [
+              { required: true, message: '请输入手机号！', trigger: 'blur' },
+            ],
+            companyname: [
+              { required: true, message: '请输入企业名称！', trigger: 'blur' },
+            ],
+            authority_id: [
+              { required: true, message: '请选择客户权限！', trigger: 'blur' },
+            ],
+          }">
+      <el-form-item label="客户名称" prop="username">
+        <el-input v-model="createFormData.username"/>
       </el-form-item>
-      <el-form-item label="客户LOGO" prop="logo">
+      <el-form-item label="密码" prop="password">
+        <el-input v-model="createFormData.password" type="password"/>
+      </el-form-item>
+      <el-form-item label="真实姓名" prop="realname">
+        <el-input v-model="createFormData.realname"/>
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="createFormData.email"/>
+      </el-form-item>
+      <el-form-item label="手机号" prop="mobile">
+        <el-input v-model="createFormData.mobile"/>
+      </el-form-item>
+      <el-form-item label="企业名称" prop="companyname">
+        <el-input v-model="createFormData.companyname"/>
+      </el-form-item>
+      <el-form-item label="客户LOGO" prop="avatar">
         <el-upload drag action="" :before-upload="beforeUpload" style="width: 100%;">
           <i class="el-icon-upload"></i>
         </el-upload>
@@ -106,10 +148,10 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="flex justify-center">
-      <el-button>
+      <el-button  @click="$refs.mainForm.resetFields()">
         重置
       </el-button>
-      <el-button type="primary" class="ml3">
+      <el-button type="primary" class="ml3" @click="submit">
         提交
       </el-button>
     </div>
@@ -131,6 +173,20 @@
       </el-button>
     </div>
   </el-dialog>
+  <!--管理员详情-->
+  <el-dialog :visible.sync="customerDetail.dialog" title="管理员详情" width="480px">
+    <el-form :model="customerDetail.formData" label-width="100px">
+      <el-form-item :label="l" v-for="([l, f]) in [
+        ['企业名', 'companyname'],
+        ['姓名', 'username'],
+        ['用户昵称', 'realname'],
+        ['手机号', 'mobile'],
+        ['邮箱', 'email']
+      ]">
+        <el-input v-model="customerDetail.formData[f]" disabled/>
+      </el-form-item>
+    </el-form>
+  </el-dialog>
 </div>
 <script>
   const attendenceList = new Vue({
@@ -145,8 +201,14 @@
         },
         createDialog: false,
         createFormData: {
-          name: '',
-          logo: '',
+          username: '',
+          password: '',
+          email: '',
+          realname: '',
+          mobile: '',
+          authority_id: '',
+          companyname: '',
+          avatar: '',
           authority_id: ''
         },
         totalNumber: 0,
@@ -155,15 +217,71 @@
           username: '',
           page: 1
         },
-        tableData: []
+        tableData: [],
+        customerDetail:{
+          dialog: false,
+          formData: {
+            realname: '',
+            job_number: '',
+            mobile: '',
+            position: '',
+            parent_name: '',
+            sex: '',
+            job_status: ''
+          }
+        }
       }
     },
     computed: {},
     created() {
-      //this.doQuery()
+      this.doQuery()
     },
 
     methods: {
+      submit() {
+        info = {
+          "username": this.createFormData.username,
+          "password": this.createFormData.password,
+          "email":this.createFormData.email,
+          "realname":this.createFormData.realname,
+          "mobile":this.createFormData.mobile,
+          "group_id":this.createFormData.authority_id,
+          "companyname":this.createFormData.companyname,
+          "avatar":this.createFormData.avatar,
+        }
+        this.$refs.mainForm.validate(r => {
+          if (r) {
+            // 这里代表表单验证通过，即将提交数据到后台
+            console.log(info);
+            DMS.ajaxPost('__CONTROLLER__/customerAdd', info, ref => {
+              console.log(ref);
+              if (ref.status === 1) {
+                this.$message({
+                  message: ref.info,
+                  type: 'success'
+                });
+                window.location.reload();
+              }else{
+                this.$message({
+                  message: ref.info,
+                  type: 'error'
+                });
+              //window.location.reload();
+              }
+            })
+          }
+        })
+      },
+      showCustomerDetail(row){
+        this.customerDetail.dialog = true;
+        DMS.ajaxPost('__MODULE__/Customer/customerInfo',
+                {
+                  "uid" : row.uid
+                }, res => {
+                  this.customerDetail.formData = res;
+                })
+
+      },
       changeAuth(id){
         param = {
           "uid":this.editAuthorityFormData.uid,
@@ -215,6 +333,7 @@
                 message: '删除成功!',
                 showClose: true
               });
+            this.queryCondition.page='1';
             this.doQuery();
           });
          }).catch(() => {
@@ -223,6 +342,4 @@
       }
     }
   })
-  attendenceList.doQuery();
-
 </script>
