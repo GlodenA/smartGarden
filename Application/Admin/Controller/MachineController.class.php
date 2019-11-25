@@ -1260,11 +1260,23 @@ class MachineController extends BaseController{
             }
         }
 
-        $center["lng"] =119.40;
-        $center["lat"] =36.85;
-        $mapData["center"]=$center;
-        $mapData["zoom"]=15;
-        $ret["mapData"]=$mapData;
+
+        $wheremap["uid"] = session("admin_uid");
+        $wheremap["is_delete"] = 0;
+        $mapConfigInfo=M("Map_config")->where($wheremap)->select();
+        if($mapConfigInfo)
+        {
+            $center["lng"] =$mapConfigInfo[0]["lng"];//119.40;
+            $center["lat"] =$mapConfigInfo[0]["lat"];//36.85;
+            $mapData["center"]=$center;
+            $mapData["zoom"]=$mapConfigInfo[0]["rank"];//15;
+            $ret["mapData"]=$mapData;
+        }
+        else
+        {
+            $ret["mapData"]="";
+        }
+
         $ret["totalNumber"]= $count;
         $ret["machineList"]= $machineList;
         $this->ajaxReturn($ret);
@@ -1299,6 +1311,13 @@ class MachineController extends BaseController{
         $where['is_delete'] = 0;
         $areaList = M('Area_map')->where($where)->select();
         $this->assign('areaList',$areaList);
+
+        if($areaList){
+            foreach($areaList as $k=>$v){
+                $areaList[$k]['coordinate'] = json_decode('['.$v['coordinate'].']',true);
+            }
+        }
+
         $ret["areaList"]= $areaList;
         $this->ajaxReturn($ret);
     }
@@ -1327,6 +1346,17 @@ class MachineController extends BaseController{
             $areaList = M('Area_map')->where($where)->select();
             $this->assign('areaList',$areaList);
             $this->assign('machineList',$machineList);
+        }
+    }
+    public function areaBindsByone(){
+        $machine_id = I("machine_id") ? I("machine_id") : $this->error("缺少参数");
+        $data["area_id"]=I("area_id");
+        $res = M('Machine')->where(array('machine_id'=>$machine_id))->save($data);
+
+        if($res) {
+            $this->success("绑定成功");
+        }else{
+            $this->error("绑定失败");
         }
     }
     //设备位置

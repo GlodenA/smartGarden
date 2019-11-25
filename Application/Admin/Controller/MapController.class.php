@@ -40,11 +40,26 @@ class MapController extends BaseController {
                 $areaList[$k]['coordinate'] = json_decode('['.$v['coordinate'].']',true);
             }
         }
-        $center["lng"] =119.40;
-        $center["lat"] =36.85;
-        $mapData["center"]=$center;
-        $mapData["zoom"]=16;
-        $ret["mapData"]=$mapData;
+//        $center["lng"] =119.40;
+//        $center["lat"] =36.85;
+//        $mapData["center"]=$center;
+//        $mapData["zoom"]=16;
+//        $ret["mapData"]=$mapData;
+        $wheremap["uid"] = session("admin_uid");
+        $wheremap["is_delete"] = 0;
+        $mapConfigInfo=M("Map_config")->where($wheremap)->select();
+        if($mapConfigInfo)
+        {
+            $center["lng"] =$mapConfigInfo[0]["lng"];//119.40;
+            $center["lat"] =$mapConfigInfo[0]["lat"];//36.85;
+            $mapData["center"]=$center;
+            $mapData["zoom"]=$mapConfigInfo[0]["rank"];//15;
+            $ret["mapData"]=$mapData;
+        }
+        else
+        {
+            $ret["mapData"]="";
+        }
         $ret["areaList"] = $areaList;
         $ret["totalNumber"]=$count;
         $this->ajaxReturn($ret);

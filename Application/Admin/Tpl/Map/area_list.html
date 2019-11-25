@@ -296,6 +296,8 @@
 				this.create.moveStatus = !this.create.moveStatus
 			},
 			addMap(){
+				if(this.create.mapData)
+				{
 				this.create.title='区域添加'
 				this.mapEditable = true
 				this.points=[]
@@ -303,8 +305,15 @@
 				this.create.editStatus=false
 				this.create.dialog = true
 				this.create.operType=true
+				}
+				else
+				{
+					this.$alert("表yl_map_config没有配置")
+				}
 			},
 			editMap(row){
+				if(this.create.mapData)
+				{
 				this.create.title='区域编辑'
 				this.mapEditable = true
 				this.create.moveStatus=false
@@ -317,9 +326,16 @@
 				}))
 				this.create.operType=false
 				this.create.dialog=true
+			}
+			else
+					{
+						this.$alert("表yl_map_config没有配置")
+					}
 
 			},
 			showDetailMap(row){
+				if(this.create.mapData)
+				{
 				this.create.title='区域详情'
 				this.mapEditable = false
 				this.create.moveStatus=true
@@ -330,6 +346,11 @@
 					lng: lon
 				}))
 				this.create.dialog=true
+				}
+				else
+				{
+					this.$alert("表yl_map_config没有配置")
+				}
 			},
 			submitMap(){
 				var path = this.points;
@@ -451,15 +472,15 @@
 				this.doQuery()
 			},
 			showBindDeviceDialog(row){
-				Object.keys(this.bindDevice.targetArea).forEach(f => {
-					this.bindDevice.targetArea[f] = row[f]
-				})
-				DMS.ajaxPost('__CONTROLLER__/machineList',{id:row.id},res=>{
-					this.bindDevice.tableData=res.machineList
+					Object.keys(this.bindDevice.targetArea).forEach(f => {
+						this.bindDevice.targetArea[f] = row[f]
+					})
+					DMS.ajaxPost('__CONTROLLER__/machineList',{id:row.id},res=>{
+						this.bindDevice.tableData=res.machineList
 
 
-				})
-				this.bindDevice.dialog = true
+					})
+					this.bindDevice.dialog = true
 			},
 			checkMachine(){
 		        var machine_imei=this.bindDevice.add.machine_imei;

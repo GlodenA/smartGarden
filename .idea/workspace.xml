@@ -2,13 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="91fbad24-5e9d-4835-a586-f849dbd1e330" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Uploads/2019-11-22/1574416341760724489.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Uploads/2019-11-22/1574416474530395218.xlsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jsLinters/jshint.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jsLinters/jshint.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/Admin/Controller/MachineController.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/Application/Admin/Controller/MachineController.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/Admin/Controller/MapController.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/Application/Admin/Controller/MapController.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/Admin/Tpl/Machine/machine_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/Application/Admin/Tpl/Machine/machine_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/Admin/Tpl/Map/area_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/Application/Admin/Tpl/Map/area_list.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Application/Runtime/Cache/Admin/100cf140b4ce28aec5091db35f8b8f2b.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Application/Runtime/Cache/Admin/1a8891c6da3830995cd743d5bc57f618.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Application/Runtime/Cache/Admin/5b22956049ccceba906c14f71403127f.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Application/Runtime/Cache/Admin/b1817b3f974735e1a66bdc0030b2fd94.php" beforeDir="false" afterPath="$PROJECT_DIR$/Application/Runtime/Cache/Admin/b1817b3f974735e1a66bdc0030b2fd94.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Application/Runtime/Cache/Admin/c9788ecf08719e944f2852624f5384e9.php" beforeDir="false" afterPath="$PROJECT_DIR$/Application/Runtime/Cache/Admin/c9788ecf08719e944f2852624f5384e9.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/Runtime/Cache/Admin/a66c83210fcef5ddebe98bc06221a2c2.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/Runtime/Cache/Admin/b1817b3f974735e1a66bdc0030b2fd94.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/Runtime/Cache/Admin/c9788ecf08719e944f2852624f5384e9.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Application/Runtime/Cache/Home/2a94b8bda04ff446dcedd42276fc99ee.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Application/Runtime/Logs/Admin/1573708050-19_11_14.log" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Application/Runtime/Logs/Admin/1573714210-19_11_14.log" beforeDir="false" />
@@ -32,10 +41,11 @@
       <change beforePath="$PROJECT_DIR$/Application/Runtime/Logs/Home/19_10_31.log" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Application/Runtime/Logs/Home/19_11_01.log" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Application/Runtime/Logs/Home/19_11_13.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Public/Admin/Js/admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/Public/Admin/Js/admin.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yuanlin.sql" beforeDir="false" />
     </list>
     <list id="2c84633d-9160-468e-a78b-1be1bdf65816" name="忽略列表" comment="忽略列表">
-      <change beforePath="$PROJECT_DIR$/Application/Runtime/Cache/Admin/cc3702d0a16cda040df6be917a1aa271.php" beforeDir="false" afterPath="$PROJECT_DIR$/Application/Runtime/Cache/Admin/cc3702d0a16cda040df6be917a1aa271.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Application/Runtime/Cache/Admin/cc3702d0a16cda040df6be917a1aa271.php" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -66,15 +76,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1350">
               <caret line="54" column="68" selection-start-line="54" selection-start-column="68" selection-end-line="54" selection-end-column="68" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Application/Runtime/Logs/Admin/19_11_23.log">
-          <provider selected="true" editor-type-id="LogFileEditorProvider">
-            <state relative-caret-position="52050">
-              <caret line="2082" column="47" selection-start-line="2082" selection-start-column="40" selection-end-line="2082" selection-end-column="47" />
             </state>
           </provider>
         </entry>
@@ -137,8 +138,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Application/Admin/Tpl/Group/group_list.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="74">
-              <caret line="235" column="18" lean-forward="true" selection-start-line="235" selection-start-column="18" selection-end-line="235" selection-end-column="18" />
+            <state relative-caret-position="-326">
+              <caret line="237" column="38" lean-forward="true" selection-start-line="237" selection-start-column="38" selection-end-line="237" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -245,85 +246,7 @@
             <path>
               <item name="smartGarden" type="b2602c69:ProjectViewProjectNode" />
               <item name="smartGarden" type="462c0819:PsiDirectoryNode" />
-              <item name=".idea" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="smartGarden" type="b2602c69:ProjectViewProjectNode" />
-              <item name="smartGarden" type="462c0819:PsiDirectoryNode" />
               <item name="Application" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="smartGarden" type="b2602c69:ProjectViewProjectNode" />
-              <item name="smartGarden" type="462c0819:PsiDirectoryNode" />
-              <item name="Application" type="462c0819:PsiDirectoryNode" />
-              <item name="Admin" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="smartGarden" type="b2602c69:ProjectViewProjectNode" />
-              <item name="smartGarden" type="462c0819:PsiDirectoryNode" />
-              <item name="Application" type="462c0819:PsiDirectoryNode" />
-              <item name="Admin" type="462c0819:PsiDirectoryNode" />
-              <item name="Controller" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="smartGarden" type="b2602c69:ProjectViewProjectNode" />
-              <item name="smartGarden" type="462c0819:PsiDirectoryNode" />
-              <item name="Application" type="462c0819:PsiDirectoryNode" />
-              <item name="Admin" type="462c0819:PsiDirectoryNode" />
-              <item name="Tpl" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="smartGarden" type="b2602c69:ProjectViewProjectNode" />
-              <item name="smartGarden" type="462c0819:PsiDirectoryNode" />
-              <item name="Application" type="462c0819:PsiDirectoryNode" />
-              <item name="Admin" type="462c0819:PsiDirectoryNode" />
-              <item name="Tpl" type="462c0819:PsiDirectoryNode" />
-              <item name="Admin" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="smartGarden" type="b2602c69:ProjectViewProjectNode" />
-              <item name="smartGarden" type="462c0819:PsiDirectoryNode" />
-              <item name="Application" type="462c0819:PsiDirectoryNode" />
-              <item name="Admin" type="462c0819:PsiDirectoryNode" />
-              <item name="Tpl" type="462c0819:PsiDirectoryNode" />
-              <item name="Attendance" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="smartGarden" type="b2602c69:ProjectViewProjectNode" />
-              <item name="smartGarden" type="462c0819:PsiDirectoryNode" />
-              <item name="Application" type="462c0819:PsiDirectoryNode" />
-              <item name="Admin" type="462c0819:PsiDirectoryNode" />
-              <item name="Tpl" type="462c0819:PsiDirectoryNode" />
-              <item name="Group" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="smartGarden" type="b2602c69:ProjectViewProjectNode" />
-              <item name="smartGarden" type="462c0819:PsiDirectoryNode" />
-              <item name="Application" type="462c0819:PsiDirectoryNode" />
-              <item name="Admin" type="462c0819:PsiDirectoryNode" />
-              <item name="Tpl" type="462c0819:PsiDirectoryNode" />
-              <item name="Member" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="smartGarden" type="b2602c69:ProjectViewProjectNode" />
-              <item name="smartGarden" type="462c0819:PsiDirectoryNode" />
-              <item name="Application" type="462c0819:PsiDirectoryNode" />
-              <item name="Runtime" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="smartGarden" type="b2602c69:ProjectViewProjectNode" />
-              <item name="smartGarden" type="462c0819:PsiDirectoryNode" />
-              <item name="Application" type="462c0819:PsiDirectoryNode" />
-              <item name="Runtime" type="462c0819:PsiDirectoryNode" />
-              <item name="Logs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="smartGarden" type="b2602c69:ProjectViewProjectNode" />
-              <item name="smartGarden" type="462c0819:PsiDirectoryNode" />
-              <item name="Application" type="462c0819:PsiDirectoryNode" />
-              <item name="Runtime" type="462c0819:PsiDirectoryNode" />
-              <item name="Logs" type="462c0819:PsiDirectoryNode" />
-              <item name="Admin" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -336,7 +259,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="add_unversioned_files" value="$PROJECT_DIR$/Application/Runtime/Cache/Admin/1a8891c6da3830995cd743d5bc57f618.php" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1574501404176" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1574645982993" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -367,7 +290,7 @@
       <workItem from="1574322807304" duration="3918000" />
       <workItem from="1574385342924" duration="5409000" />
       <workItem from="1574477090592" duration="3754000" />
-      <workItem from="1574644399374" duration="1271000" />
+      <workItem from="1574644399374" duration="1554000" />
     </task>
     <task id="LOCAL-00001" summary="commit">
       <created>1574492337973</created>
@@ -418,11 +341,18 @@
       <option name="project" value="LOCAL" />
       <updated>1574499766931</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="消息提示修改">
+      <created>1574645707176</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1574645707176</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="19117000" />
+    <option name="totallyTimeSpent" value="19400000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1295" height="695" extended-state="6" />
@@ -442,7 +372,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.60711396" visible="true" weight="0.5053381" />
+      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.60711396" visible="true" weight="0.37188613" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="10" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.392886" side_tool="true" weight="0.74733096" />
@@ -510,7 +440,8 @@
     <MESSAGE value="commit" />
     <MESSAGE value="忽略列表" />
     <MESSAGE value="消息提示修改" />
-    <option name="LAST_COMMIT_MESSAGE" value="消息提示修改" />
+    <MESSAGE value="Merge branch 'master' of https://github.com/GlodenA/smartGarden&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'master' of https://github.com/GlodenA/smartGarden&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Application/Admin/Controller/AttendanceController.class.php">
@@ -675,8 +606,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Application/Admin/Tpl/Group/group_list.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="74">
-          <caret line="235" column="18" lean-forward="true" selection-start-line="235" selection-start-column="18" selection-end-line="235" selection-end-column="18" />
+        <state relative-caret-position="-326">
+          <caret line="237" column="38" lean-forward="true" selection-start-line="237" selection-start-column="38" selection-end-line="237" selection-end-column="38" />
         </state>
       </provider>
     </entry>
