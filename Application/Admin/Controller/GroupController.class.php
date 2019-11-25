@@ -1,5 +1,6 @@
 <?php
 namespace Admin\Controller;
+use Think\Log;
 class GroupController extends BaseController {
     public function __construct(){
         parent::__construct();
@@ -13,12 +14,12 @@ class GroupController extends BaseController {
     * 管理组列表
     */
     public function index(){
-        $count = $this->groupDb->count();
-        $Page = new \Think\Page($count,20);
-        $list = $this->groupDb->limit($Page->firstRow.','.$Page->listRows)->where($where)->order('id desc')->select();
-        $show = $Page->show();
-        $this->assign('page',$show);
-        $this->assign('list',$list);
+//        $count = $this->groupDb->count();
+//        $Page = new \Think\Page($count,20);
+//        $list = $this->groupDb->limit($Page->firstRow.','.$Page->listRows)->where($where)->order('id desc')->select();
+//        $show = $Page->show();
+//        $this->assign('page',$show);
+//        $this->assign('list',$list);
         $this->display("group_list");
     }
     /**
@@ -26,7 +27,7 @@ class GroupController extends BaseController {
     */
     public function groupAdd(){
         if(IS_POST){
-            $data = $_POST['info'];
+            $data = I("info");
             if(!$data['title']){
                 $this->error("请输入管理组名称");
             }else{
@@ -49,8 +50,8 @@ class GroupController extends BaseController {
     */
     public function groupEdit(){
         if(IS_POST){
-            $id = $where['id'] = I('id');
-            $data = $_POST['info'];
+            $data = I("info");
+            $id = $where['id'] = $data['id'];
             $result = $this->groupDb->where($where)->save($data);
             if($result){
                 $this->success("操作成功");
@@ -71,7 +72,7 @@ class GroupController extends BaseController {
     */
     public function groupDelete(){
         if(IS_POST){
-            $id = intval($_POST['id']);
+            $id = I("id");
             if($id == '1') $this->error("当前管理组不允许删除");
             $whereData['id'] = $id;
             // 判断当前管理组是否有会员
@@ -118,7 +119,8 @@ class GroupController extends BaseController {
     public function groupSettingMenu(){
         if(IS_POST){
             $whereGroup['id'] = $id = I("groupId");
-            $ids = I('ids');
+            $ids = implode(',',I("ids"));
+            Log::record("数组".$ids);
             if($ids){
                 $this->groupDb->where($whereGroup)->setField("menu_ids",$ids);
                 $this->success("操作成功");
@@ -140,6 +142,35 @@ class GroupController extends BaseController {
             $this->assign("menuList",$menuList);
             $this->display("group_menu_list");
         }
+    }
+
+    /**
+     * 管理组列表
+     */
+    public function getIndex(){
+        $count = $this->groupDb->count();
+        $listRows=10;
+        $firstRow = $listRows*(I("page")-1);
+        $list = $this->groupDb->limit($firstRow.','.$listRows)->where($where)->order('id desc')->select();
+        $ret["totalNumber"] = $count;
+        $ret["list"]=$list;
+        $this.$this->ajaxReturn($ret);
+    }
+
+    public function Text(){
+        $whereGroup['id'] = $id = I("groupId");
+        $groupData = $this->groupDb->where($whereGroup)->find();
+        $groupData['menu_ids']  =  explode(',',$groupData['menu_ids']);
+        // dump($groupData);
+        $this->assign($groupData);
+        // 获取
+        $tree = new \Org\Tree\Tree;
+        $where["is_delete"] = 0;
+        $where["is_show"] = 1;
+        $data = $this->menuDb->where($where)->order('sort desc,id desc')->select();
+        $menuList = $tree->makeTree($data);
+        Log::record("树形结构：".$menuList);
+        $this->success($menuList);
     }
 
 }

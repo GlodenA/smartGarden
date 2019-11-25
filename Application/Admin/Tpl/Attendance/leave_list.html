@@ -130,20 +130,22 @@
                 this.$refs.mainForm.validate(r => {
                     if (r) {
                         // 这里代表表单验证通过，即将提交数据到后台
-                        DMS.ajaxPost('__CONTROLLER__/shiftDuty', info, ref => {
-                            if (ref.status === 1) {
-                                this.$message({
-                                    message: ref.info,
-                                    type: 'success'
-                                });
-                                window.location.reload();
+                        DMS.ajaxPost('__CONTROLLER__/shiftDuty', info, res => {
+                            if (res.status === 1) {
+                                this.$alert(res.info, '通知', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        window.location.reload()
+                                    }
+                                })
+                            } else {
+                                this.$alert(res.info+res.info, '通知', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+
+                                    }
+                                })
                             }
-                            else
-                                this.$message({
-                                    message: ref.info,
-                                    type: 'error'
-                                });
-                            window.location.reload();
                         })
                     }
                 })

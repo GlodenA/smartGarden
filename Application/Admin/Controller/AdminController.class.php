@@ -33,8 +33,8 @@ class AdminController extends BaseController {
     */
     public function adminAdd(){
         if(IS_POST){
-            $data = $_POST['info'];
-            $password = password($_POST['password']);
+            $data =I("info");
+            $password = password($data["password"]);
             $data['password'] = $password['password'];
             $data['encrypt'] = $password['encrypt'];
             $data['reg_date'] = $data['last_date'] = $data['update_time'] = time();
@@ -44,7 +44,6 @@ class AdminController extends BaseController {
             $isIn = $this->adminDb->where($where)->find();
             if($isIn){
                 $this->error('账号已存在');
-                return false;
             }
             if(!$data['username'] || !$data['password']){
                 $this->error('操作失败');
