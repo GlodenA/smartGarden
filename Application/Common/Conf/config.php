@@ -14,13 +14,7 @@ return array(
 //    'DB_PWD'    => '',
 //    'DB_PORT'   => '3306',
 //    'DB_PREFIX' => 'yl_',
-    'DB_TYPE'   => 'mysql',
-    'DB_HOST'   => '10.19.9.55',
-    'DB_NAME'   => 'smartGarden',
-    'DB_USER'   => 'smartGarden',
-    'DB_PWD'    => 'smartGarden',
-    'DB_PORT'   => '3306',
-    'DB_PREFIX' => 'yl_',
+    
     //附件上传目录
     'UPLOAD_PATH'=> 'Uploads/',
     'CITY_NAME' => "潍坊市",
